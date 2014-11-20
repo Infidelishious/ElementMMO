@@ -1,4 +1,4 @@
-package com.imglow.ElementMMO;
+package com.imglow.ElementMMO.server;
 
 import java.io.BufferedReader;
 import java.io.IOException;

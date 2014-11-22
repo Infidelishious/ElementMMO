@@ -22,7 +22,7 @@ public class Cell implements Drawable {
 
 	@Override
 	public void draw(SpriteBatch sb) {
-		sb.draw(spr, x * LENGTH, y * LENGTH, LENGTH, LENGTH); 
+		sb.draw(spr, (x - Game.getInstance().dX) * Cell.LENGTH, (y - Game.getInstance().dY) * Cell.LENGTH, LENGTH, LENGTH); 
 	}
 
 }

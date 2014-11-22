@@ -3,16 +3,16 @@ package com.imglow.ElementMMO;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-public class Player implements Drawable{
+public abstract class Player implements Drawable{
 	
-	public static int LEFT = 0, UP = 1, RIGHT = 2, DOWN = 3;
+	public static int LEFT = 0, UP = 1, RIGHT = 2, DOWN = 3, 
+			WIDTH = 32, HEIGHT = 42;
 	float x,y, px, py, time = 0;
 	int type, lw = DOWN;
 	boolean frame1 = true;
 	TextureRegion spr;
 
-	@Override
-	public void draw(SpriteBatch sb) {
+	protected void updateSprite() {
 		TextureSingleton ts = TextureSingleton.getInstance();
 		time++;
 		time %= 10;
@@ -72,8 +72,6 @@ public class Player implements Drawable{
 		
 		px = x;
 		py = y;
-		
-//		sb.draw(spr,);
 	}
 
 }

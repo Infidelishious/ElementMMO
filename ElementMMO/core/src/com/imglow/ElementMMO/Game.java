@@ -1,5 +1,7 @@
 package com.imglow.ElementMMO;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -9,7 +11,11 @@ public class Game implements Drawable{
 	
 	float dX = 0, dY = 0;
 	Cell[][] grid;
-	private MainClient client;
+	MainClient client;
+	
+	public CurrentPlayer player;
+	
+	public ArrayList<OtherPlayer> otherPlayers;
 	
 	private static Game instance;
 

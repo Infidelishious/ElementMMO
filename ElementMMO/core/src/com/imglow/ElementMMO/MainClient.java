@@ -1,5 +1,7 @@
 package com.imglow.ElementMMO;
 
+import java.net.Socket;
+
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
@@ -21,15 +23,17 @@ public class MainClient extends ApplicationAdapter {
 
 	private Vector3 firstTouch;
 	
+	public MainClient(Socket s, int playerType, String name)
+	{
+		MessageManager.getInstance().init(s);
+	}
+	
 	@Override
 	public void create () {
 		thiss = this; 
 		ClickController.getInstance().initalize(this);
 		batch = new SpriteBatch();
 		initalizeAssets();
-		
-		float w = Gdx.graphics.getWidth();
-		float h = Gdx.graphics.getHeight();
 
 		camera = new OrthographicCamera(WIDTH, HEIGHT);
 		batch = new SpriteBatch();

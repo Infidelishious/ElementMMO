@@ -30,81 +30,73 @@ public class MessageManager{
 		return instance;
 	}
 	
-	public void init(String host, int port)
+	public void init(final Socket s)
 	{
-		try {
-			s = new Socket (host, port);
-			
-			input = new Runnable(){
-				public void run() {
-					try {
-						ObjectInputStream br= new ObjectInputStream(s.getInputStream());
-						int x = 2;
-						while(x == 2)
-						{
-							System.out.println( "Waiting for message" );
-							try {
-								Message msg = (Message) br.readObject();
-								messages.add(msg);
-							} catch (ClassNotFoundException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-							System.out.println("Message Object Receaved");
+		this.s = s;
+		
+		input = new Runnable(){
+			public void run() {
+				try {
+					ObjectInputStream br= new ObjectInputStream(s.getInputStream());
+					int x = 2;
+					while(x == 2)
+					{
+						System.out.println( "Waiting for message" );
+						try {
+							Message msg = (Message) br.readObject();
+							messages.add(msg);
+						} catch (ClassNotFoundException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
 						}
-						br.close();
-						s.close();
-					} catch (IOException ioe) {
-						System.out.println( "IOExceptionin Client constructor: " + ioe.getMessage() );
+						System.out.println("Message Object Receaved");
 					}
+					br.close();
+					s.close();
+				} catch (IOException ioe) {
+					System.out.println( "IOExceptionin Client constructor: " + ioe.getMessage() );
 				}
+			}
 
 
-			};
-			new Thread(input).start();
-			
-			output = new Runnable(){
-				public void run() {
-					try {
-						ObjectOutputStream br = new ObjectOutputStream(s.getOutputStream());
-						int x = 2;
-						while(x == 2)
+		};
+		new Thread(input).start();
+		
+		output = new Runnable(){
+			public void run() {
+				try {
+					ObjectOutputStream br = new ObjectOutputStream(s.getOutputStream());
+					int x = 2;
+					while(x == 2)
+					{
+						if(queue.size() > 0)
 						{
-							if(queue.size() > 0)
+							br.writeObject(queue.get(0));
+							queue.remove(0);
+						}
+						else
+						{
+							synchronized(msgLock)
 							{
-								br.writeObject(queue.get(0));
-								queue.remove(0);
-							}
-							else
-							{
-								synchronized(msgLock)
-								{
-									try {
-										msgLock.wait();
-									} catch (InterruptedException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									}
+								try {
+									msgLock.wait();
+								} catch (InterruptedException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
 								}
 							}
 						}
-						br.close();
-						s.close();
-					} catch (IOException ioe) {
-						System.out.println( "IOExceptionin Client constructor: " + ioe.getMessage() );
 					}
+					br.close();
+					s.close();
+				} catch (IOException ioe) {
+					System.out.println( "IOExceptionin Client constructor: " + ioe.getMessage() );
 				}
+			}
 
 
-			};
-			new Thread(output).start();
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		};
+		new Thread(output).start();
 	}
 	
 	public void sendMessageToServer(Message msg)

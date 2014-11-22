@@ -1,12 +1,79 @@
 package com.imglow.ElementMMO;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Player implements Drawable{
+	
+	public static int LEFT = 0, UP = 1, RIGHT = 2, DOWN = 3;
+	float x,y, px, py, time = 0;
+	int type, lw = DOWN;
+	boolean frame1 = true;
+	TextureRegion spr;
 
 	@Override
 	public void draw(SpriteBatch sb) {
-		// TODO Auto-generated method stub
+		TextureSingleton ts = TextureSingleton.getInstance();
+		time++;
+		time %= 10;
+		
+		if(time < 5)
+			frame1 = true;
+		else
+			frame1 = false;
+			
+		if(px > x) //moving left
+		{
+			if(frame1)
+				spr = ts.playerSprites.get(type).get(TextureSingleton.WALK_LEFT_1);
+			else
+				spr = ts.playerSprites.get(type).get(TextureSingleton.WALK_LEFT_2);
+			
+			lw = LEFT;
+		}
+		else if(px < x) //moving right
+		{
+			if(frame1)
+				spr = ts.playerSprites.get(type).get(TextureSingleton.WALK_RIGHT_1);
+			else
+				spr = ts.playerSprites.get(type).get(TextureSingleton.WALK_RIGHT_2);
+			
+			lw = RIGHT;
+		}
+		else if(py > y) //moving down
+		{
+			if(frame1)
+				spr = ts.playerSprites.get(type).get(TextureSingleton.WALK_DOWN);
+			else
+				spr = ts.playerSprites.get(type).get(TextureSingleton.STAND);
+			
+			lw = DOWN;
+		}
+		else if(py < y) //moving up
+		{
+			if(frame1)
+				spr = ts.playerSprites.get(type).get(TextureSingleton.WALK_UP);
+			else
+				spr = ts.playerSprites.get(type).get(TextureSingleton.FACE_UP);
+			
+			lw = UP;
+		}
+		else
+		{
+			if(lw == UP)
+				spr = ts.playerSprites.get(type).get(TextureSingleton.FACE_UP);
+			else if(lw == DOWN)
+				spr = ts.playerSprites.get(type).get(TextureSingleton.STAND);
+			else if(lw == RIGHT)
+				spr = ts.playerSprites.get(type).get(TextureSingleton.FACE_RIGHT);
+			else
+				spr = ts.playerSprites.get(type).get(TextureSingleton.FACE_LEFT);
+		}
+		
+		px = x;
+		py = y;
+		
+//		sb.draw(spr,);
 	}
 
 }

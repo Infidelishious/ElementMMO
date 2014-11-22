@@ -51,6 +51,9 @@ public class MainClient extends ApplicationAdapter {
 	}
 	
 	private void touchLogic() {
+		if(Login.getInstance().getVisable())
+			return;
+			
 		Vector3 touchPos = null;
 		//
 		if(Gdx.input.isTouched()) {

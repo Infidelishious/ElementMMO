@@ -45,7 +45,7 @@ public class TextureSingleton {
 		spikey = new Texture(Gdx.files.internal("images/Spikey.png"));
 		chika = new Texture(Gdx.files.internal("images/chika.png"));
 		nakedMan = new Texture(Gdx.files.internal("images/nake_man.png"));
-		nakedManList = new ArrayList<TextureRegion>();
+		nakedManList = new ArrayList<TextureRegion>();	
 		copList = new ArrayList<TextureRegion>();
 		spikeyList = new ArrayList<TextureRegion>();
 		chikaList = new ArrayList<TextureRegion>();
@@ -65,9 +65,6 @@ public class TextureSingleton {
 		}
 		for(int i = 0; i < 9; i++) {
 			spikeyList.add(new TextureRegion(spikey, i * 16, 0, 16, 21));
-		}
-		for(int i = 0; i < 9; i++) {
-			chikaList.add(new TextureRegion(chika, i * 16, 0, 16, 21));
 		}
 		for(int i = 0; i < 9; i++) {
 			chikaList.add(new TextureRegion(chika, i * 16, 0, 16, 21));

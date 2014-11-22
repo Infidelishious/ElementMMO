@@ -11,7 +11,7 @@ import com.sun.media.jfxmedia.events.PlayerStateEvent.PlayerState;
 
 public class TextureSingleton {
 	private static TextureSingleton instance;
-	
+	//////////////IF YOU TOUCH THIS CODE I WILL PEE ON YOUR MOM////////////////
 	public static int COP = 0, SPIKEY = 1, CHIKA = 2, OLD_MAN = 3, FAT_SAILOR = 4, NAKED_MAN = 5;
 	public static int STAND = 0, FACE_UP = 1, FACE_LEFT = 2, WALK_DOWN = 3, WALK_UP = 4, WALK_LEFT_1 = 5,
 						WALK_LEFT_2 = 6, WALK_RIGHT_1 = 7, WALK_RIGHT_2 = 8, FACE_RIGHT = 9;
@@ -23,6 +23,7 @@ public class TextureSingleton {
 	public BitmapFont scoreFont, nameFont;
 	public Texture cop, spikey;
 	public ArrayList<TextureRegion> copList, spikeyList;
+	public TextureRegion grass, bush;
 	
 	protected TextureSingleton(){}
 
@@ -45,6 +46,10 @@ public class TextureSingleton {
 		copList = new ArrayList<TextureRegion>();
 		spikeyList = new ArrayList<TextureRegion>();
 		playerSprites.add(copList);
+		Texture temp = new Texture(Gdx.files.internal("images/grass.png"));		//using to initialized bush and grass
+		grass = new TextureRegion(temp);
+		temp = new Texture(Gdx.files.internal("images/bush.png"));
+		bush = new TextureRegion(bush);
 		for(int i = 0; i < 9; i++) {
 			copList.add(new TextureRegion(cop, i * 16, 0, 16, 20));
 		}

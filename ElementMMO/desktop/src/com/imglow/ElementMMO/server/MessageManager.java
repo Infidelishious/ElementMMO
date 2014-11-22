@@ -10,6 +10,8 @@ import java.net.UnknownHostException;
 import java.util.Queue;
 import java.util.Vector;
 
+import com.imglow.ElementMMO.Message;
+
 public class MessageManager{
 	private static MessageManager instance;
 	private Vector<Message> messages, queue;

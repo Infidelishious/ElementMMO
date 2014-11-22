@@ -23,7 +23,7 @@ public class TextureSingleton {
 	public BitmapFont scoreFont, nameFont;
 	public Texture cop, spikey;
 	public ArrayList<TextureRegion> copList, spikeyList;
-	public TextureRegion grass, bush;
+	public TextureRegion grass, bush, tree1, tree2;
 	
 	protected TextureSingleton(){}
 
@@ -46,10 +46,14 @@ public class TextureSingleton {
 		copList = new ArrayList<TextureRegion>();
 		spikeyList = new ArrayList<TextureRegion>();
 		playerSprites.add(copList);
-		Texture temp = new Texture(Gdx.files.internal("images/grass.png"));		//using to initialized bush and grass
+		Texture temp = new Texture(Gdx.files.internal("images/grass.png"));		//using to initialized all the green stuff
 		grass = new TextureRegion(temp);
 		temp = new Texture(Gdx.files.internal("images/bush.png"));
 		bush = new TextureRegion(bush);
+		temp = new Texture(Gdx.files.internal("images/tree1.png"));
+		tree1 = new TextureRegion(temp);
+		temp = new Texture(Gdx.files.internal("images/tree2.png"));
+		tree2 = new TextureRegion(temp);
 		for(int i = 0; i < 9; i++) {
 			copList.add(new TextureRegion(cop, i * 16, 0, 16, 20));
 		}

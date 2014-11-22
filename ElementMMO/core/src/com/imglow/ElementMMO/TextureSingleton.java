@@ -13,7 +13,7 @@ public class TextureSingleton {
 	
 	public static int COP = 0, SPIKEY = 1, CHIKA = 2, OLD_MAN = 3, FAT_SAILOR = 4, NAKED_MAN = 5;
 	public static int STAND = 0, FACE_UP = 1, FACE_LEFT = 2, WALK_DOWN = 3, WALK_UP = 4, WALK_LEFT_1 = 5,
-						WALK_LEFT_2 = 6, WALK_RIGHT_1 = 7, WALK_RIGHT_2 = 8;
+						WALK_LEFT_2 = 6, WALK_RIGHT_1 = 7, WALK_RIGHT_2 = 8, FACE_RIGHT = 9;
 	
 			//playersprites.get(COP).get(UP);
 	public ArrayList<ArrayList<TextureRegion>> playerSprites;

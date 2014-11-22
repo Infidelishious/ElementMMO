@@ -6,6 +6,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.sun.media.jfxmedia.events.PlayerStateEvent.PlayerState;
 
 
 public class TextureSingleton {
@@ -36,7 +37,7 @@ public class TextureSingleton {
 	{
 		//This is where textures are loaded
 		white = new Texture(Gdx.files.internal("images/white.png"));
-		
+		playerSprites = new ArrayList<ArrayList<TextureRegion>>();
 		scoreFont = new BitmapFont(Gdx.files.internal("fonts/Fipps-Regular.fnt"), Gdx.files.internal("fonts/Fipps-Regular_0.tga"), false);
 		nameFont = new BitmapFont(Gdx.files.internal("fonts/FlxRegular.fnt"), Gdx.files.internal("fonts/FlxRegular_0.tga"), false);
 		cop = new Texture(Gdx.files.internal("images/cop.png"));

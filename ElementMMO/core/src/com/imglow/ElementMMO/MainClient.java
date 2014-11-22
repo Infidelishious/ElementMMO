@@ -33,6 +33,7 @@ public class MainClient extends ApplicationAdapter {
 
 		camera = new OrthographicCamera(WIDTH, HEIGHT);
 		batch = new SpriteBatch();
+		Game.getInstance().init(this);
 	}
 
 	private void initalizeAssets() {
@@ -47,6 +48,7 @@ public class MainClient extends ApplicationAdapter {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
+		Game.getInstance().draw(batch);
 		batch.end();
 	}
 	

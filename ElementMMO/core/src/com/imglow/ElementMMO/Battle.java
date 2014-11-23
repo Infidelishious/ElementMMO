@@ -32,11 +32,11 @@ public class Battle implements Drawable
 	CurrentPlayer currentPlayer;
 	OtherPlayer otherPlayer;
 	
-	SpriteBatch sb;
+	// SpriteBatch sb;
 	
 	public Battle(CurrentPlayer currentPlayer, OtherPlayer otherPlayer)
 	{
-		this.sb = sb;
+		// this.sb = sb;
 		this.currentPlayer = currentPlayer;
 		this.otherPlayer = otherPlayer;
 		currentPlayerInventoryImages = new TextureRegion[6];

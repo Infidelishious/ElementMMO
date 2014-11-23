@@ -29,6 +29,7 @@ public class Game implements Drawable{
 	protected Game(){}
 	
 	public void init(MainClient client) {
+		
 		this.client = client;
 		grid = new Cell[WIDTH][HEIGHT];
 		
@@ -97,6 +98,9 @@ public class Game implements Drawable{
 		}
 		
 		player = new CurrentPlayer();
+		
+		OtherPlayer temp = new OtherPlayer();
+		bg = new Battle(player,temp);
 	}
 	
 	public static Game getInstance() {
@@ -127,7 +131,8 @@ public class Game implements Drawable{
 		
 		//if battle draw battle
 		
-		//bg.draw(sb);
+		bg.draw(sb);
+		/*
 		if(chat == null)
 		{
 			if(player !=null) {
@@ -150,6 +155,7 @@ public class Game implements Drawable{
 		
 		if(store != null)
 			store.draw(sb);
+			*/
 			
 	}
 }

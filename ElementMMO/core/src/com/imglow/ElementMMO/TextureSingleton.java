@@ -70,16 +70,16 @@ public class TextureSingleton {
 		tree1 = new TextureRegion(temp);
 		temp = new Texture(Gdx.files.internal("images/tree2.png"));
 		tree2 = new TextureRegion(temp);
-		for(int i = 0; i < 9; i++) {
+		for(int i = 0; i < 10; i++) {
 			copList.add(new TextureRegion(cop, i * 16, 0, 16, 21));
 		}
-		for(int i = 0; i < 9; i++) {
+		for(int i = 0; i < 10; i++) {
 			spikeyList.add(new TextureRegion(spikey, i * 16, 0, 16, 21));
 		}
-		for(int i = 0; i < 9; i++) {
+		for(int i = 0; i < 10; i++) {
 			chikaList.add(new TextureRegion(chika, i * 16, 0, 16, 21));
 		}
-		for(int i = 0; i < 9; i++) {
+		for(int i = 0; i < 10; i++) {
 			nakedManList.add(new TextureRegion(nakedMan, i * 16, 0, 16, 21));
 		}
 		

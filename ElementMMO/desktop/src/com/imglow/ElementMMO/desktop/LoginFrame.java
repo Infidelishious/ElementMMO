@@ -40,11 +40,13 @@ public class LoginFrame extends JFrame {
 	JPanel loginPanel;
 	JLabel loginErrorLabel;
 	JLabel charErrorLabel;
+	JLabel teamErrorLabel;
 	Image logo;
 	
 	// user data
 	String newUser;
 	String newPW;
+	int newCharID;
 	
 	// VARIABLES END --------------------------------------
 	
@@ -131,7 +133,7 @@ public class LoginFrame extends JFrame {
 				else if (i==2) unscaledImage = ImageIO.read(new File("chika.png"));
 				else if (i==0) unscaledImage = ImageIO.read(new File("cop.png"));
 				else unscaledImage = ImageIO.read(new File("naked_man.png"));
-				scaledImage = unscaledImage.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+				scaledImage = unscaledImage.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
 				charLabels[i] = new JLabel(new ImageIcon(scaledImage));
 				charLabels[i].setOpaque(false);
 				charLabels[i].addMouseListener(new CharSelectListener(i, this));
@@ -148,9 +150,46 @@ public class LoginFrame extends JFrame {
 		charSelectPanel.setBorder(new EmptyBorder(120, 350, 200, 350));
 		charSelectPanel.setBackground(Color.BLACK);
 		
+		// team selection panel
+		JPanel teamSelectPanel = new JPanel(new BorderLayout());	// empty, holds border
+		JPanel teamStuffPanel = new JPanel(new BorderLayout());	// holds all team selection elements
+		JPanel teamOptionsPanel = new JPanel(new GridLayout(1,2));	// holds team choice elements
+		
+		// team selection panel elements
+		JLabel chooseTeamLabel = new JLabel("Choose your team!");
+		chooseTeamLabel.setForeground(Color.WHITE);
+		chooseTeamLabel.setBorder(new EmptyBorder(20, 20, 50, 20));
+		chooseTeamLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		teamErrorLabel = new JLabel(".");
+		teamErrorLabel.setForeground(Color.BLACK);
+		
+		// build team selection panel
+		JLabel[] teamLabels = new JLabel[2];
+		try {
+			for (int i=0; i<teamLabels.length; i++) {
+				if (i==0) unscaledImage = ImageIO.read(new File("blueteam.png"));
+				else unscaledImage = ImageIO.read(new File("redteam.png"));
+				scaledImage = unscaledImage.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+				teamLabels[i] = new JLabel(new ImageIcon(scaledImage));
+				teamOptionsPanel.add(teamLabels[i]);
+			}
+		} catch (Exception e) { System.out.println("ERROR: " + e.getMessage()); return; }
+		teamLabels[0].addMouseListener(new TeamSelectListener(true, this));
+		teamLabels[1].addMouseListener(new TeamSelectListener(false, this));
+		
+		teamOptionsPanel.setBackground(Color.BLACK);
+		teamStuffPanel.add(chooseTeamLabel, BorderLayout.NORTH);
+		teamStuffPanel.add(teamOptionsPanel, BorderLayout.CENTER);
+		teamStuffPanel.setBackground(Color.BLACK);
+		teamSelectPanel.add(teamStuffPanel, BorderLayout.CENTER);
+		teamSelectPanel.add(teamErrorLabel, BorderLayout.SOUTH);
+		teamSelectPanel.setBorder(new EmptyBorder(180, 350, 200, 350));
+		teamSelectPanel.setBackground(Color.BLACK);
+		
 		// add login and char select panels to main panel as cards
 		mainPanel.add(loginPanel, "login");
 		mainPanel.add(charSelectPanel, "charselect");
+		mainPanel.add(teamSelectPanel, "teamselect");
 		add(mainPanel);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -200,8 +239,16 @@ public class LoginFrame extends JFrame {
 						try {
 							ResultSet myChar = mySQLManager.getUserEntry(userAttempt);
 							myChar.next();
-							int myCharID = myChar.getInt("char_id");
-							startGame(userAttempt, myCharID);
+							
+							// cache user's previously-made username and character selection
+							newUser = myChar.getString("username");
+							newCharID = myChar.getInt("char_id");
+							
+							// advance to team select screen
+							CardLayout mainCL = (CardLayout)mainPanel.getLayout();
+							mainCL.show(mainPanel, "teamselect");
+							
+							//startGame(userAttempt, myCharID);
 						}
 						catch (Exception e) { System.out.println("ERROR GETTING PLAYER DATA"); }
 					}
@@ -258,15 +305,40 @@ public class LoginFrame extends JFrame {
 			this.charID = charID;
 		}
 		
-		// Override actionperformed
-		//public void actionPerformed (ActionEvent ae)
+		// Override mouseClicked
 		public void mouseClicked (MouseEvent me)
 		{
-			// enter new user into database
-			mySQLManager.createUser(newUser, newPW, charID);
+			// store character ID
+			newCharID = charID;
 			
+			// enter new user into database
+			mySQLManager.createUser(newUser, newPW, newCharID);
+			
+			// advance to team select screen
+			CardLayout mainCL = (CardLayout)mainPanel.getLayout();
+			mainCL.show(mainPanel, "teamselect");
+		}
+	}
+	
+	
+	
+	// Team select listener
+	class TeamSelectListener extends MouseAdapter {
+		
+		boolean team1;
+
+		// Constructor
+		public TeamSelectListener (boolean team1, LoginFrame introFrame)
+		{
+			this.team1 = team1;
+		}
+		
+		// Override mouseClicked
+		public void mouseClicked (MouseEvent me)
+		{
+			System.out.println(team1);
 			// start game with chosen character
-			startGame(newUser, charID);
+			startGame(newUser, newCharID, team1);
 		}
 	}
 	
@@ -290,7 +362,7 @@ public class LoginFrame extends JFrame {
 	
 	
 	// Start main game client
-	void startGame (String user, int charID)
+	void startGame (String user, int charID, boolean team1)
 	{
 		try {
 			// initialize socket
@@ -304,7 +376,7 @@ public class LoginFrame extends JFrame {
 			config.height = 720;
 			config.resizable = false;
 //			System.out.println("carid: " + charID);
-			new LwjglApplication(new MainClient(mySocket, mySQLManager, charID, user, true), config);	// TODO - assign actual team
+			new LwjglApplication(new MainClient(mySocket, mySQLManager, charID, user, team1), config);
 			
 			dispose();
 		}

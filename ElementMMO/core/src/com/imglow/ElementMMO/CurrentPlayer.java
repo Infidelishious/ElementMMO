@@ -50,6 +50,27 @@ public class CurrentPlayer extends Player{
 		
 	}
 	
+	public CurrentPlayer(int type, String name, boolean team1)
+	{
+		this(type, name);
+		this.team1 = team1;
+		sendToSpawn();
+	}
+	
+	private void sendToSpawn() {
+		if(team1)
+		{
+			x = Game.WIDTH/2;
+			y = 5;
+		}
+		else
+		{
+			x = Game.WIDTH/2;
+			y = Game.HEIGHT - 5;
+		}
+		
+	}
+
 	public void move(int direction){
 		if(moving) return;
 		currX = (int) x;

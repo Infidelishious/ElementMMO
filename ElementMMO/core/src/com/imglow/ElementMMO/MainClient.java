@@ -17,6 +17,7 @@ public class MainClient extends ApplicationAdapter {
 	SpriteBatch batch;
 	Texture img;
 	MainClient thiss;
+	SQL sql;
 	OrthographicCamera camera;
 
 	private boolean touched, click;
@@ -27,10 +28,11 @@ public class MainClient extends ApplicationAdapter {
 	{
 	}
 	
-	public MainClient(Socket s, int playerType, String name)
+	public MainClient(Socket s, SQL sql, int playerType, String name, boolean team1)
 	{
+		this.sql = sql;
 		MessageManager.getInstance().init(s);
-		Game.getInstance().player = new CurrentPlayer(playerType, name);
+		Game.getInstance().player = new CurrentPlayer(playerType, name, team1);
 	}
 	
 	@Override

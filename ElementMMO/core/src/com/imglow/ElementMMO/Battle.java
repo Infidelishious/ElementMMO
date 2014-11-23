@@ -7,16 +7,16 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Battle implements Drawable
 {	
-	Texture currentPlayerImage;
-	Texture otherPlayerImage;
+	TextureRegion currentPlayerImage;
+	TextureRegion otherPlayerImage;
 	
 	Texture[] currentPlayerHealthImages;
 	Texture[] otherPlayerHealthImages;
 	
 	Texture[] playerInventoryImages;
 	
-	Texture currentPlayerBattleElementImage;
-	Texture otherPlayerBattleElementImage;
+	TextureRegion currentPlayerBattleElementImage;
+	TextureRegion otherPlayerBattleElementImage;
 	
 	CurrentPlayer currentPlayer;
 	OtherPlayer otherPlayer;
@@ -28,9 +28,6 @@ public class Battle implements Drawable
 		this.sb = sb;
 		this.currentPlayer = currentPlayer;
 		this.otherPlayer = otherPlayer;
-		
-		currentPlayerImage = TextureSingleton.getInstance().white;
-		otherPlayerImage = TextureSingleton.getInstance().white;
 		
 		currentPlayerHealthImages = new Texture[3];
 		otherPlayerHealthImages = new Texture[3];
@@ -104,6 +101,24 @@ public class Battle implements Drawable
 		
 		//assign health amounts
 		currentPlayerHealthImages = new Texture[3];
+		//assigns hearts left to right
+		switch(currentPlayer.helth)
+		{
+			case 0:
+				break;
+			case 1:
+				break;
+			case 2:
+				break;
+			case 3:
+				break;
+			case 4:
+				break;
+			case 5: 
+				break;
+			case 6:
+				break;
+		}
 		
 		otherPlayerHealthImages = new Texture[3];
 		

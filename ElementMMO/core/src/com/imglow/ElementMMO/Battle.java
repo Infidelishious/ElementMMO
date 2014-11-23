@@ -18,12 +18,7 @@ public class Battle implements Drawable
 	Texture otherPlayerHeartImage2;
 	Texture otherPlayerHeartImage3;
 	
-	Texture currentPlayerInventoryImage1;
-	Texture currentPlayerInventoryImage2;
-	Texture currentPlayerInventoryImage3;
-	Texture currentPlayerInventoryImage4;
-	Texture currentPlayerInventoryImage5;
-	Texture currentPlayerInventoryImage6;
+	TextureRegion[] currentPlayerInventoryImages;
 	
 	TextureRegion currentPlayerBattleElementImage;
 	TextureRegion otherPlayerBattleElementImage;
@@ -38,6 +33,8 @@ public class Battle implements Drawable
 		this.sb = sb;
 		this.currentPlayer = currentPlayer;
 		this.otherPlayer = otherPlayer;
+		currentPlayerInventoryImages = new TextureRegion[6];
+		
 			
 		//load the players information into the GUI.
 		
@@ -66,9 +63,9 @@ public class Battle implements Drawable
 		//draw player sprites
 		
 		//this player
-		sb.draw(TextureSingleton.getInstance().playerSprites.get(TextureSingleton.COP).get(TextureSingleton.STAND), -MainClient.HEIGHT/2+50, 0, Player.WIDTH, Player.HEIGHT);
+		sb.draw(currentPlayerImage, -MainClient.HEIGHT/2+50, 0, Player.WIDTH, Player.HEIGHT);
 		//other player
-		sb.draw(TextureSingleton.getInstance().playerSprites.get(TextureSingleton.COP).get(TextureSingleton.STAND), MainClient.HEIGHT/2-125, 0, Player.WIDTH, Player.HEIGHT);
+		sb.draw(otherPlayerImage, MainClient.HEIGHT/2-125, 0, Player.WIDTH, Player.HEIGHT);
 
 		//draw health amounts
 		Texture tempFullHeartTexture = new Texture(Gdx.files.internal("full_heart.jpg"));
@@ -79,20 +76,20 @@ public class Battle implements Drawable
 		sb.draw(currentPlayerHeartImage2, -MainClient.WIDTH/4+30, 100, 16, 16);
 		sb.draw(currentPlayerHeartImage3, -MainClient.WIDTH/4+50, 100, 16, 16);
 		//other player
-		sb.draw(otherPlayerHeartImage1, MainClient.WIDTH/4-45, 100, 16, 16);
+		sb.draw(otherPlayerHeartImage3, MainClient.WIDTH/4-45, 100, 16, 16);
 		sb.draw(otherPlayerHeartImage2, MainClient.WIDTH/4-65, 100, 16, 16);
-		sb.draw(otherPlayerHeartImage3, MainClient.WIDTH/4-85, 100, 16, 16);
+		sb.draw(otherPlayerHeartImage1, MainClient.WIDTH/4-85, 100, 16, 16);
 
 		//draw space for element slots
 		sb.draw(new Texture(Gdx.files.internal("grey.jpg")), -MainClient.WIDTH/4+150, -MainClient.HEIGHT/4+10, MainClient.WIDTH/4, MainClient.HEIGHT/4-50);
 		
 		//draw element slots
-		sb.draw(TextureSingleton.getInstance().imagination, -MainClient.WIDTH/4+180, -80);
-		sb.draw(TextureSingleton.getInstance().imagination, -MainClient.WIDTH/4+180, -120);
-		sb.draw(TextureSingleton.getInstance().imagination, -MainClient.WIDTH/4+180, -160);
-		sb.draw(TextureSingleton.getInstance().imagination, -MainClient.WIDTH/4+340, -80);
-		sb.draw(TextureSingleton.getInstance().imagination, -MainClient.WIDTH/4+340, -120);
-		sb.draw(TextureSingleton.getInstance().imagination, -MainClient.WIDTH/4+340, -160);
+		sb.draw(currentPlayerInventoryImages[0], -MainClient.WIDTH/4+180, -80);
+		sb.draw(currentPlayerInventoryImages[1], -MainClient.WIDTH/4+180, -120);
+		sb.draw(currentPlayerInventoryImages[2], -MainClient.WIDTH/4+180, -160);
+		sb.draw(currentPlayerInventoryImages[3], -MainClient.WIDTH/4+340, -80);
+		sb.draw(currentPlayerInventoryImages[4], -MainClient.WIDTH/4+340, -120);
+		sb.draw(currentPlayerInventoryImages[5], -MainClient.WIDTH/4+340, -160);
 
 		//draw battle element slots
 		sb.draw(TextureSingleton.getInstance().imagination, -200, 0);
@@ -107,8 +104,6 @@ public class Battle implements Drawable
 		otherPlayerImage = TextureSingleton.getInstance().playerSprites.get(otherPlayer.type).get(TextureSingleton.STAND);
 		
 		//assign health amounts
-
-		//assigns hearts left to right
 		switch(currentPlayer.health)
 		{
 			case 0:
@@ -186,14 +181,39 @@ public class Battle implements Drawable
 				otherPlayerHeartImage3 = new Texture(Gdx.files.internal("full_heart.jpg"));
 				break;
 		}
-		
-//		otherPlayerHealthImages = new Texture[3];
-		
+				
 		//assign element textures
-//		playerInventoryImages = new Texture[6];
 		
-		//assign battle element slots
-		currentPlayerBattleElementImage = TextureSingleton.getInstance().playerSprites.get(currentPlayer.type).get(TextureSingleton.STAND);
-		otherPlayerBattleElementImage = TextureSingleton.getInstance().playerSprites.get(otherPlayer.type).get(TextureSingleton.STAND);
+		int inventoryElementNum = 0;
+		for(int i = 0; i < 12; i++)
+		{
+			//if all inventory spots have been exhausted
+			if(inventoryElementNum >= 6)
+			{
+				//stop checking whether further elements are owned by current player
+				break;
+			}
+			
+			//if the player owns a given item
+			if(currentPlayer.owned.get(i));
+			{
+				//add that item to their inventory display at the next available spot
+				currentPlayerInventoryImages[inventoryElementNum] = TextureSingleton.getInstance().elements.get(i);
+				//indicate that one should now move to the next available spot
+				inventoryElementNum++;
+			}
+		}
+		
+		//if not all inventory spots have been exhausted
+		while(inventoryElementNum < 6)
+		{
+			//fill remaining inventory elements with white space
+			currentPlayerInventoryImages[inventoryElementNum] = TextureSingleton.getInstance().whiteGrass;
+			inventoryElementNum++;
+		}
+		
+		//assign battle element slots as whitespace until event causes them to be otherwise
+		currentPlayerBattleElementImage = TextureSingleton.getInstance().whiteGrass;
+		otherPlayerBattleElementImage = TextureSingleton.getInstance().whiteGrass;
 	}
 }

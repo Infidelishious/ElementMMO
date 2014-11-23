@@ -5,11 +5,24 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public abstract class Player implements Drawable{
 	
-	public static int LEFT = 0, UP = 1, RIGHT = 2, DOWN = 3, 
-			WIDTH = 32, HEIGHT = 42;
-	float x,y, px, py, time = 0;
-	int type, lw = DOWN;
-	boolean frame1 = true;
+	public static int LEFT = 0, 
+			UP = 1, 
+			RIGHT = 2, 
+			DOWN = 3, 
+			NOT_MOVING = 4, 
+			WIDTH = 32,
+			HEIGHT = 42;
+	
+	public static float SPEED = 0.05f;
+	
+	float x, y, px, py, time = 0;
+	
+	int type, 
+		lw = DOWN, 
+		helth = 0;
+	
+	boolean frame1 = true, team1 = false;
+	
 	TextureRegion spr;
 
 	protected void updateSprite() {

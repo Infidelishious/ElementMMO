@@ -85,7 +85,7 @@ public class CurrentPlayer extends Player{
 			}
 			if(team1)
 			{
-				if(currY + 1 >= 3 * Game.getInstance().HEIGHT / 4)
+				if(currY + 1 >= 5 * Game.getInstance().HEIGHT / 6)
 				{
 					blocked = true;
 					py--;
@@ -118,7 +118,7 @@ public class CurrentPlayer extends Player{
 			}
 			if(!team1) // so you are team2 lol
 			{
-				if(currY - 1 <= Game.getInstance().HEIGHT / 4)
+				if(currY - 1 <= Game.getInstance().HEIGHT / 6)
 				{
 					blocked = true;
 					py++;

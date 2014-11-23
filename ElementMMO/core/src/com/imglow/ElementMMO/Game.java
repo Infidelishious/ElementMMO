@@ -70,19 +70,19 @@ public class Game implements Drawable{
 		
 		for(int x = 1; x < WIDTH - 1; x++)
 		{
-			if(x < WIDTH/4 || x > 3*WIDTH/4)
+			if(x < WIDTH/5 || x > 3*WIDTH/4)
 			{
-				if(grid[x][HEIGHT/4] == null)
-					grid[x][HEIGHT/4] = new Cell(x,HEIGHT/4,Cell.BUSH);
-				if(grid[x][3*HEIGHT/4] == null)
-					grid[x][3*HEIGHT/4] = new Cell(x, 3*HEIGHT/4,Cell.BUSH);
+				if(grid[x][HEIGHT/6] == null)
+					grid[x][HEIGHT/6] = new Cell(x,HEIGHT/6,Cell.BUSH);
+				if(grid[x][5*HEIGHT/6] == null)
+					grid[x][5*HEIGHT/6] = new Cell(x, 5*HEIGHT/6,Cell.BUSH);
 			}
 			else
 			{
-				if(grid[x][HEIGHT/4] == null)
-					grid[x][HEIGHT/4] = new Cell(x,HEIGHT/4,Cell.GRASS);
-				if(grid[x][3*HEIGHT/4] == null)
-					grid[x][3*HEIGHT/4] = new Cell(x, 3*HEIGHT/4,Cell.GRASS);
+				if(grid[x][HEIGHT/6] == null)
+					grid[x][HEIGHT/6] = new Cell(x,HEIGHT/6,Cell.GRASS);
+				if(grid[x][5*HEIGHT/6] == null)
+					grid[x][5*HEIGHT/6] = new Cell(x, 5*HEIGHT/6,Cell.GRASS);
 			}
 		}
 		

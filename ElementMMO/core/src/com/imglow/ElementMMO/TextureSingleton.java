@@ -20,7 +20,7 @@ public class TextureSingleton {
 			//playersprites.get(COP).get(UP);
 	public ArrayList<ArrayList<TextureRegion>> playerSprites;
 	
-	public Texture white;
+	public Texture white, gray;
 	public BitmapFont scoreFont, nameFont;
 	public Texture cop, spikey, chika, nakedMan;
 	public ArrayList<TextureRegion> copList, spikeyList, chikaList, nakedManList, shopElements, elements;
@@ -42,6 +42,7 @@ public class TextureSingleton {
 	{
 		//This is where textures are loaded
 		white = new Texture(Gdx.files.internal("images/white.png"));
+		gray = new Texture(Gdx.files.internal("images/gray.png"));
 		playerSprites = new ArrayList<ArrayList<TextureRegion>>();
 		scoreFont = new BitmapFont(Gdx.files.internal("fonts/Fipps-Regular.fnt"), Gdx.files.internal("fonts/Fipps-Regular_0.tga"), false);
 		nameFont = new BitmapFont(Gdx.files.internal("fonts/FlxRegular.fnt"), Gdx.files.internal("fonts/FlxRegular_0.tga"), false);

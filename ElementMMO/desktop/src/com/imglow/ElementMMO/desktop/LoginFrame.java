@@ -218,14 +218,22 @@ public class LoginFrame extends JFrame {
 			else
 			{
 				// (only proceed in making new user if specified username doesn't already exist)
-				if (!exists) {
-					// store user/pw
-					newUser = userAttempt;
-					newPW = pwAttempt;
-					
-					// advance to char select screen
-					CardLayout mainCL = (CardLayout)mainPanel.getLayout();
-					mainCL.show(mainPanel, "charselect");
+				if (!exists)
+				{
+					// (only proceed in making new user if specified username is valid format)
+					if (isValidUsername(userAttempt))
+					{
+						// store user/pw
+						newUser = userAttempt;
+						newPW = pwAttempt;
+						
+						// advance to char select screen
+						CardLayout mainCL = (CardLayout)mainPanel.getLayout();
+						mainCL.show(mainPanel, "charselect");
+					}
+					else {
+						displayLoginError(4);
+					}
 				}
 				else {
 					displayLoginError(3);
@@ -264,6 +272,23 @@ public class LoginFrame extends JFrame {
 	
 	
 	
+	// Return whether specified username is valid
+	boolean isValidUsername (String user)
+	{
+		// disallow system tokens
+		if (user.equals("msg") || user.equals("all") || user.equals("team1") || user.equals("team2")) return false;
+		
+		// disallow whitespace
+		for (int i=0; i<user.length(); i++) {
+			if (Character.isWhitespace(user.charAt(i))) return false;
+		}
+		
+		// if no special cases broken, name is valid
+		return true;
+	}
+	
+	
+	
 	// Start main game client
 	void startGame (String user, int charID)
 	{
@@ -279,7 +304,7 @@ public class LoginFrame extends JFrame {
 			config.height = 720;
 			config.resizable = false;
 //			System.out.println("carid: " + charID);
-			new LwjglApplication(new MainClient(mySocket, charID, user), config);
+			new LwjglApplication(new MainClient(mySocket, mySQLManager, charID, user, true), config);	// TODO - assign actual team
 			
 			dispose();
 		}
@@ -291,7 +316,7 @@ public class LoginFrame extends JFrame {
 	// Display login error
 	void displayLoginError (int error)
 	{
-		if (error < 4) loginErrorLabel.setForeground(Color.RED);
+		if (error < 5) loginErrorLabel.setForeground(Color.RED);
 		else charErrorLabel.setForeground(Color.RED);
 		
 		switch (error)
@@ -300,9 +325,10 @@ public class LoginFrame extends JFrame {
 		case 1: loginErrorLabel.setText("Incorrect username/password!"); break;
 		case 2: loginErrorLabel.setText("This username does not exist!"); break;
 		case 3: loginErrorLabel.setText("This username already exists!"); break;
-		case 4: loginErrorLabel.setText("Unable to connect to server!"); break;
+		case 4: loginErrorLabel.setText("This username is not allowed!"); break;
+		case 5: loginErrorLabel.setText("Unable to connect to server!"); break;
 		
-		case 5: charErrorLabel.setText("Unable to connect to server!"); break;
+		case 6: charErrorLabel.setText("Unable to connect to server!"); break;
 		
 		default: break;
 		}

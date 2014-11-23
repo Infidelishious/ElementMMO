@@ -8,9 +8,13 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.concurrent.locks.ReentrantLock;
 
+import javax.swing.JOptionPane;
+
+import com.imglow.ElementMMO.SQL;
 
 
-public class SQLManager {
+
+public class SQLManager implements SQL {
 	
 	// VARIABLES START --------------------------------------------------------
 	
@@ -171,6 +175,16 @@ public class SQLManager {
 			myPS = myConnection.prepareStatement("UPDATE users SET deathcount='" + currentDeaths + "' WHERE username='" + user + "'");
 		}
 		catch (SQLException se) { System.out.println("ERROR in addDeath: " + se.getMessage()); }
+	}
+	
+	
+	
+	// Inform user they have been disconnected
+	//	- creates message popup
+	public void disconnected ()
+	{
+		// you have been disconnected from the server
+		JOptionPane.showMessageDialog(null, "You have been disconnected from the server.", "Disconnected", JOptionPane.INFORMATION_MESSAGE);
 	}
 	
 }

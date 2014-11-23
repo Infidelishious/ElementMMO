@@ -102,24 +102,35 @@ public class TextureSingleton {
 		sunshine = new TextureRegion(temp);
 		temp = new Texture(Gdx.files.internal("images/Shop/Music.png"));
 		music = new TextureRegion(temp);
+		temp = new Texture(Gdx.files.internal("images/Shop/Hunger.png"));
+		hunger = new TextureRegion(temp);
 		shopElements = new ArrayList<TextureRegion>();
 		shopElements.add(imagination);
 		shopElements.add(giggles);
 		shopElements.add(segFaults);
 		shopElements.add(sunshine);
 		shopElements.add(music);
+		shopElements.add(hunger);
 		
 		//Adding elements in main Arraylist//
-		temp =  new Texture(Gdx.files.internal("images/Imagination.png"));
+		temp =  new Texture(Gdx.files.internal("images/Elements/Imagination.png"));
 		imagination = new TextureRegion(temp);
-		temp =  new Texture(Gdx.files.internal("images/giggles.png"));
+		temp =  new Texture(Gdx.files.internal("images/Elements/giggles.png"));
 		giggles = new TextureRegion(temp);
-		temp =  new Texture(Gdx.files.internal("images/SegFaults.png"));
+		temp =  new Texture(Gdx.files.internal("images/Elements/SegFaults.png"));
 		segFaults = new TextureRegion(temp);
+		temp = new Texture(Gdx.files.internal("images/Elements/Hunger.png"));
+		hunger = new TextureRegion(temp);
+		temp = new Texture(Gdx.files.internal("images/Elements/Music.png"));
+		music = new TextureRegion(temp);
+		temp = new Texture(Gdx.files.internal("images/Elements/Sunshine.png"));
+		sunshine = new TextureRegion(temp);
+		
 		elements = new ArrayList<TextureRegion>();
 		elements.add(imagination);
 		elements.add(giggles);
 		elements.add(segFaults);
+		elements.add(hunger);
 	}
 	
 	public void EnterBattle() {			//Changing music when entering the battle.

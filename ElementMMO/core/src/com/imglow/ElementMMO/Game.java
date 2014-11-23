@@ -26,7 +26,7 @@ public class Game implements Drawable{
 	public void init(MainClient client) {
 		this.client = client;
 		grid = new Cell[WIDTH][HEIGHT];
-		bg = new Battle();
+//		bg = new Battle();
 		
 		for(int y = 0; y < HEIGHT; y++)
 		{

@@ -19,7 +19,7 @@ public abstract class Player implements Drawable{
 	
 	int type, 
 		lw = DOWN, 
-		helth = 0;
+		health = 6;
 	
 	boolean frame1 = true, team1 = false;
 	

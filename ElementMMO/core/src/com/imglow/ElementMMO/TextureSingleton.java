@@ -143,8 +143,8 @@ public class TextureSingleton {
 		shopElements.add(giggles);
 		shopElements.add(segFaults);
 		shopElements.add(sunshine);
-		shopElements.add(music);
 		shopElements.add(hunger);
+		shopElements.add(music);
 		shopElements.add(drought);
 		shopElements.add(entropy);
 		shopElements.add(trig);
@@ -183,8 +183,8 @@ public class TextureSingleton {
 		elements.add(giggles);
 		elements.add(segFaults);
 		elements.add(sunshine);
-		elements.add(music);
 		elements.add(hunger);
+		elements.add(music);
 		elements.add(drought);
 		elements.add(entropy);
 		elements.add(trig);

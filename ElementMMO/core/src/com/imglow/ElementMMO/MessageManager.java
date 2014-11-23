@@ -111,14 +111,18 @@ public class MessageManager{
 		new Thread(output).start();
 	}
 	
-	public void sendMessageToServer(Message msg)
+	public void sendMessageToServer(final Message msg)
 	{
-		queue.add(msg);
-		
-		synchronized(msgLock)
-		{
-			msgLock.notifyAll();
-		}
+		new Thread(new Runnable(){
+			@Override
+			public void run() {
+				queue.add(msg);
+				
+				synchronized(msgLock)
+				{
+					msgLock.notifyAll();
+				}
+			}}).start();
 	}
 	
 	public boolean messageQueued()

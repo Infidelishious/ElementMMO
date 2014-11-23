@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -23,12 +24,13 @@ public class TextureSingleton {
 	public Texture white, gray;
 	public BitmapFont scoreFont, nameFont;
 	public Texture cop, spikey, chika, nakedMan;
-	public ArrayList<TextureRegion> copList, spikeyList, chikaList, nakedManList, shopElements, elements, Grass;
+	public ArrayList<TextureRegion> copList, spikeyList, chikaList, nakedManList, shopElements, elements, grassArray;
 	public TextureRegion grass, whiteGrass, blackGrass, bush, tree1, tree2, imagination, hunger, music, giggles, segFaults, sunshine, drought,
-							entropy, trig, choco, synergy, hugs;
+							entropy, trig, choco, synergy, hugs, shop;
 	
 	public Music mainMusic;
 	public Music battleMusic;
+	public Sound cannotAccess;
 	
 	protected TextureSingleton(){}
 
@@ -76,10 +78,10 @@ public class TextureSingleton {
 		tree1 = new TextureRegion(temp);
 		temp = new Texture(Gdx.files.internal("images/tree2.png"));
 		tree2 = new TextureRegion(temp);
-		Grass = new ArrayList<TextureRegion>();
-		Grass.add(grass);
-		Grass.add(whiteGrass);
-		Grass.add(blackGrass);
+		grassArray = new ArrayList<TextureRegion>();
+		grassArray.add(grass);
+		grassArray.add(whiteGrass);
+		grassArray.add(blackGrass);
 		//Done with that green shit. Not I create people for I am the CREATOR!!!!
 		for(int i = 0; i < 10; i++) {
 			copList.add(new TextureRegion(cop, i * 16, 0, 16, 21));
@@ -102,7 +104,11 @@ public class TextureSingleton {
 		////Battle music shit////
 		battleMusic = Gdx.audio.newMusic(Gdx.files.internal("sound/battle.mp3"));
 		
-		// Adding elements to shop ArrayList//
+		
+		////More music shit////
+		cannotAccess = Gdx.audio.newSound(Gdx.files.internal("sound/accessDenied.mp3"));
+		
+		// Adding elements to shop ArrayList & initalizing shop//
 		temp = new Texture(Gdx.files.internal("images/Shop/Imagination.png"));
 		imagination = new TextureRegion(temp);
 		temp = new Texture(Gdx.files.internal("images/Shop/Giggles.png"));
@@ -127,6 +133,9 @@ public class TextureSingleton {
 		synergy = new TextureRegion(temp);
 		temp = new Texture(Gdx.files.internal("images/Shop/Hugs.png"));
 		hugs = new TextureRegion(temp);
+		
+		temp = new Texture(Gdx.files.internal("images/Shop/Shoppe.png"));
+		shop = new TextureRegion(temp);
 		
 		
 		shopElements = new ArrayList<TextureRegion>();
@@ -173,11 +182,11 @@ public class TextureSingleton {
 		elements.add(imagination);
 		elements.add(giggles);
 		elements.add(segFaults);
-		elements.add(hunger);
 		elements.add(sunshine);
+		elements.add(music);
+		elements.add(hunger);
 		elements.add(drought);
 		elements.add(entropy);
-		elements.add(music);
 		elements.add(trig);
 		elements.add(choco);
 		elements.add(synergy);
@@ -194,4 +203,9 @@ public class TextureSingleton {
 		battleMusic.pause();
 		mainMusic.play();
 	}
+	
+	public void playAccessDenied() {
+		cannotAccess.play();
+	}
+	
 }

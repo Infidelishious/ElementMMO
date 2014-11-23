@@ -31,7 +31,7 @@ public class LoginFrame extends JFrame {
 	
 	// game connection
 	Socket mySocket;
-//	SQLManager mySQLManager;
+	SQLManager mySQLManager;
 	String hostname = "127.0.0.1";
 	int port = 1337;
 	
@@ -43,7 +43,8 @@ public class LoginFrame extends JFrame {
 	Image logo;
 	
 	// user data
-	String currentUser;
+	String newUser;
+	String newPW;
 	
 	// VARIABLES END --------------------------------------
 	
@@ -57,7 +58,7 @@ public class LoginFrame extends JFrame {
 		this.setMaximumSize(new Dimension(screenDim));
 		setLocation(0, 0);
 		
-//		mySQLManager = new SQLManager();
+		mySQLManager = new SQLManager();
 		
 		// main card panel
 		mainPanel = new JPanel(new CardLayout());	// holds login and char select panels as cards
@@ -84,7 +85,7 @@ public class LoginFrame extends JFrame {
 		JTextField pwField = new JTextField("(password)");
 		JButton loginButton = new JButton("Log In");
 		loginButton.setHorizontalAlignment(SwingConstants.CENTER);
-//		loginButton.addActionListener(new LoginListener(userField, pwField, true));
+		loginButton.addActionListener(new LoginListener(userField, pwField, true));
 		JButton registerButton = new JButton("Register");
 		registerButton.setHorizontalAlignment(SwingConstants.CENTER);
 		registerButton.addActionListener(new LoginListener(userField, pwField, false));
@@ -187,38 +188,52 @@ public class LoginFrame extends JFrame {
 			}
 			
 			// look for specified user's entry in player database
-//			boolean exists = mySQLManager.userExists(userAttempt);
-			
+			boolean exists = mySQLManager.userExists(userAttempt);
+			System.out.println("user exists? = " + exists);
 			// if trying to log in to existing user, verify that user actually exists
 			if (returning)
 			{
-				// verify user exists and credentials match
-//				if (exists && mySQLManager.isValidLogin(userAttempt, pwAttempt)) {
-					try {
-//						ResultSet myChar = mySQLManager.getUserEntry(userAttempt);
-//						int myCharID = myChar.getInt("char_id");
-//						startGame(userAttempt, myCharID);
+				// (only proceed in logging user in if specified username exists)
+				if (exists) {
+					// verify user exists and credentials match
+					if (mySQLManager.isValidLogin(userAttempt, pwAttempt)) {
+						try {
+							ResultSet myChar = mySQLManager.getUserEntry(userAttempt);
+							myChar.next();
+							int myCharID = myChar.getInt("char_id");
+							startGame(userAttempt, myCharID);
+						}
+						catch (Exception e) { System.out.println("ERROR GETTING PLAYER DATA"); }
 					}
-					catch (Exception e) { System.out.println("ERROR GETTING PLAYER DATA"); }
-//				}
-//				else {
-//					displayLoginError(1);
-//				}
+					else {
+						displayLoginError(1);
+					}
+				}
+				else {
+					displayLoginError(2);
+				}
 			}
 			
-			// if making new user, store new user/pw on server and signal character select screen (card)
+			// if making new user, cache username/pw and signal character select screen (card)
 			else
 			{
-				// store user/pw
-				// TODO
-				
-				// advance to char select screen
-				CardLayout mainCL = (CardLayout)mainPanel.getLayout();
-				mainCL.show(mainPanel, "charselect");
+				// (only proceed in making new user if specified username doesn't already exist)
+				if (!exists) {
+					// store user/pw
+					newUser = userAttempt;
+					newPW = pwAttempt;
+					
+					// advance to char select screen
+					CardLayout mainCL = (CardLayout)mainPanel.getLayout();
+					mainCL.show(mainPanel, "charselect");
+				}
+				else {
+					displayLoginError(3);
+				}
 			}
 			
-			// store username
-			currentUser = userAttempt;
+			// store username and pw
+//			currentUser = userAttempt;
 		}
 	}
 	
@@ -239,8 +254,11 @@ public class LoginFrame extends JFrame {
 		//public void actionPerformed (ActionEvent ae)
 		public void mouseClicked (MouseEvent me)
 		{
+			// enter new user into database
+			mySQLManager.createUser(newUser, newPW, charID);
+			
 			// start game with chosen character
-			startGame(currentUser, charID);
+			startGame(newUser, charID);
 		}
 	}
 	
@@ -261,7 +279,7 @@ public class LoginFrame extends JFrame {
 			config.height = 720;
 			config.resizable = false;
 //			System.out.println("carid: " + charID);
-			new LwjglApplication(new MainClient(mySocket, charID, currentUser), config);
+			new LwjglApplication(new MainClient(mySocket, charID, user), config);
 			
 			dispose();
 		}
@@ -273,16 +291,18 @@ public class LoginFrame extends JFrame {
 	// Display login error
 	void displayLoginError (int error)
 	{
-		if (error < 3) loginErrorLabel.setForeground(Color.RED);
+		if (error < 4) loginErrorLabel.setForeground(Color.RED);
 		else charErrorLabel.setForeground(Color.RED);
 		
 		switch (error)
 		{
 		case 0: loginErrorLabel.setText("Please fill all fields!"); break;
 		case 1: loginErrorLabel.setText("Incorrect username/password!"); break;
-		case 2: loginErrorLabel.setText("Unable to connect to server!"); break;
+		case 2: loginErrorLabel.setText("This username does not exist!"); break;
+		case 3: loginErrorLabel.setText("This username already exists!"); break;
+		case 4: loginErrorLabel.setText("Unable to connect to server!"); break;
 		
-		case 3: charErrorLabel.setText("Unable to connect to server!"); break;
+		case 5: charErrorLabel.setText("Unable to connect to server!"); break;
 		
 		default: break;
 		}

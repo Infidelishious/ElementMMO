@@ -62,7 +62,7 @@ public class Store implements Drawable, ClickListener
 		abilities.add(new TextureRegion(TextureSingleton.getInstance().white,0,0,60,20) );
 		
 		// get the negation sound
-		negatory = new Sound(TextureSingleton.getInstance().negatory);
+		// negatory = new Sound(TextureSingleton.getInstance().negatory);
 	}
 	
 	

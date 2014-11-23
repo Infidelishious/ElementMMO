@@ -6,6 +6,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class Cell implements Drawable {
 	
 	public static int GRASS = 0, LENGTH = 64;
+	public static int TREE = 1;
+	public static int BUSH = 2;
+	public static int STORE = 3;
 	int x, y, type;
 	TextureRegion spr;
 	
@@ -18,11 +21,41 @@ public class Cell implements Drawable {
 		{
 			this.spr = TextureSingleton.getInstance().grassArray.get((int)(TextureSingleton.getInstance().grassArray.size() * Math.random()));
 		}
+		else if(type == TREE)
+		{
+			int rand = (int)(Math.random()*2);
+			if(rand == 0)
+				this.spr = TextureSingleton.getInstance().tree1;
+			else
+				this.spr = TextureSingleton.getInstance().tree2;
+		}
+		else if(type == BUSH)
+		{
+			this.spr = TextureSingleton.getInstance().bush;
+		}
+		else if(type == STORE)
+		{
+			this.spr = TextureSingleton.getInstance().whiteRegion;
+		}
 	}
 
 	@Override
-	public void draw(SpriteBatch sb) {
-		sb.draw(spr, (x - Game.getInstance().dX) * Cell.LENGTH - 0.5f * Cell.LENGTH, (y - Game.getInstance().dY) * Cell.LENGTH - 0.5f * Cell.LENGTH, LENGTH, LENGTH); 
+	public void draw(SpriteBatch sb)
+	{
+		// always draw the grass underneath
+		if(type != GRASS && type != STORE)
+		{
+			sb.draw(TextureSingleton.getInstance().grass,
+					(x - Game.getInstance().dX) * Cell.LENGTH - 0.5f * Cell.LENGTH,
+					(y - Game.getInstance().dY) * Cell.LENGTH - 0.5f * Cell.LENGTH,
+					LENGTH,
+					LENGTH);
+		}
+		sb.draw(spr,
+				(x - Game.getInstance().dX) * Cell.LENGTH - 0.5f * Cell.LENGTH,
+				(y - Game.getInstance().dY) * Cell.LENGTH - 0.5f * Cell.LENGTH,
+				LENGTH,
+				LENGTH); 
 	}
 
 }

@@ -17,7 +17,10 @@ public abstract class Player implements Drawable{
 	
 	String name;
 	
-	float x, y, px, py, time = 0;
+	float y = 1;
+	float x, px, py, time = 0;
+	
+	
 	
 	int type, 
 		lw = DOWN, 

@@ -21,6 +21,7 @@ public class ChatArea implements Drawable{
 		
 			if(first) chatText += " >"; 
 			BitmapFont chatFont = TextureSingleton.getInstance().scoreFont;
+			chatFont.setColor(0.0f,0.0f,0.0f,1.0f);
 			chatFont.setScale(2.0f);
 			chatFont.draw(sb, chatText, -MainClient.WIDTH/2 + 30, -MainClient.HEIGHT/2 + 75);
 			if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER) && first != true) sendMessage(chatText);

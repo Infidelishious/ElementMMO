@@ -1,6 +1,7 @@
 package com.imglow.ElementMMO;
 
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
@@ -11,10 +12,10 @@ public class Store implements Drawable, ClickListener
 {
 	// the coordinates of where the topleft of the thing is
 	float x, y;
-	static float buttonWidth = 80;
-	static float buttonHeight = 80;
-	static float storeWidth = buttonWidth*3;
-	static float storeHeight = buttonHeight*5;
+	static final float buttonWidth = 100;
+	static final float buttonHeight = 30;
+	static final float storeWidth = buttonWidth*3 + 10*5;
+	static final float storeHeight = buttonHeight*5 + 10*6;
 	
 	static int[] moneyValues = {0,0,0,100,100,300,300,300,500,500,500,1000};
 	
@@ -35,10 +36,13 @@ public class Store implements Drawable, ClickListener
 	// that we pulled from the texturesingleton
 	
 	// these ones are grayscale
-	private ArrayList <TextureRegion> abilities;
+	private ArrayList <TextureRegion> shopElements;
+	private ArrayList <TextureRegion> boughtElements;
 	
+	public ArrayList <Button> buttons;
 	private TextureRegion usingHighlight;
 	private TextureRegion notOwnedHighlight;
+	BitmapFont moneyFont;
 	public Store(float x, float y)
 	{
 		// set up the coordinates
@@ -49,49 +53,152 @@ public class Store implements Drawable, ClickListener
 		// set up the data
 		textures = TextureSingleton.getInstance();
 		clicker = ClickController.getInstance();
+		clicker.addHandler(this);
 		game = Game.getInstance();
 		
-		currentPlayer = game.player;
+		currentPlayer = game.player;// game.player;
+		
 		// initialize all the selected to false
-		owned = currentPlayer.owned;
-		using = currentPlayer.using;
+		if(currentPlayer != null)
+		{
+			owned = currentPlayer.owned;
+			using = currentPlayer.using;
+		}
 		usingCount = 3;
 		updateUsingCount();
 		
 		// get the arraylist from textureRegion for the appropriate things
-		abilities = textures.shopElements;
+		shopElements = textures.shopElements;
+		boughtElements = textures.elements;
 		
-		// get the negation sound
-		// negatory = new Sound(TextureSingleton.getInstance().negatory);
-	}
-	
-	
-	@Override
-	public void draw(SpriteBatch sb)
-	{
-		
-		// there is also a banner on top that has width 80*3, height 144
-		// sb.draw(imagetodraw, xcoordinate, coordinate, width, height)
-		// draw the banner
-		
-		
-		// draw each button
-		for(int row = 1; row < 5; row++)
+		buttons = new ArrayList<Button>();
+		moneyFont = TextureSingleton.getInstance().scoreFont;
+		int count = 0;
+		for(int row = 0; row < 4; row ++)
 		{
 			for(int col = 0; col < 3; col++)
 			{
-				if(row*3 + col < abilities.size())
+				int rowActual = - ((row + 1)*((int)(buttonHeight) + 10) + (int)(this.y) + 5 + 40);
+				int colActual = (col)*(int)(buttonWidth + 10) + (int)(this.x) + 15;
+				TextureRegion temp;
+				if(count < 3 || owned.get(count))
 				{
-					sb.draw(abilities.get(row*3 + col),
-							(x - Game.getInstance().dX) + buttonWidth* col,
-							(y - Game.getInstance().dY) + buttonHeight*row,
-							buttonWidth,
-							buttonHeight); 
+					temp = boughtElements.get(count);
 				}
+				else
+				{
+					temp = shopElements.get(count);
+				}
+				buttons.add(new Button(temp,colActual,rowActual,buttonWidth,buttonHeight, new OnClickListener(){
+
+					@Override
+					public void onClick(Button source, Vector3 pos) {
+						for(int i = 0; i < buttons.size(); i++)
+						{
+							if(buttons.get(i) == source)
+							{
+								// we found our button index!!!
+
+								// System.out.println("inside the button wut");
+								if(owned.get(i))
+								{
+									// if we are already using it
+									if(using.get(i))
+									{
+
+										// don't do anything!!!
+										// we need at least one left
+										if(usingCount <= 1)
+										{
+											textures.playAccessDenied();
+										}
+										// get rid of it from using
+										else
+										{
+											using.set(i,false);
+										}
+									}
+									else // 
+									{
+										if(usingCount < 6)
+										{
+											using.set(i,true);
+										}
+										else
+											textures.playAccessDenied();
+									}
+								}
+								else // !owned.get(i)
+								{
+									if(currentPlayer.money < moneyValues[i])
+									{
+										textures.playAccessDenied();
+									}
+									else // if you have enuf moneys
+									{
+										owned.set(i,true);
+										buttons.get(i).spr = boughtElements.get(i);
+										if(usingCount < 6)
+										{
+											using.set(i, true);
+										}
+										currentPlayer.money -= moneyValues[i];
+									}
+								}
+							}
+							updateUsingCount();
+							// System.out.println("usingCount is " + usingCount);
+							currentPlayer.using = using;
+							currentPlayer.owned = owned;
+						}
+
+					}} )
+						);
+				count++;
 			}
+
+			
 		}
 	}
-	
+	// get the negation sound
+
+
+
+	@Override
+	public void draw(SpriteBatch sb)
+	{
+
+		// there is also a banner on top that has width 80*3, height 144
+		// sb.draw(imagetodraw, xcoordinate, coordinate, width, height)
+		
+		
+		//draw the background
+		sb.setColor(0.0f,0.0f,0.0f,1.0f);
+		sb.draw(new TextureRegion(textures.white), x, y, storeWidth, storeHeight);
+		sb.setColor(1.0f,1.0f,1.0f,1.0f);
+
+
+		// draw the banner
+		sb.draw(new TextureRegion(textures.shop), x, storeHeight/2 - 40, storeWidth, buttonHeight);
+
+		
+		// draw the money
+		moneyFont.setColor(0.0f,0.0f,0.0f,1.0f);
+		moneyFont.draw(sb , "" + currentPlayer.money , x , y + storeHeight - 15);
+		sb.setColor(1.0f,1.0f,1.0f,1.0f);
+		
+		// draw each button
+		for(int i = 0; i < buttons.size(); i++)
+		{
+			if(using.get(i))
+			{
+				sb.setColor(1.0f,1.0f,1.0f,0.7f);
+			}
+			buttons.get(i).draw(sb);
+			sb.setColor(1.0f,1.0f,1.0f,1.0f);
+		}
+	}
+
 	public void updateUsingCount()
 	{
 		usingCount = 0; 
@@ -101,176 +208,53 @@ public class Store implements Drawable, ClickListener
 				usingCount++;
 		}
 	}
-	public void calculateClick(int buttonClicked)
+	
+	public void dispose()
 	{
-		if(owned.get(buttonClicked))
+		// get rid of all the buttons
+		for(int i = 0; i < buttons.size(); i++)
 		{
-			if(using.get(buttonClicked))
-			{
-				// if there is only 1 using left
-				// then we can't get rid of it
-				if(usingCount > 1)
-				{
-					// get rid of it
-					using.set(buttonClicked,false);
-				}
-			}
-			else
-			{
-				// can't add to using
-				// if there are already 7 in using
-				if(usingCount < 7)
-				{
-					using.set(buttonClicked,true);
-				}
-				else
-					negatory.play();
-			}
+			buttons.get(i).dispose();
 		}
-		else // !owned.get(buttonClicked)
-		{
-			// if you don't have enuf moneys
-			if(currentPlayer.money < moneyValues[buttonClicked])
-			{
-				negatory.play();
-			}
-			else // if you have enuf moneys
-			{
-				owned.set(buttonClicked,true);
-				if(usingCount < 7)
-				{
-					using.set(buttonClicked, true);
-				}
-				currentPlayer.money -= moneyValues[buttonClicked];
-			}
-		}
-		// update the values
-		// based upon what transpired
-		updateUsingCount();
-		currentPlayer.using = using;
-		currentPlayer.owned = owned;
-	}
-	@Override
-	public void onClick(Vector3 clickPos) {
 		
+		// remove the reference to the store
+		game.store = null;// set game's reference to store = null
+	}
+	
+	@Override
+	public void onClick(Vector3 clickPos)
+	{
 		float xclick = clickPos.x;
 		float yclick = clickPos.y;
-		if(yclick < y)
+		if(yclick < 95 && yclick > 85)
 		{
-			// ignore
-		}
-		else if(yclick < y + buttonHeight)
-		{
-			// top banner
-		}
-		else if(yclick < y + buttonHeight*2)
-		{
-			// first row of buttons
-			if(xclick < x)
+			if(xclick > 150 && xclick < 165)
 			{
-				// ignore
-			}
-			else if(xclick < x + buttonWidth)
-			{
-				// button 1
-				calculateClick(0);
+				// kill the thing!!!
+				// System.out.println("die");
+				
+				dispose();
 				
 				
-			}
-			else if(xclick < x + buttonWidth*2)
-			{
-				// button 2
-				calculateClick(1);
-			}
-			else if(xclick < x + buttonWidth*3)
-			{
-				// button 3
-				calculateClick(2);
-			}
-		}
-		else if(yclick < y + buttonHeight*3)
-		{
-			// second row of buttons
-			if(xclick < x)
-			{
-				// ignore
-				
-			}
-			else if(xclick < x + buttonWidth)
-			{
-				// button 4
-				calculateClick(3);
-			}
-			else if(xclick < x + buttonWidth*2)
-			{
-				// button 5
-				calculateClick(4);
-			}
-			else if(xclick < x + buttonWidth*3)
-			{
-				// button 6
-				calculateClick(5);
-			}
-		}
-		else if(yclick < y + buttonHeight*4)
-		{
-			// third row of buttons
-			if(xclick < x)
-			{
-				// ignore
-			}
-			else if(xclick < x + buttonWidth)
-			{
-				// button 7
-				calculateClick(6);
-			}
-			else if(xclick < x + buttonWidth*2)
-			{
-				// button 8
-				calculateClick(7);
-			}
-			else if(xclick < x + buttonWidth*3)
-			{
-				// button 9
-				calculateClick(8);
-			}
-		}
-		else if(yclick < y + buttonHeight*5)
-		{
-			// last row of buttons
-			if(xclick < x)
-			{
-				// ignore
-			}
-			else if(xclick < x + buttonWidth)
-			{
-				// button 10
-				calculateClick(9);
-			}
-			else if(xclick < x + buttonWidth*2)
-			{
-				// button 11
-				calculateClick(10);
-			}
-			else if(xclick < x + buttonWidth*3)
-			{
-				// button 12
-				calculateClick(11);
 			}
 		}
 	}
 
 	@Override
-	public boolean isInside(Vector3 clickPos) {
+	public boolean isInside(Vector3 clickPos)
+	{
 		
 		// click exists inside the store!!!
-		
 		float xclick = clickPos.x;
 		float yclick = clickPos.y;
+		// System.out.println("xclick is " + xclick + " yclick is " + yclick);
+		// System.out.println("x is " + x + "y is " + y);
 		if(xclick > x && xclick < x + storeWidth && yclick > y && yclick < y + storeHeight)
 		{
+			// System.out.println("true\n");
 			return true;
 		}
+		// System.out.println("false\n");
 		return false;
 	}
 

@@ -13,7 +13,7 @@ public abstract class Player implements Drawable{
 			WIDTH = 64,
 			HEIGHT = 84;
 	
-	public static float SPEED = 0.1f;
+	public static float SPEED = 0.2f;
 	
 	String name;
 	
@@ -23,7 +23,7 @@ public abstract class Player implements Drawable{
 		lw = DOWN, 
 		health = 6;
 	
-	boolean frame1 = true, team1 = false;
+	boolean frame1 = true, team1 = true;
 	
 	TextureRegion spr;
 

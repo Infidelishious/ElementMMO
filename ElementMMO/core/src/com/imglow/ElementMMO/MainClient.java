@@ -23,17 +23,9 @@ public class MainClient extends ApplicationAdapter {
 
 	private Vector3 firstTouch;
 	
-	//!!!!
-	private BattleGUI bg;
-	//!!!!
-	
-	//!!!!
-	public MainClient(/*Socket s, int playerType, String name*/)
-	//!!!!
+	public MainClient(Socket s, int playerType, String name)
 	{
-		//!!!!
-//		MessageManager.getInstance().init(s);
-		//!!!!
+		MessageManager.getInstance().init(s);
 	}
 	
 	@Override
@@ -44,9 +36,6 @@ public class MainClient extends ApplicationAdapter {
 		
 		camera = new OrthographicCamera(WIDTH, HEIGHT);
 		batch = new SpriteBatch();
-		//!!!!
-		bg = new BattleGUI();
-		//!!!!
 		Game.getInstance().init(this);
 	}
 
@@ -95,7 +84,5 @@ public class MainClient extends ApplicationAdapter {
 			//char keyboard = rightInput();
 			
 		}
-	}
-	
-	
+	}	
 }

@@ -1,0 +1,46 @@
+package com.imglow.ElementMMO;
+
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector3;
+
+public abstract class Button implements ClickListener {
+	public TextureRegion spr;
+	float x, y, width, height;
+	
+	public Button(TextureRegion spr, int x, int y, int width, int height)
+	{
+		this.width = width;
+		this.height = height;
+		this.x = x;
+		this.y = y;
+		this.spr = spr;
+		ClickController.getInstance().addHandler(this);
+	}
+
+	public void draw(SpriteBatch sb)
+	{
+		sb.draw(spr, x, y, width, height);
+	}
+	
+	@Override
+	public boolean isInside(Vector3 clickPos) {
+		//System.out.println("In isInside");
+		if(clickPos.y < y + height && clickPos.y > y && clickPos.x > x && clickPos.x < x + width)
+		{
+			//System.out.println("IS isInside");
+			return true;
+		}
+		return false;
+	}
+	
+	public void dispose()
+	{
+		ClickController.getInstance().remaddHandler(this);
+	}
+
+	@Override
+	public int getDepth() {
+		return 0;
+	}
+}

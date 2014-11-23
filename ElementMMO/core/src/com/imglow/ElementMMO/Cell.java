@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Cell implements Drawable {
 	
-	public static int GRASS = 0, LENGTH = 32;
+	public static int GRASS = 0, LENGTH = 64;
 	int x, y, type;
 	TextureRegion spr;
 	
@@ -16,13 +16,13 @@ public class Cell implements Drawable {
 		this.type = type;
 		if(type == GRASS)
 		{
-			this.spr = new TextureRegion(TextureSingleton.getInstance().grass,0,0,2,2);
+			this.spr = TextureSingleton.getInstance().grass;
 		}
 	}
 
 	@Override
 	public void draw(SpriteBatch sb) {
-		sb.draw(spr, (x - Game.getInstance().dX) * Cell.LENGTH, (y - Game.getInstance().dY) * Cell.LENGTH, LENGTH, LENGTH); 
+		sb.draw(spr, (x - Game.getInstance().dX) * Cell.LENGTH - 0.5f * Cell.LENGTH, (y - Game.getInstance().dY) * Cell.LENGTH - 0.5f * Cell.LENGTH, LENGTH, LENGTH); 
 	}
 
 }

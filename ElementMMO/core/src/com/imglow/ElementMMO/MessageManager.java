@@ -12,15 +12,22 @@ import java.util.Vector;
 
 public class MessageManager{
 	private static MessageManager instance;
-	private Vector<Message> messages, queue;
+	private Vector<Message> queue;
+	private Vector<TextMessage> textMessages;
+	private Vector<StatusMessage> statusMessages;
+	private Vector<EventMessage> eventMessages ;
+	private Vector<BattleMessage> battleMessages;
 	
 	Socket s;
 	Runnable input, output;
 	Object msgLock = new Object();
 
 	protected MessageManager(){
-		messages = new Vector<Message>();
 		queue = new Vector<Message>();
+		textMessages = new Vector<TextMessage>();
+		statusMessages = new Vector<StatusMessage>();
+		eventMessages = new Vector<EventMessage>() ;
+		battleMessages = new Vector<BattleMessage>();
 	}
 
 	public static MessageManager getInstance() {
@@ -41,15 +48,22 @@ public class MessageManager{
 					int x = 2;
 					while(x == 2)
 					{
-						System.out.println( "Waiting for message" );
+//						System.out.println( "Waiting for message" );
 						try {
 							Message msg = (Message) br.readObject();
-							messages.add(msg);
+							if(msg instanceof StatusMessage)
+								statusMessages.add((StatusMessage) msg);
+							else if(msg instanceof EventMessage)
+								eventMessages.add((EventMessage) msg);
+							else if(msg instanceof BattleMessage)
+								battleMessages.add((BattleMessage) msg);
+							else
+								textMessages.add((TextMessage) msg);
 						} catch (ClassNotFoundException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-						System.out.println("Message Object Receaved");
+//						System.out.println("Message Object Receaved");
 					}
 					br.close();
 					s.close();
@@ -97,14 +111,18 @@ public class MessageManager{
 		new Thread(output).start();
 	}
 	
-	public void sendMessageToServer(Message msg)
+	public void sendMessageToServer(final Message msg)
 	{
-		queue.add(msg);
-		
-		synchronized(msgLock)
-		{
-			msgLock.notifyAll();
-		}
+		new Thread(new Runnable(){
+			@Override
+			public void run() {
+				queue.add(msg);
+				
+				synchronized(msgLock)
+				{
+					msgLock.notifyAll();
+				}
+			}}).start();
 	}
 	
 	public boolean messageQueued()
@@ -112,18 +130,63 @@ public class MessageManager{
 		return !queue.isEmpty();
 	}
 	
-	public boolean hasMessage()
+	public boolean hasStatusMessage()
 	{
-		return !messages.isEmpty();
+		return !statusMessages.isEmpty();
 	}
 
-	public Message getMessage()
+	public StatusMessage getStatusMessage()
 	{
-		if(!hasMessage())
+		if(!hasStatusMessage())
 			return null;
 		
-		Message temp = messages.firstElement();
-		messages.remove(0);
+		StatusMessage temp = statusMessages.firstElement();
+		statusMessages.remove(0);
+		return temp;
+	}
+	
+	public boolean hasEventMessage()
+	{
+		return !eventMessages.isEmpty();
+	}
+
+	public EventMessage getEventMessage()
+	{
+		if(!hasEventMessage())
+			return null;
+		
+		EventMessage temp = eventMessages.firstElement();
+		eventMessages.remove(0);
+		return temp;
+	}
+	
+	public boolean hasTextMessage()
+	{
+		return !textMessages.isEmpty();
+	}
+
+	public TextMessage getTextMessage()
+	{
+		if(!hasTextMessage())
+			return null;
+		
+		TextMessage temp = textMessages.firstElement();
+		textMessages.remove(0);
+		return temp;
+	}
+	
+	public boolean hasBattleMessage()
+	{
+		return !battleMessages.isEmpty();
+	}
+
+	public Message getBattleMessage()
+	{
+		if(!hasBattleMessage())
+			return null;
+		
+		BattleMessage temp = battleMessages.firstElement();
+		battleMessages.remove(0);
 		return temp;
 	}
 	

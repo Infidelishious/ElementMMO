@@ -3,23 +3,27 @@ package com.imglow.ElementMMO.desktop;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
+
 import com.imglow.ElementMMO.*;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+
 import java.net.Socket;
 
 import javax.imageio.ImageIO;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+
+import java.sql.*;
 
 public class LoginFrame extends JFrame {
 	
@@ -27,14 +31,15 @@ public class LoginFrame extends JFrame {
 	
 	// game connection
 	Socket mySocket;
-	//MainClient myClient;
+//	SQLManager mySQLManager;
 	String hostname = "127.0.0.1";
-	int port;
+	int port = 1337;
 	
 	// gui elements
 	JPanel mainPanel;
 	JPanel loginPanel;
-	JLabel loginLabel;
+	JLabel loginErrorLabel;
+	JLabel charErrorLabel;
 	Image logo;
 	
 	// user data
@@ -51,6 +56,8 @@ public class LoginFrame extends JFrame {
 		this.setMinimumSize(new Dimension(screenDim));
 		this.setMaximumSize(new Dimension(screenDim));
 		setLocation(0, 0);
+		
+//		mySQLManager = new SQLManager();
 		
 		// main card panel
 		mainPanel = new JPanel(new CardLayout());	// holds login and char select panels as cards
@@ -71,16 +78,18 @@ public class LoginFrame extends JFrame {
 		JPanel buttonsPanel = new JPanel(new GridLayout(1,2));	// holds buttons
 		
 		// login panel elements
-		loginLabel = new JLabel("Log In:");
+		JLabel loginLabel = new JLabel("Log In:");
 		loginLabel.setForeground(Color.WHITE);
 		JTextField userField = new JTextField("(username)");
 		JTextField pwField = new JTextField("(password)");
 		JButton loginButton = new JButton("Log In");
 		loginButton.setHorizontalAlignment(SwingConstants.CENTER);
-		loginButton.addActionListener(new LoginListener(userField, pwField, true));
+//		loginButton.addActionListener(new LoginListener(userField, pwField, true));
 		JButton registerButton = new JButton("Register");
 		registerButton.setHorizontalAlignment(SwingConstants.CENTER);
 		registerButton.addActionListener(new LoginListener(userField, pwField, false));
+		loginErrorLabel = new JLabel(".");
+		loginErrorLabel.setForeground(Color.BLACK);
 		
 		// build login panel
 		buttonsPanel.add(loginButton);
@@ -93,7 +102,8 @@ public class LoginFrame extends JFrame {
 		stuffPanel.add(buttonsPanel, BorderLayout.SOUTH);
 		stuffPanel.setOpaque(false);
 		loginPanel.add(stuffPanel, BorderLayout.CENTER);
-		loginPanel.setBorder(new EmptyBorder(220, 420, 350, 420));
+		loginPanel.add(loginErrorLabel, BorderLayout.SOUTH);
+		loginPanel.setBorder(new EmptyBorder(220, 420, 330, 420));
 		loginPanel.setBackground(Color.BLACK);
 		loginPanel.repaint();
 		
@@ -107,6 +117,8 @@ public class LoginFrame extends JFrame {
 		chooseLabel.setForeground(Color.WHITE);
 		chooseLabel.setBorder(new EmptyBorder(20, 20, 50, 20));
 		chooseLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		charErrorLabel = new JLabel(".");
+		charErrorLabel.setForeground(Color.BLACK);
 		
 		// build character select panel
 		JLabel[] charLabels = new JLabel[4];
@@ -114,9 +126,9 @@ public class LoginFrame extends JFrame {
 		Image scaledImage;
 		try {
 			for (int i=0; i<charLabels.length; i++) {
-				if (i==0) unscaledImage = ImageIO.read(new File("Spikey.png"));
-				else if (i==1) unscaledImage = ImageIO.read(new File("chika.png"));
-				else if (i==2) unscaledImage = ImageIO.read(new File("cop.png"));
+				if (i== 1) unscaledImage = ImageIO.read(new File("Spikey.png"));
+				else if (i==2) unscaledImage = ImageIO.read(new File("chika.png"));
+				else if (i==0) unscaledImage = ImageIO.read(new File("cop.png"));
 				else unscaledImage = ImageIO.read(new File("naked_man.png"));
 				scaledImage = unscaledImage.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
 				charLabels[i] = new JLabel(new ImageIcon(scaledImage));
@@ -131,6 +143,7 @@ public class LoginFrame extends JFrame {
 		charSelectStuffPanel.add(charPanel, BorderLayout.CENTER);
 		charSelectStuffPanel.setBackground(Color.BLACK);
 		charSelectPanel.add(charSelectStuffPanel, BorderLayout.CENTER);
+		charSelectPanel.add(charErrorLabel, BorderLayout.SOUTH);
 		charSelectPanel.setBorder(new EmptyBorder(120, 350, 200, 350));
 		charSelectPanel.setBackground(Color.BLACK);
 		
@@ -169,19 +182,31 @@ public class LoginFrame extends JFrame {
 			
 			// if at least one is empty or unchanged, display error
 			if (userAttempt.equals("") || userAttempt.equals("(username)") || pwAttempt.equals("") || pwAttempt.equals("(password)")) {
-				displayLoginError();
+				displayLoginError(0);
 				return;
 			}
 			
-			// if returning user, verify that user actually exists
+			// look for specified user's entry in player database
+//			boolean exists = mySQLManager.userExists(userAttempt);
+			
+			// if trying to log in to existing user, verify that user actually exists
 			if (returning)
 			{
 				// verify user exists and credentials match
-				// TODO
-				
+//				if (exists && mySQLManager.isValidLogin(userAttempt, pwAttempt)) {
+					try {
+//						ResultSet myChar = mySQLManager.getUserEntry(userAttempt);
+//						int myCharID = myChar.getInt("char_id");
+//						startGame(userAttempt, myCharID);
+					}
+					catch (Exception e) { System.out.println("ERROR GETTING PLAYER DATA"); }
+//				}
+//				else {
+//					displayLoginError(1);
+//				}
 			}
 			
-			// if new user, store new user/pw on server and signal character select screen (card)
+			// if making new user, store new user/pw on server and signal character select screen (card)
 			else
 			{
 				// store user/pw
@@ -203,45 +228,64 @@ public class LoginFrame extends JFrame {
 	class CharSelectListener extends MouseAdapter {
 		
 		int charID;
-		LoginFrame introFrame;
 
 		// Constructor
 		public CharSelectListener (int charID, LoginFrame introFrame)
 		{
 			this.charID = charID;
-			this.introFrame = introFrame;
 		}
 		
 		// Override actionperformed
 		//public void actionPerformed (ActionEvent ae)
 		public void mouseClicked (MouseEvent me)
 		{
-			try {
-				// initialize socket
-				mySocket = new Socket(hostname, port);
-				
-				// make this frame invisible
-				// TODO
-				introFrame.setVisible(false);
-				
-				// start main client
-				LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-				config.width = 1280;
-				config.height = 720;
-				config.resizable = false;
-				new LwjglApplication(new MainClient(mySocket, charID, currentUser), config);
-			}
-			catch (IOException ioe) { System.out.println("IOException in CharSelectListener: " + ioe.getMessage()); }
+			// start game with chosen character
+			startGame(currentUser, charID);
 		}
 	}
 	
 	
 	
-	// Display login error
-	void displayLoginError ()
+	// Start main game client
+	void startGame (String user, int charID)
 	{
-		loginLabel.setText("Log In: (Please fill all fields)");
-		loginLabel.setForeground(Color.RED);
+		try {
+			// initialize socket
+			mySocket = new Socket(hostname, port);
+
+			// make this frame invisible
+			setVisible(false);
+			
+			LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+			config.width = 1280;
+			config.height = 720;
+			config.resizable = false;
+//			System.out.println("carid: " + charID);
+			new LwjglApplication(new MainClient(mySocket, charID, currentUser), config);
+			
+			dispose();
+		}
+		catch (IOException ioe) { System.out.println("IOException in CharSelectListener: " + ioe.getMessage()); }
+	}
+	
+	
+	
+	// Display login error
+	void displayLoginError (int error)
+	{
+		if (error < 3) loginErrorLabel.setForeground(Color.RED);
+		else charErrorLabel.setForeground(Color.RED);
+		
+		switch (error)
+		{
+		case 0: loginErrorLabel.setText("Please fill all fields!"); break;
+		case 1: loginErrorLabel.setText("Incorrect username/password!"); break;
+		case 2: loginErrorLabel.setText("Unable to connect to server!"); break;
+		
+		case 3: charErrorLabel.setText("Unable to connect to server!"); break;
+		
+		default: break;
+		}
 	}
 	
 	

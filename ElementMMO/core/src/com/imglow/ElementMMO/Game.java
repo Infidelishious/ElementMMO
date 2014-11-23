@@ -2,6 +2,8 @@ package com.imglow.ElementMMO;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -19,14 +21,14 @@ public class Game implements Drawable{
 	
 	private static Game instance;
 	
-	private BattleGUI bg;
+	private Battle bg;
 
 	protected Game(){}
 	
 	public void init(MainClient client) {
 		this.client = client;
 		grid = new Cell[WIDTH][HEIGHT];
-		bg = new BattleGUI();
+//		bg = new Battle();
 		
 		for(int y = 0; y < HEIGHT; y++)
 		{
@@ -35,6 +37,7 @@ public class Game implements Drawable{
 				grid[x][y] = new Cell(x,y,Cell.GRASS);
 			}
 		}
+		
 	}
 	
 	public static Game getInstance() {
@@ -56,6 +59,18 @@ public class Game implements Drawable{
 		
 		//if battle draw battle
 		
-			bg.draw(sb);
+		//bg.draw(sb);
+		
+		if(Gdx.input.isKeyPressed(Input.Keys.W))
+			player.move(Player.UP);
+		if(Gdx.input.isKeyPressed(Input.Keys.S))
+			player.move(Player.DOWN);
+		if(Gdx.input.isKeyPressed(Input.Keys.D))
+			player.move(Player.RIGHT);
+		if(Gdx.input.isKeyPressed(Input.Keys.A))
+			player.move(Player.LEFT);
+		
+		if(player != null)
+			player.draw(sb);
 	}
 }

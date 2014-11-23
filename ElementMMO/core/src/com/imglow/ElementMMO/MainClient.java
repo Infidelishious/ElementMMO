@@ -23,9 +23,14 @@ public class MainClient extends ApplicationAdapter {
 
 	private Vector3 firstTouch;
 	
+	public MainClient()
+	{
+	}
+	
 	public MainClient(Socket s, int playerType, String name)
 	{
 		MessageManager.getInstance().init(s);
+		Game.getInstance().player = new CurrentPlayer(playerType, name);
 	}
 	
 	@Override

@@ -15,9 +15,6 @@ public class BattleGUI implements Drawable
 	@Override
 	public void draw(SpriteBatch sb) 
 	{
-		System.out.println("file loaded");
-		FileHandle f = Gdx.files.internal("images/tree1.png");
-		Texture t = new Texture(f);
-		sb.draw(t, 0, 0);
+		sb.draw(TextureSingleton.getInstance().tree1, 0, 0);
 	}
 }

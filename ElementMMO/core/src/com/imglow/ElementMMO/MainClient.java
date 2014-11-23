@@ -23,20 +23,30 @@ public class MainClient extends ApplicationAdapter {
 
 	private Vector3 firstTouch;
 	
-	public MainClient(Socket s, int playerType, String name)
+	//!!!!
+	private BattleGUI bg;
+	//!!!!
+	
+	//!!!!
+	public MainClient(/*Socket s, int playerType, String name*/)
+	//!!!!
 	{
-		MessageManager.getInstance().init(s);
+		//!!!!
+//		MessageManager.getInstance().init(s);
+		//!!!!
 	}
 	
 	@Override
 	public void create () {
 		thiss = this; 
 		ClickController.getInstance().initalize(this);
-		batch = new SpriteBatch();
 		initalizeAssets();
-
+		
 		camera = new OrthographicCamera(WIDTH, HEIGHT);
 		batch = new SpriteBatch();
+		//!!!!
+		bg = new BattleGUI();
+		//!!!!
 		Game.getInstance().init(this);
 	}
 

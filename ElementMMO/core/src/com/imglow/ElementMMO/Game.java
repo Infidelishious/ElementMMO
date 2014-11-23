@@ -19,14 +19,14 @@ public class Game implements Drawable{
 	
 	private static Game instance;
 	
-	private BattleGUI bg;
+	private Battle bg;
 
 	protected Game(){}
 	
 	public void init(MainClient client) {
 		this.client = client;
 		grid = new Cell[WIDTH][HEIGHT];
-		bg = new BattleGUI();
+		bg = new Battle();
 		
 		for(int y = 0; y < HEIGHT; y++)
 		{

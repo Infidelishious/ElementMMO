@@ -10,10 +10,10 @@ public abstract class Player implements Drawable{
 			RIGHT = 2, 
 			DOWN = 3, 
 			NOT_MOVING = 4, 
-			WIDTH = 32,
-			HEIGHT = 42;
+			WIDTH = 64,
+			HEIGHT = 84;
 	
-	public static float SPEED = 0.05f;
+	public static float SPEED = 0.1f;
 	
 	float x, y, px, py, time = 0;
 	
@@ -28,9 +28,9 @@ public abstract class Player implements Drawable{
 	protected void updateSprite() {
 		TextureSingleton ts = TextureSingleton.getInstance();
 		time++;
-		time %= 10;
+		time %= 14;
 		
-		if(time < 5)
+		if(time < 7)
 			frame1 = true;
 		else
 			frame1 = false;

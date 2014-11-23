@@ -48,6 +48,6 @@ public class Button implements ClickListener {
 
 	@Override
 	public void onClick(Vector3 clickPos) {
-		l.onClick(clickPos);
+		l.onClick(this, clickPos);
 	}
 }

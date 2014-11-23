@@ -56,8 +56,7 @@ public class LoginFrame extends JFrame {
 		super("Element MMO - Login");
 		Dimension screenDim = new Dimension(1280, 720);
 		setSize(screenDim);
-		this.setMinimumSize(new Dimension(screenDim));
-		this.setMaximumSize(new Dimension(screenDim));
+		setResizable(false);
 		setLocation(0, 0);
 		
 		mySQLManager = new SQLManager();
@@ -84,7 +83,11 @@ public class LoginFrame extends JFrame {
 		JLabel loginLabel = new JLabel("Log In:");
 		loginLabel.setForeground(Color.WHITE);
 		JTextField userField = new JTextField("(username)");
+		userField.setForeground(Color.GRAY);
+		userField.addFocusListener(new LoginFocusListener(userField, userField.getText()));
 		JTextField pwField = new JTextField("(password)");
+		pwField.setForeground(Color.GRAY);
+		pwField.addFocusListener(new LoginFocusListener(pwField, pwField.getText()));
 		JButton loginButton = new JButton("Log In");
 		loginButton.setHorizontalAlignment(SwingConstants.CENTER);
 		loginButton.addActionListener(new LoginListener(userField, pwField, true));
@@ -290,6 +293,45 @@ public class LoginFrame extends JFrame {
 			// store username and pw
 //			currentUser = userAttempt;
 		}
+	}
+	
+	
+	
+	// Login focus listener
+	class LoginFocusListener implements FocusListener {
+		
+		JTextField myJTF;
+		String defaultMsg;
+		
+		// Constructor
+		public LoginFocusListener (JTextField myJTF, String defaultMsg)
+		{
+			this.myJTF = myJTF;
+			this.defaultMsg = defaultMsg;
+		}
+		
+		// Gain focus
+		public void focusGained (FocusEvent e)
+		{
+			// change color to black
+			myJTF.setForeground(Color.BLACK);
+			
+			// if text field contains default message, wipe text from text field
+			if (myJTF.getText().equals(defaultMsg)) {
+				myJTF.setText("");
+			}
+		}
+		
+		// Lose focus
+		public void focusLost (FocusEvent e)
+		{
+			// if empty, repopulate with default message and set text color back to gray
+			if (myJTF.getText().equals("")) {
+				myJTF.setForeground(Color.GRAY);
+				myJTF.setText(defaultMsg);
+			}
+		}
+		
 	}
 	
 	

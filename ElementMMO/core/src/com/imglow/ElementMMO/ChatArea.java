@@ -150,29 +150,56 @@ public class ChatArea implements Drawable{
 							// not proper format!!
 							msg.msg = chatText2;
 						}
-						else // there is a slash!!
+						else // there is a second slash!!
 						{
 							// everything after the second slash is the message
-							String messageText = chatText2.substring(chatText2.indexOf("/",4));
+							msg.msg = chatText2.substring(chatText2.indexOf("/",4));
 							String name = "";
 							int indexHold = 4;
+							// boolean correctFormat = false;
+							ArrayList<String> peopleToMessage = new ArrayList<String>();
+							
 							while(indexHold != -1 && chatText2.indexOf(",", indexHold) != -1)
 							{
 								// the name is everything from indexHold to the comma
-								name = chatText2.substring(indexHold, chatText2.indexOf(",",indexHold));
+								for(int i = indexHold; i < chatText2.indexOf(indexHold,chatText2.indexOf(",",indexHold) ); i++)
+								{
+									if(!Character.isWhitespace(chatText2.charAt(i)))
+									{
+										name += chatText2.substring(i,i+1);
+									}
+								}
+								peopleToMessage.add(name);
+								// name = "";
 								
 								if(chatText2.indexOf(",",indexHold+1) == -1)
 								{
 									// do the /
-									name = chatText2.substring(indexHold, chatText2.indexOf("/",indexHold));
+									// go get it
+									// it is guaranteed
+									// to exist
+									
+									for(int i = indexHold; i < chatText2.indexOf(indexHold,chatText2.indexOf("//",indexHold) ); i++)
+									{
+										if(!Character.isWhitespace(chatText2.charAt(i)))
+										{
+											name+=chatText2.substring(i,i+1);
+										}
+									}
+									// correctFormat = true;
+									peopleToMessage.add(name);
+									// name = "";
+									// name = chatText2.substring(indexHold, chatText2.indexOf("/",indexHold));
 								}
 								System.out.println("message sent to " + name);
 								msg.to = name;
-								msg.msg = messageText;
+								// msg.msg = messageText;
 								MessageManager.getInstance().sendMessageToServer(msg);
-								
+								// refresh for looping
+								name = "";
 								indexHold = chatText2.indexOf(",",indexHold + 1);
 							}
+							
 						}
 					}
 				}

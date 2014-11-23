@@ -233,9 +233,6 @@ public class CurrentPlayer extends Player{
 		
 		Game.getInstance().dX = x;
 		Game.getInstance().dY = y;
-
-			
-		
 		
 		if(team1)
 			sb.setColor(0.5f,0.5f,1f,1f);
@@ -245,10 +242,6 @@ public class CurrentPlayer extends Player{
 		sb.draw(spr, - WIDTH / 2.0f, - HEIGHT / 2.0f, WIDTH, HEIGHT);
 
 		sb.setColor(Color.WHITE);
-		if(Game.getInstance().store !=null)
-		{
-			
-		}
 
 		sendPosToServer();
 	}

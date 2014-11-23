@@ -4,12 +4,13 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Game implements Drawable{
-	public static int WIDTH = 100, HEIGHT = 200;
+	public static int WIDTH = 40, HEIGHT = 80;
 	
 	float dX = 1, dY = 1;
 	Cell[][] grid;
@@ -116,16 +117,7 @@ public class Game implements Drawable{
 		{
 			for(int x = 0; x < WIDTH; x++)
 			{
-				if(y <= HEIGHT / 4)
-				{
-					sb.setColor(0.7f,0.7f,1.0f,1.0f);
-				}
-				if(y >= 3*HEIGHT / 4)
-				{
-					sb.setColor(1.0f,0.7f,0.7f,1.0f);
-				}
 				grid[x][y].draw(sb);
-				sb.setColor(1.0f,1.0f,1.0f,1.0f);
 			}
 		}
 		

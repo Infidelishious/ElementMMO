@@ -1,5 +1,6 @@
 package com.imglow.ElementMMO;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
@@ -42,20 +43,43 @@ public class Cell implements Drawable {
 	@Override
 	public void draw(SpriteBatch sb)
 	{
+		float dx = Game.getInstance().dX,
+				dy = Game.getInstance().dY;
+		
+		float tempx = (x - dx) * Cell.LENGTH - 0.5f * Cell.LENGTH,
+				tempy = (y - dy) * Cell.LENGTH - 0.5f * Cell.LENGTH;
+		
+		
+		if(tempx > MainClient.WIDTH/2 || tempy > MainClient.HEIGHT /2 ||
+				tempx + LENGTH < -MainClient.WIDTH/2 || tempy + LENGTH < -MainClient.HEIGHT/2)
+			return;
+		
+		if(y <= Game.HEIGHT / 4)
+		{
+			sb.setColor(0.7f,0.7f,1.0f,1.0f);
+		}
+		
+		if(y >= 3*Game.HEIGHT / 4)
+		{
+			sb.setColor(1.0f,0.7f,0.7f,1.0f);
+		}
+		
 		// always draw the grass underneath
 		if(type != GRASS && type != STORE)
 		{
 			sb.draw(TextureSingleton.getInstance().grass,
-					(x - Game.getInstance().dX) * Cell.LENGTH - 0.5f * Cell.LENGTH,
-					(y - Game.getInstance().dY) * Cell.LENGTH - 0.5f * Cell.LENGTH,
+					tempx,
+					tempy,
 					LENGTH,
 					LENGTH);
 		}
 		sb.draw(spr,
-				(x - Game.getInstance().dX) * Cell.LENGTH - 0.5f * Cell.LENGTH,
-				(y - Game.getInstance().dY) * Cell.LENGTH - 0.5f * Cell.LENGTH,
+				tempx,
+				tempy,
 				LENGTH,
 				LENGTH); 
+		
+		sb.setColor(Color.WHITE);
 	}
 
 }

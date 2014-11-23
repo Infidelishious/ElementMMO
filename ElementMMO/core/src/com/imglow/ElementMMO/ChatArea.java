@@ -10,6 +10,8 @@ public class ChatArea implements Drawable{
 	public void draw(SpriteBatch sb) {
 		BitmapFont chatFont = TextureSingleton.getInstance().scoreFont;
 		String chatText = new String("");
+		chatFont.setScale(2.0f);
+		chatFont.draw(sb, chatText, -MainClient.WIDTH/2 + 50, -MainClient.HEIGHT/2 + 200);
 	} 
 
 }

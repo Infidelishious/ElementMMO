@@ -16,7 +16,7 @@ public class Cell implements Drawable {
 		this.type = type;
 		if(type == GRASS)
 		{
-			this.spr = TextureSingleton.getInstance().grass;
+			this.spr = TextureSingleton.getInstance().grassArray.get((int)(TextureSingleton.getInstance().grassArray.size() * Math.random()));
 		}
 	}
 

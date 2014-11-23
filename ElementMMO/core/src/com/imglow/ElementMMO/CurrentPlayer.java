@@ -2,6 +2,7 @@ package com.imglow.ElementMMO;
 
 import java.util.ArrayList;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class CurrentPlayer extends Player{
@@ -94,7 +95,14 @@ public class CurrentPlayer extends Player{
 		Game.getInstance().dX = x;
 		Game.getInstance().dY = y;
 		
+		if(team1)
+			sb.setColor(0.5f,0.5f,1f,1f);
+		else
+			sb.setColor(1f,0.5f,0.5f,1f);
+		
 		sb.draw(spr, - WIDTH / 2.0f, - HEIGHT / 2.0f, WIDTH, HEIGHT);
+		
+		sb.setColor(Color.WHITE);
 		
 		sendPosToServer();
 	}

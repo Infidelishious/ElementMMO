@@ -10,10 +10,20 @@ public class Battle implements Drawable
 	TextureRegion currentPlayerImage;
 	TextureRegion otherPlayerImage;
 	
-	Texture[] currentPlayerHealthImages;
-	Texture[] otherPlayerHealthImages;
+	Texture currentPlayerHeartImage1;
+	Texture currentPlayerHeartImage2;
+	Texture currentPlayerHeartImage3;
+
+	Texture otherPlayerHeartImage1;
+	Texture otherPlayerHeartImage2;
+	Texture otherPlayerHeartImage3;
 	
-	Texture[] playerInventoryImages;
+	Texture currentPlayerInventoryImage1;
+	Texture currentPlayerInventoryImage2;
+	Texture currentPlayerInventoryImage3;
+	Texture currentPlayerInventoryImage4;
+	Texture currentPlayerInventoryImage5;
+	Texture currentPlayerInventoryImage6;
 	
 	TextureRegion currentPlayerBattleElementImage;
 	TextureRegion otherPlayerBattleElementImage;
@@ -28,11 +38,7 @@ public class Battle implements Drawable
 		this.sb = sb;
 		this.currentPlayer = currentPlayer;
 		this.otherPlayer = otherPlayer;
-		
-		currentPlayerHealthImages = new Texture[3];
-		otherPlayerHealthImages = new Texture[3];
-		playerInventoryImages = new Texture[6];
-		
+			
 		//load the players information into the GUI.
 		
 		//client-event of choosing an element to use is sent to the server.
@@ -47,6 +53,7 @@ public class Battle implements Drawable
 	@Override
 	public void draw(SpriteBatch sb) 
 	{
+		assignTextures();
 		//draw window
 		
 		sb.draw(TextureSingleton.getInstance().white, -MainClient.WIDTH/4, -MainClient.HEIGHT/4, MainClient.WIDTH/2, MainClient.HEIGHT/2);		
@@ -68,13 +75,13 @@ public class Battle implements Drawable
 		Texture tempHalfHeartTexture = new Texture(Gdx.files.internal("half_heart.jpg"));
 		Texture tempNoHeartTexture = new Texture(Gdx.files.internal("no_heart.jpg"));
 		//this player
-		sb.draw(tempFullHeartTexture, -MainClient.WIDTH/4+10, 100, 16, 16);
-		sb.draw(tempFullHeartTexture, -MainClient.WIDTH/4+30, 100, 16, 16);
-		sb.draw(tempFullHeartTexture, -MainClient.WIDTH/4+50, 100, 16, 16);
+		sb.draw(currentPlayerHeartImage1, -MainClient.WIDTH/4+10, 100, 16, 16);
+		sb.draw(currentPlayerHeartImage2, -MainClient.WIDTH/4+30, 100, 16, 16);
+		sb.draw(currentPlayerHeartImage3, -MainClient.WIDTH/4+50, 100, 16, 16);
 		//other player
-		sb.draw(tempFullHeartTexture, MainClient.WIDTH/4-45, 100, 16, 16);
-		sb.draw(tempFullHeartTexture, MainClient.WIDTH/4-65, 100, 16, 16);
-		sb.draw(tempFullHeartTexture, MainClient.WIDTH/4-85, 100, 16, 16);
+		sb.draw(otherPlayerHeartImage1, MainClient.WIDTH/4-45, 100, 16, 16);
+		sb.draw(otherPlayerHeartImage2, MainClient.WIDTH/4-65, 100, 16, 16);
+		sb.draw(otherPlayerHeartImage3, MainClient.WIDTH/4-85, 100, 16, 16);
 
 		//draw space for element slots
 		sb.draw(new Texture(Gdx.files.internal("grey.jpg")), -MainClient.WIDTH/4+150, -MainClient.HEIGHT/4+10, MainClient.WIDTH/4, MainClient.HEIGHT/4-50);
@@ -100,30 +107,90 @@ public class Battle implements Drawable
 		otherPlayerImage = TextureSingleton.getInstance().playerSprites.get(otherPlayer.type).get(TextureSingleton.STAND);
 		
 		//assign health amounts
-		currentPlayerHealthImages = new Texture[3];
+
 		//assigns hearts left to right
-		switch(currentPlayer.helth)
+		switch(currentPlayer.health)
 		{
 			case 0:
+				currentPlayerHeartImage1 = new Texture(Gdx.files.internal("no_heart.jpg"));
+				currentPlayerHeartImage2 = new Texture(Gdx.files.internal("no_heart.jpg"));
+				currentPlayerHeartImage3 = new Texture(Gdx.files.internal("no_heart.jpg"));
 				break;
 			case 1:
+				currentPlayerHeartImage1 = new Texture(Gdx.files.internal("half_heart.jpg"));
+				currentPlayerHeartImage2 = new Texture(Gdx.files.internal("no_heart.jpg"));
+				currentPlayerHeartImage3 = new Texture(Gdx.files.internal("no_heart.jpg"));
 				break;
 			case 2:
+				currentPlayerHeartImage1 = new Texture(Gdx.files.internal("full_heart.jpg"));
+				currentPlayerHeartImage2 = new Texture(Gdx.files.internal("no_heart.jpg"));
+				currentPlayerHeartImage3 = new Texture(Gdx.files.internal("no_heart.jpg"));
 				break;
 			case 3:
+				currentPlayerHeartImage1 = new Texture(Gdx.files.internal("full_heart.jpg"));
+				currentPlayerHeartImage2 = new Texture(Gdx.files.internal("half_heart.jpg"));
+				currentPlayerHeartImage3 = new Texture(Gdx.files.internal("no_heart.jpg"));
 				break;
 			case 4:
+				currentPlayerHeartImage1 = new Texture(Gdx.files.internal("full_heart.jpg"));
+				currentPlayerHeartImage2 = new Texture(Gdx.files.internal("full_heart.jpg"));
+				currentPlayerHeartImage3 = new Texture(Gdx.files.internal("no_heart.jpg"));
 				break;
 			case 5: 
+				currentPlayerHeartImage1 = new Texture(Gdx.files.internal("full_heart.jpg"));
+				currentPlayerHeartImage2 = new Texture(Gdx.files.internal("full_heart.jpg"));
+				currentPlayerHeartImage3 = new Texture(Gdx.files.internal("half_heart.jpg"));
 				break;
 			case 6:
+				currentPlayerHeartImage1 = new Texture(Gdx.files.internal("full_heart.jpg"));
+				currentPlayerHeartImage2 = new Texture(Gdx.files.internal("full_heart.jpg"));
+				currentPlayerHeartImage3 = new Texture(Gdx.files.internal("full_heart.jpg"));
 				break;
 		}
 		
-		otherPlayerHealthImages = new Texture[3];
+		switch(otherPlayer.health)
+		{
+			case 0:
+				otherPlayerHeartImage1 = new Texture(Gdx.files.internal("no_heart.jpg"));
+				otherPlayerHeartImage2 = new Texture(Gdx.files.internal("no_heart.jpg"));
+				otherPlayerHeartImage3 = new Texture(Gdx.files.internal("no_heart.jpg"));
+				break;
+			case 1:
+				otherPlayerHeartImage1 = new Texture(Gdx.files.internal("half_heart.jpg"));
+				otherPlayerHeartImage2 = new Texture(Gdx.files.internal("no_heart.jpg"));
+				otherPlayerHeartImage3 = new Texture(Gdx.files.internal("no_heart.jpg"));
+				break;
+			case 2:
+				otherPlayerHeartImage1 = new Texture(Gdx.files.internal("full_heart.jpg"));
+				otherPlayerHeartImage2 = new Texture(Gdx.files.internal("no_heart.jpg"));
+				otherPlayerHeartImage3 = new Texture(Gdx.files.internal("no_heart.jpg"));
+				break;
+			case 3:
+				otherPlayerHeartImage1 = new Texture(Gdx.files.internal("full_heart.jpg"));
+				otherPlayerHeartImage2 = new Texture(Gdx.files.internal("half_heart.jpg"));
+				otherPlayerHeartImage3 = new Texture(Gdx.files.internal("no_heart.jpg"));
+				break;
+			case 4:
+				otherPlayerHeartImage1 = new Texture(Gdx.files.internal("full_heart.jpg"));
+				otherPlayerHeartImage2 = new Texture(Gdx.files.internal("full_heart.jpg"));
+				otherPlayerHeartImage3 = new Texture(Gdx.files.internal("no_heart.jpg"));
+				break;
+			case 5: 
+				otherPlayerHeartImage1 = new Texture(Gdx.files.internal("full_heart.jpg"));
+				otherPlayerHeartImage2 = new Texture(Gdx.files.internal("full_heart.jpg"));
+				otherPlayerHeartImage3 = new Texture(Gdx.files.internal("half_heart.jpg"));
+				break;
+			case 6:
+				otherPlayerHeartImage1 = new Texture(Gdx.files.internal("full_heart.jpg"));
+				otherPlayerHeartImage2 = new Texture(Gdx.files.internal("full_heart.jpg"));
+				otherPlayerHeartImage3 = new Texture(Gdx.files.internal("full_heart.jpg"));
+				break;
+		}
+		
+//		otherPlayerHealthImages = new Texture[3];
 		
 		//assign element textures
-		playerInventoryImages = new Texture[6];
+//		playerInventoryImages = new Texture[6];
 		
 		//assign battle element slots
 		currentPlayerBattleElementImage = TextureSingleton.getInstance().playerSprites.get(currentPlayer.type).get(TextureSingleton.STAND);

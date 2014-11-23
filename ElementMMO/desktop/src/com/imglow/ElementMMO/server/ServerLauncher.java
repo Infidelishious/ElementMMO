@@ -19,6 +19,7 @@ public class ServerLauncher {
 	Vector<EventMessage> eventMessages ;
 	Vector<BattleMessage> battleMessages;
 	Vector<ServerThread> serverThreads;
+	Vector<Message> playerPositions;
 	Object msgLock = new Object();
 	Runnable think, output;
 
@@ -82,6 +83,11 @@ public class ServerLauncher {
 					while(hasBattleMessage())
 					{
 						sendMessage(getBattleMessage());
+					}
+					
+					while(hasTextMessage())
+					{
+						sendMessage(getTextMessage());
 					}
 
 

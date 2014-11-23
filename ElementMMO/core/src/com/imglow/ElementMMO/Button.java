@@ -4,12 +4,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
 
-public abstract class Button implements ClickListener {
+public class Button implements ClickListener {
 	public TextureRegion spr;
 	float x, y, width, height;
+	private OnClickListener l;
 	
-	public Button(TextureRegion spr, int x, int y, int width, int height)
+	public Button(TextureRegion spr, int x, int y, int width, int height, OnClickListener l)
 	{
+		this.l = l;
 		this.width = width;
 		this.height = height;
 		this.x = x;
@@ -42,5 +44,10 @@ public abstract class Button implements ClickListener {
 	@Override
 	public int getDepth() {
 		return 0;
+	}
+
+	@Override
+	public void onClick(Vector3 clickPos) {
+		l.onClick(clickPos);
 	}
 }

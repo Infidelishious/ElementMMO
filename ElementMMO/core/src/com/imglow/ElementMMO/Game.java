@@ -38,7 +38,6 @@ public class Game implements Drawable{
 			}
 		}
 		
-		player = new CurrentPlayer();
 	}
 	
 	public static Game getInstance() {
@@ -70,7 +69,8 @@ public class Game implements Drawable{
 			player.move(Player.RIGHT);
 		if(Gdx.input.isKeyPressed(Input.Keys.A))
 			player.move(Player.LEFT);
-			
-		player.draw(sb);
+		
+		if(player != null)
+			player.draw(sb);
 	}
 }

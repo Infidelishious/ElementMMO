@@ -126,9 +126,9 @@ public class LoginFrame extends JFrame {
 		Image scaledImage;
 		try {
 			for (int i=0; i<charLabels.length; i++) {
-				if (i==0) unscaledImage = ImageIO.read(new File("Spikey.png"));
-				else if (i==1) unscaledImage = ImageIO.read(new File("chika.png"));
-				else if (i==2) unscaledImage = ImageIO.read(new File("cop.png"));
+				if (i== 1) unscaledImage = ImageIO.read(new File("Spikey.png"));
+				else if (i==2) unscaledImage = ImageIO.read(new File("chika.png"));
+				else if (i==0) unscaledImage = ImageIO.read(new File("cop.png"));
 				else unscaledImage = ImageIO.read(new File("naked_man.png"));
 				scaledImage = unscaledImage.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
 				charLabels[i] = new JLabel(new ImageIcon(scaledImage));
@@ -260,7 +260,10 @@ public class LoginFrame extends JFrame {
 			config.width = 1280;
 			config.height = 720;
 			config.resizable = false;
+//			System.out.println("carid: " + charID);
 			new LwjglApplication(new MainClient(mySocket, charID, currentUser), config);
+			
+			dispose();
 		}
 		catch (IOException ioe) { System.out.println("IOException in CharSelectListener: " + ioe.getMessage()); }
 	}

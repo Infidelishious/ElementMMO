@@ -34,6 +34,13 @@ public class CurrentPlayer extends Player{
 		using.set(2,true);
 	}
 	
+	public CurrentPlayer(int type, String name)
+	{
+		this();
+		this.type = type;
+		this.name = name;
+	}
+	
 	public void move(int direction){
 		if(moving) return;
 		
@@ -88,5 +95,18 @@ public class CurrentPlayer extends Player{
 		Game.getInstance().dY = y;
 		
 		sb.draw(spr, - WIDTH / 2.0f, - HEIGHT / 2.0f, WIDTH, HEIGHT);
+		
+		sendPosToServer();
+	}
+
+	private void sendPosToServer() {
+		MovmentMessage mm = new MovmentMessage();
+		mm.direction = moveDirection;
+		mm.x = x;
+		mm.y = y;
+		mm.moving = moving;
+		mm.from = name;
+		MessageManager.getInstance().sendMessageToServer(mm);
+		
 	}
 }

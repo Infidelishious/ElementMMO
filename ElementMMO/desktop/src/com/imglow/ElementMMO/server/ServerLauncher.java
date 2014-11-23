@@ -4,7 +4,8 @@ import java.util.*;
 import java.net.*;
 import java.io.*;
 
-
+import com.imglow.ElementMMO.Message;
+import com.imglow.ElementMMO.MovmentMessage;
 
 public class ServerLauncher {
 	
@@ -54,10 +55,24 @@ class ServerThread extends Thread {
 	{		
 		try
 		{
-			PrintWriter myPW = new PrintWriter(mySocket.getOutputStream());
+			ObjectInputStream is = new ObjectInputStream(mySocket.getInputStream());
 			
 			while (true)
 			{
+				Message msg;
+				try {
+					msg = (Message) is.readObject();
+					System.out.println("Message from: " + msg.from); 
+					if(msg instanceof MovmentMessage)
+					{
+						MovmentMessage mm = (MovmentMessage) msg;
+						System.out.println("Position: " + mm.x + "," + mm.y);
+					}
+						
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				
 			}
 		}

@@ -30,6 +30,7 @@ public class MainClient extends ApplicationAdapter {
 	public MainClient(Socket s, int playerType, String name)
 	{
 		MessageManager.getInstance().init(s);
+		Game.getInstance().player = new CurrentPlayer(playerType, name);
 	}
 	
 	@Override

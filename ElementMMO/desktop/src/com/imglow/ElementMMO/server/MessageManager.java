@@ -1,28 +1,35 @@
 package com.imglow.ElementMMO.server;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.net.UnknownHostException;
-import java.util.Queue;
 import java.util.Vector;
 
+import com.imglow.ElementMMO.BattleMessage;
+import com.imglow.ElementMMO.EventMessage;
 import com.imglow.ElementMMO.Message;
+import com.imglow.ElementMMO.StatusMessage;
+import com.imglow.ElementMMO.TextMessage;
 
 public class MessageManager{
 	private static MessageManager instance;
-	private Vector<Message> messages, queue;
+	private Vector<Message> queue;
+	private Vector<TextMessage> textMessages;
+	private Vector<StatusMessage> statusMessages;
+	private Vector<EventMessage> eventMessages ;
+	private Vector<BattleMessage> battleMessages;
 	
 	Socket s;
 	Runnable input, output;
 	Object msgLock = new Object();
 
 	protected MessageManager(){
-		messages = new Vector<Message>();
 		queue = new Vector<Message>();
+		textMessages = new Vector<TextMessage>();
+		statusMessages = new Vector<StatusMessage>();
+		eventMessages = new Vector<EventMessage>() ;
+		battleMessages = new Vector<BattleMessage>();
 	}
 
 	public static MessageManager getInstance() {
@@ -32,91 +39,92 @@ public class MessageManager{
 		return instance;
 	}
 	
-	public void init(String host, int port)
+	public void init(final Socket s)
 	{
-		try {
-			s = new Socket (host, port);
-			
-			input = new Runnable(){
-				public void run() {
-					try {
-						ObjectInputStream br= new ObjectInputStream(s.getInputStream());
-						int x = 2;
-						while(x == 2)
-						{
-							System.out.println( "Waiting for message" );
-							try {
-								Message msg = (Message) br.readObject();
-								messages.add(msg);
-							} catch (ClassNotFoundException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-							System.out.println("Message Object Receaved");
-						}
-						br.close();
-						s.close();
-					} catch (IOException ioe) {
-						System.out.println( "IOExceptionin Client constructor: " + ioe.getMessage() );
-					}
-				}
-
-
-			};
-			new Thread(input).start();
-			
-			output = new Runnable(){
-				public void run() {
-					try {
-						ObjectOutputStream br = new ObjectOutputStream(s.getOutputStream());
-						int x = 2;
-						while(x == 2)
-						{
-							if(queue.size() > 0)
-							{
-								br.writeObject(queue.get(0));
-								queue.remove(0);
-							}
+		this.s = s;
+		
+		input = new Runnable(){
+			public void run() {
+				try {
+					ObjectInputStream br= new ObjectInputStream(s.getInputStream());
+					int x = 2;
+					while(x == 2)
+					{
+//						System.out.println( "Waiting for message" );
+						try {
+							Message msg = (Message) br.readObject();
+							if(msg instanceof StatusMessage)
+								statusMessages.add((StatusMessage) msg);
+							else if(msg instanceof EventMessage)
+								eventMessages.add((EventMessage) msg);
+							else if(msg instanceof BattleMessage)
+								battleMessages.add((BattleMessage) msg);
 							else
+								textMessages.add((TextMessage) msg);
+						} catch (ClassNotFoundException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+//						System.out.println("Message Object Receaved");
+					}
+					br.close();
+					s.close();
+				} catch (IOException ioe) {
+					System.out.println( "IOExceptionin Client constructor: " + ioe.getMessage() );
+				}
+			}
+		};
+		new Thread(input).start();
+		
+		output = new Runnable(){
+			public void run() {
+				try {
+					ObjectOutputStream br = new ObjectOutputStream(s.getOutputStream());
+					int x = 2;
+					while(x == 2)
+					{
+						if(queue.size() > 0)
+						{
+							br.writeObject(queue.get(0));
+							queue.remove(0);
+						}
+						else
+						{
+							synchronized(msgLock)
 							{
-								synchronized(msgLock)
-								{
-									try {
-										msgLock.wait();
-									} catch (InterruptedException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									}
+								try {
+									msgLock.wait();
+								} catch (InterruptedException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
 								}
 							}
 						}
-						br.close();
-						s.close();
-					} catch (IOException ioe) {
-						System.out.println( "IOExceptionin Client constructor: " + ioe.getMessage() );
 					}
+					br.close();
+					s.close();
+				} catch (IOException ioe) {
+					System.out.println( "IOExceptionin Client constructor: " + ioe.getMessage() );
 				}
+			}
 
 
-			};
-			new Thread(output).start();
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		};
+		new Thread(output).start();
 	}
 	
-	public void sendMessageToServer(Message msg)
+	public void sendMessageToServer(final Message msg)
 	{
-		queue.add(msg);
-		
-		synchronized(msgLock)
-		{
-			msgLock.notifyAll();
-		}
+		new Thread(new Runnable(){
+			@Override
+			public void run() {
+				queue.add(msg);
+				
+				synchronized(msgLock)
+				{
+					msgLock.notifyAll();
+				}
+			}}).start();
 	}
 	
 	public boolean messageQueued()
@@ -124,18 +132,63 @@ public class MessageManager{
 		return !queue.isEmpty();
 	}
 	
-	public boolean hasMessage()
+	public boolean hasStatusMessage()
 	{
-		return !messages.isEmpty();
+		return !statusMessages.isEmpty();
 	}
 
-	public Message getMessage()
+	public StatusMessage getStatusMessage()
 	{
-		if(!hasMessage())
+		if(!hasStatusMessage())
 			return null;
 		
-		Message temp = messages.firstElement();
-		messages.remove(0);
+		StatusMessage temp = statusMessages.firstElement();
+		statusMessages.remove(0);
+		return temp;
+	}
+	
+	public boolean hasEventMessage()
+	{
+		return !eventMessages.isEmpty();
+	}
+
+	public EventMessage getEventMessage()
+	{
+		if(!hasEventMessage())
+			return null;
+		
+		EventMessage temp = eventMessages.firstElement();
+		eventMessages.remove(0);
+		return temp;
+	}
+	
+	public boolean hasTextMessage()
+	{
+		return !textMessages.isEmpty();
+	}
+
+	public TextMessage getTextMessage()
+	{
+		if(!hasTextMessage())
+			return null;
+		
+		TextMessage temp = textMessages.firstElement();
+		textMessages.remove(0);
+		return temp;
+	}
+	
+	public boolean hasBattleMessage()
+	{
+		return !battleMessages.isEmpty();
+	}
+
+	public Message getBattleMessage()
+	{
+		if(!hasBattleMessage())
+			return null;
+		
+		BattleMessage temp = battleMessages.firstElement();
+		battleMessages.remove(0);
 		return temp;
 	}
 	

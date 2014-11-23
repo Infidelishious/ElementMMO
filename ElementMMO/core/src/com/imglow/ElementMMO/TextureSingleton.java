@@ -44,7 +44,7 @@ public class TextureSingleton {
 		cop = new Texture(Gdx.files.internal("images/cop.png"));
 		spikey = new Texture(Gdx.files.internal("images/Spikey.png"));
 		chika = new Texture(Gdx.files.internal("images/chika.png"));
-		nakedMan = new Texture(Gdx.files.internal("images/nake_man.png"));
+		nakedMan = new Texture(Gdx.files.internal("images/naked_man.png"));
 		nakedManList = new ArrayList<TextureRegion>();	
 		copList = new ArrayList<TextureRegion>();
 		spikeyList = new ArrayList<TextureRegion>();
@@ -55,8 +55,9 @@ public class TextureSingleton {
 		Texture temp = new Texture(Gdx.files.internal("images/grass.png"));		//using to initialized all the green stuff
 		grass = new TextureRegion(temp);
 		temp = new Texture(Gdx.files.internal("images/bush.png"));
-		bush = new TextureRegion(bush);
+		bush = new TextureRegion(temp);
 		temp = new Texture(Gdx.files.internal("images/tree1.png"));
+		System.out.println("bushes loaded");
 		tree1 = new TextureRegion(temp);
 		temp = new Texture(Gdx.files.internal("images/tree2.png"));
 		tree2 = new TextureRegion(temp);

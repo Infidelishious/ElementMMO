@@ -7,18 +7,17 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class BattleGUI implements Drawable
 {
-	SpriteBatch sb;
 	
-	public BattleGUI(SpriteBatch sb)
+	public BattleGUI()
 	{
-		this.sb = sb;
 	}
 	
 	@Override
 	public void draw(SpriteBatch sb) 
 	{
-		FileHandle f = Gdx.files.internal("/images/tree1.png");
+		System.out.println("file loaded");
+		FileHandle f = Gdx.files.internal("images/tree1.png");
 		Texture t = new Texture(f);
-		sb.draw(t, 10, 10);
+		sb.draw(t, 0, 0);
 	}
 }

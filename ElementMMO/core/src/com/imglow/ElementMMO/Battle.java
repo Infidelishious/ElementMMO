@@ -4,11 +4,16 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector3;
 
 public class Battle implements Drawable
 {	
 	TextureRegion currentPlayerImage;
 	TextureRegion otherPlayerImage;
+	
+	Texture halfHeartTexture;
+	Texture fullHeartTexture;
+	Texture noHeartTexture;
 	
 	Texture currentPlayerHeartImage1;
 	Texture currentPlayerHeartImage2;
@@ -19,6 +24,7 @@ public class Battle implements Drawable
 	Texture otherPlayerHeartImage3;
 	
 	TextureRegion[] currentPlayerInventoryImages;
+	Button[] currentPlayerInventoryButtons;
 	
 	TextureRegion currentPlayerBattleElementImage;
 	TextureRegion otherPlayerBattleElementImage;
@@ -34,11 +40,17 @@ public class Battle implements Drawable
 		this.currentPlayer = currentPlayer;
 		this.otherPlayer = otherPlayer;
 		currentPlayerInventoryImages = new TextureRegion[6];
+		currentPlayerInventoryButtons = new Button[6];
 		
-			
+		fullHeartTexture = new Texture(Gdx.files.internal("full_heart.jpg"));
+		halfHeartTexture = new Texture(Gdx.files.internal("half_heart.jpg"));
+		noHeartTexture = new Texture(Gdx.files.internal("no_heart.jpg"));
+		
 		//load the players information into the GUI.
+		assignTextures();
 		
 		//client-event of choosing an element to use is sent to the server.
+		
 		
 		//other player's message is taken from the server
 		
@@ -50,7 +62,6 @@ public class Battle implements Drawable
 	@Override
 	public void draw(SpriteBatch sb) 
 	{
-		assignTextures();
 		//draw window
 		
 		sb.draw(TextureSingleton.getInstance().white, -MainClient.WIDTH/4, -MainClient.HEIGHT/4, MainClient.WIDTH/2, MainClient.HEIGHT/2);		
@@ -61,16 +72,11 @@ public class Battle implements Drawable
 		sb.draw(tempBattleTexture, -50, 150);
 		
 		//draw player sprites
-		
-		//this player
+
 		sb.draw(currentPlayerImage, -MainClient.HEIGHT/2+50, 0, Player.WIDTH, Player.HEIGHT);
-		//other player
 		sb.draw(otherPlayerImage, MainClient.HEIGHT/2-125, 0, Player.WIDTH, Player.HEIGHT);
 
 		//draw health amounts
-		Texture tempFullHeartTexture = new Texture(Gdx.files.internal("full_heart.jpg"));
-		Texture tempHalfHeartTexture = new Texture(Gdx.files.internal("half_heart.jpg"));
-		Texture tempNoHeartTexture = new Texture(Gdx.files.internal("no_heart.jpg"));
 		//this player
 		sb.draw(currentPlayerHeartImage1, -MainClient.WIDTH/4+10, 100, 16, 16);
 		sb.draw(currentPlayerHeartImage2, -MainClient.WIDTH/4+30, 100, 16, 16);
@@ -84,12 +90,41 @@ public class Battle implements Drawable
 		sb.draw(new Texture(Gdx.files.internal("grey.jpg")), -MainClient.WIDTH/4+150, -MainClient.HEIGHT/4+10, MainClient.WIDTH/4, MainClient.HEIGHT/4-50);
 		
 		//draw element slots
-		sb.draw(currentPlayerInventoryImages[0], -MainClient.WIDTH/4+180, -80);
-		sb.draw(currentPlayerInventoryImages[1], -MainClient.WIDTH/4+180, -120);
-		sb.draw(currentPlayerInventoryImages[2], -MainClient.WIDTH/4+180, -160);
-		sb.draw(currentPlayerInventoryImages[3], -MainClient.WIDTH/4+340, -80);
-		sb.draw(currentPlayerInventoryImages[4], -MainClient.WIDTH/4+340, -120);
-		sb.draw(currentPlayerInventoryImages[5], -MainClient.WIDTH/4+340, -160);
+		currentPlayerInventoryButtons[0].width = 100;
+		currentPlayerInventoryButtons[0].height = 30;
+		currentPlayerInventoryButtons[0].x = -MainClient.WIDTH/4+180;
+		currentPlayerInventoryButtons[0].y = -80;
+		sb.draw(currentPlayerInventoryImages[0], -MainClient.WIDTH/4+180, -80, 100, 30);
+		
+		currentPlayerInventoryButtons[1].width = 100;
+		currentPlayerInventoryButtons[1].height = 30;
+		currentPlayerInventoryButtons[1].x = -MainClient.WIDTH/4+180;
+		currentPlayerInventoryButtons[1].y = -120;
+		sb.draw(currentPlayerInventoryImages[1], -MainClient.WIDTH/4+180, -120, 100, 30);
+		
+		currentPlayerInventoryButtons[2].width = 100;
+		currentPlayerInventoryButtons[2].height = 30;
+		currentPlayerInventoryButtons[2].x = -MainClient.WIDTH/4+180;
+		currentPlayerInventoryButtons[2].y = -160;
+		sb.draw(currentPlayerInventoryImages[2], -MainClient.WIDTH/4+180, -160, 100, 30);
+
+		currentPlayerInventoryButtons[3].width = 100;
+		currentPlayerInventoryButtons[3].height = 30;
+		currentPlayerInventoryButtons[3].x = -MainClient.WIDTH/4+180;
+		currentPlayerInventoryButtons[3].y = -80;
+		sb.draw(currentPlayerInventoryImages[3], -MainClient.WIDTH/4+340, -80, 100, 30);
+		
+		currentPlayerInventoryButtons[4].width = 100;
+		currentPlayerInventoryButtons[4].height = 30;
+		currentPlayerInventoryButtons[4].x = -MainClient.WIDTH/4+180;
+		currentPlayerInventoryButtons[4].y = -120;
+		sb.draw(currentPlayerInventoryImages[4], -MainClient.WIDTH/4+340, -120, 100, 30);
+		
+		currentPlayerInventoryButtons[5].width = 100;
+		currentPlayerInventoryButtons[5].height = 30;
+		currentPlayerInventoryButtons[5].x = -MainClient.WIDTH/4+180;
+		currentPlayerInventoryButtons[5].y = -160;
+		sb.draw(currentPlayerInventoryImages[5], -MainClient.WIDTH/4+340, -160, 100, 30);
 
 		//draw battle element slots
 		sb.draw(TextureSingleton.getInstance().imagination, -200, 0);
@@ -107,78 +142,78 @@ public class Battle implements Drawable
 		switch(currentPlayer.health)
 		{
 			case 0:
-				currentPlayerHeartImage1 = new Texture(Gdx.files.internal("no_heart.jpg"));
-				currentPlayerHeartImage2 = new Texture(Gdx.files.internal("no_heart.jpg"));
-				currentPlayerHeartImage3 = new Texture(Gdx.files.internal("no_heart.jpg"));
+				currentPlayerHeartImage1 = noHeartTexture;
+				currentPlayerHeartImage2 = noHeartTexture;
+				currentPlayerHeartImage3 = noHeartTexture;
 				break;
 			case 1:
-				currentPlayerHeartImage1 = new Texture(Gdx.files.internal("half_heart.jpg"));
-				currentPlayerHeartImage2 = new Texture(Gdx.files.internal("no_heart.jpg"));
-				currentPlayerHeartImage3 = new Texture(Gdx.files.internal("no_heart.jpg"));
+				currentPlayerHeartImage1 = halfHeartTexture;
+				currentPlayerHeartImage2 = noHeartTexture;
+				currentPlayerHeartImage3 = noHeartTexture;
 				break;
 			case 2:
-				currentPlayerHeartImage1 = new Texture(Gdx.files.internal("full_heart.jpg"));
-				currentPlayerHeartImage2 = new Texture(Gdx.files.internal("no_heart.jpg"));
-				currentPlayerHeartImage3 = new Texture(Gdx.files.internal("no_heart.jpg"));
+				currentPlayerHeartImage1 = fullHeartTexture;
+				currentPlayerHeartImage2 = noHeartTexture;
+				currentPlayerHeartImage3 = noHeartTexture;
 				break;
 			case 3:
-				currentPlayerHeartImage1 = new Texture(Gdx.files.internal("full_heart.jpg"));
-				currentPlayerHeartImage2 = new Texture(Gdx.files.internal("half_heart.jpg"));
-				currentPlayerHeartImage3 = new Texture(Gdx.files.internal("no_heart.jpg"));
+				currentPlayerHeartImage1 = fullHeartTexture;
+				currentPlayerHeartImage2 = halfHeartTexture;
+				currentPlayerHeartImage3 = noHeartTexture;
 				break;
 			case 4:
-				currentPlayerHeartImage1 = new Texture(Gdx.files.internal("full_heart.jpg"));
-				currentPlayerHeartImage2 = new Texture(Gdx.files.internal("full_heart.jpg"));
-				currentPlayerHeartImage3 = new Texture(Gdx.files.internal("no_heart.jpg"));
+				currentPlayerHeartImage1 = fullHeartTexture;
+				currentPlayerHeartImage2 = fullHeartTexture;
+				currentPlayerHeartImage3 = noHeartTexture;
 				break;
 			case 5: 
-				currentPlayerHeartImage1 = new Texture(Gdx.files.internal("full_heart.jpg"));
-				currentPlayerHeartImage2 = new Texture(Gdx.files.internal("full_heart.jpg"));
-				currentPlayerHeartImage3 = new Texture(Gdx.files.internal("half_heart.jpg"));
+				currentPlayerHeartImage1 = fullHeartTexture;
+				currentPlayerHeartImage2 = fullHeartTexture;
+				currentPlayerHeartImage3 = halfHeartTexture;
 				break;
 			case 6:
-				currentPlayerHeartImage1 = new Texture(Gdx.files.internal("full_heart.jpg"));
-				currentPlayerHeartImage2 = new Texture(Gdx.files.internal("full_heart.jpg"));
-				currentPlayerHeartImage3 = new Texture(Gdx.files.internal("full_heart.jpg"));
+				currentPlayerHeartImage1 = fullHeartTexture;
+				currentPlayerHeartImage2 = fullHeartTexture;
+				currentPlayerHeartImage3 = fullHeartTexture;
 				break;
 		}
 		
 		switch(otherPlayer.health)
 		{
 			case 0:
-				otherPlayerHeartImage1 = new Texture(Gdx.files.internal("no_heart.jpg"));
-				otherPlayerHeartImage2 = new Texture(Gdx.files.internal("no_heart.jpg"));
-				otherPlayerHeartImage3 = new Texture(Gdx.files.internal("no_heart.jpg"));
+				otherPlayerHeartImage1 = noHeartTexture;
+				otherPlayerHeartImage2 = noHeartTexture;
+				otherPlayerHeartImage3 = noHeartTexture;
 				break;
 			case 1:
-				otherPlayerHeartImage1 = new Texture(Gdx.files.internal("half_heart.jpg"));
-				otherPlayerHeartImage2 = new Texture(Gdx.files.internal("no_heart.jpg"));
-				otherPlayerHeartImage3 = new Texture(Gdx.files.internal("no_heart.jpg"));
+				otherPlayerHeartImage1 = halfHeartTexture;
+				otherPlayerHeartImage2 = noHeartTexture;
+				otherPlayerHeartImage3 = noHeartTexture;
 				break;
 			case 2:
-				otherPlayerHeartImage1 = new Texture(Gdx.files.internal("full_heart.jpg"));
-				otherPlayerHeartImage2 = new Texture(Gdx.files.internal("no_heart.jpg"));
-				otherPlayerHeartImage3 = new Texture(Gdx.files.internal("no_heart.jpg"));
+				otherPlayerHeartImage1 = fullHeartTexture;
+				otherPlayerHeartImage2 = noHeartTexture;
+				otherPlayerHeartImage3 = noHeartTexture;
 				break;
 			case 3:
-				otherPlayerHeartImage1 = new Texture(Gdx.files.internal("full_heart.jpg"));
-				otherPlayerHeartImage2 = new Texture(Gdx.files.internal("half_heart.jpg"));
-				otherPlayerHeartImage3 = new Texture(Gdx.files.internal("no_heart.jpg"));
+				otherPlayerHeartImage1 = fullHeartTexture;
+				otherPlayerHeartImage2 = halfHeartTexture;
+				otherPlayerHeartImage3 = noHeartTexture;
 				break;
 			case 4:
-				otherPlayerHeartImage1 = new Texture(Gdx.files.internal("full_heart.jpg"));
-				otherPlayerHeartImage2 = new Texture(Gdx.files.internal("full_heart.jpg"));
-				otherPlayerHeartImage3 = new Texture(Gdx.files.internal("no_heart.jpg"));
+				otherPlayerHeartImage1 = fullHeartTexture;
+				otherPlayerHeartImage2 = fullHeartTexture;
+				otherPlayerHeartImage3 = noHeartTexture;
 				break;
 			case 5: 
-				otherPlayerHeartImage1 = new Texture(Gdx.files.internal("full_heart.jpg"));
-				otherPlayerHeartImage2 = new Texture(Gdx.files.internal("full_heart.jpg"));
-				otherPlayerHeartImage3 = new Texture(Gdx.files.internal("half_heart.jpg"));
+				otherPlayerHeartImage1 = fullHeartTexture;
+				otherPlayerHeartImage2 = fullHeartTexture;
+				otherPlayerHeartImage3 = halfHeartTexture;
 				break;
 			case 6:
-				otherPlayerHeartImage1 = new Texture(Gdx.files.internal("full_heart.jpg"));
-				otherPlayerHeartImage2 = new Texture(Gdx.files.internal("full_heart.jpg"));
-				otherPlayerHeartImage3 = new Texture(Gdx.files.internal("full_heart.jpg"));
+				otherPlayerHeartImage1 = fullHeartTexture;
+				otherPlayerHeartImage2 = fullHeartTexture;
+				otherPlayerHeartImage3 = fullHeartTexture;
 				break;
 		}
 				
@@ -195,11 +230,21 @@ public class Battle implements Drawable
 			}
 			
 			//if the player owns a given item
-			if(currentPlayer.owned.get(i));
+			if(currentPlayer.owned.get(i))
 			{
 				//add that item to their inventory display at the next available spot
 				currentPlayerInventoryImages[inventoryElementNum] = TextureSingleton.getInstance().elements.get(i);
 				//indicate that one should now move to the next available spot
+				currentPlayerInventoryButtons[inventoryElementNum] = new Button(currentPlayerInventoryImages[inventoryElementNum], 0, 0, 0, 0, 
+				new OnClickListener()
+				{
+					@Override
+					public void onClick(Button source, Vector3 pos) 
+					{
+						System.out.println("clicked");
+					}
+				}
+				);
 				inventoryElementNum++;
 			}
 		}
@@ -208,7 +253,19 @@ public class Battle implements Drawable
 		while(inventoryElementNum < 6)
 		{
 			//fill remaining inventory elements with white space
-			currentPlayerInventoryImages[inventoryElementNum] = TextureSingleton.getInstance().whiteGrass;
+			currentPlayerInventoryImages[inventoryElementNum] = TextureSingleton.getInstance().whiteRegion;
+			currentPlayerInventoryButtons[inventoryElementNum] = new Button(currentPlayerInventoryImages[inventoryElementNum], 0, 0, 0, 0, 
+			new OnClickListener()
+			{
+
+				@Override
+				public void onClick(Button source, Vector3 pos) 
+				{
+					
+				}
+
+			}
+			);
 			inventoryElementNum++;
 		}
 		

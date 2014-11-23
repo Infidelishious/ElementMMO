@@ -3,10 +3,11 @@ package com.imglow.ElementMMO;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.sun.media.jfxmedia.events.PlayerStateEvent.PlayerState;
+//import com.sun.media.jfxmedia.events.PlayerStateEvent.PlayerState;
 
 
 public class TextureSingleton {
@@ -24,6 +25,8 @@ public class TextureSingleton {
 	public Texture cop, spikey, chika, nakedMan;
 	public ArrayList<TextureRegion> copList, spikeyList, chikaList, nakedManList;
 	public TextureRegion grass, bush, tree1, tree2;
+	public Music mainMusic;
+	public Music battleMusic;
 	
 	protected TextureSingleton(){}
 
@@ -41,23 +44,27 @@ public class TextureSingleton {
 		playerSprites = new ArrayList<ArrayList<TextureRegion>>();
 		scoreFont = new BitmapFont(Gdx.files.internal("fonts/Fipps-Regular.fnt"), Gdx.files.internal("fonts/Fipps-Regular_0.tga"), false);
 		nameFont = new BitmapFont(Gdx.files.internal("fonts/FlxRegular.fnt"), Gdx.files.internal("fonts/FlxRegular_0.tga"), false);
+		
+		//This one is for the player.. #PS4 reference
 		cop = new Texture(Gdx.files.internal("images/cop.png"));
 		spikey = new Texture(Gdx.files.internal("images/Spikey.png"));
 		chika = new Texture(Gdx.files.internal("images/chika.png"));
-		nakedMan = new Texture(Gdx.files.internal("images/naked_man.png"));
+		nakedMan = new Texture(Gdx.files.internal("images/nake_man.png"));
 		nakedManList = new ArrayList<TextureRegion>();	
 		copList = new ArrayList<TextureRegion>();
 		spikeyList = new ArrayList<TextureRegion>();
 		chikaList = new ArrayList<TextureRegion>();
+		
 		playerSprites.add(copList);
 		playerSprites.add(spikeyList);
 		playerSprites.add(chikaList);	
+		playerSprites.add(nakedManList);
+		
 		Texture temp = new Texture(Gdx.files.internal("images/grass.png"));		//using to initialized all the green stuff
 		grass = new TextureRegion(temp);
 		temp = new Texture(Gdx.files.internal("images/bush.png"));
-		bush = new TextureRegion(temp);
+		bush = new TextureRegion(bush);
 		temp = new Texture(Gdx.files.internal("images/tree1.png"));
-		System.out.println("bushes loaded");
 		tree1 = new TextureRegion(temp);
 		temp = new Texture(Gdx.files.internal("images/tree2.png"));
 		tree2 = new TextureRegion(temp);
@@ -73,5 +80,24 @@ public class TextureSingleton {
 		for(int i = 0; i < 9; i++) {
 			nakedManList.add(new TextureRegion(nakedMan, i * 16, 0, 16, 21));
 		}
+		
+		////Background Music shit///
+		mainMusic = Gdx.audio.newMusic(Gdx.files.internal("sound/background_music.mp3"));
+		mainMusic.setLooping(true);
+		mainMusic.play();
+		
+		////Battle music shit////
+		battleMusic = Gdx.audio.newMusic(Gdx.files.internal("sound/battle.mp3"));
+	}
+	
+	public void EnterBattle() {			//Changing music when entering the battle.
+		mainMusic.pause();
+		battleMusic.setLooping(true);
+		battleMusic.play();
+	}
+	
+	public void ExitBattle() {			//Changing music when exiting the battle.
+		battleMusic.pause();
+		mainMusic.play();
 	}
 }

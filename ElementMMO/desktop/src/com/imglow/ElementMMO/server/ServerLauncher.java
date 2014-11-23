@@ -184,6 +184,7 @@ public class ServerLauncher {
 		if(!hasTextMessage())
 			return null;
 		
+		System.out.println("got a text message in serverlauncher");
 		TextMessage temp = textMessages.firstElement();
 		textMessages.remove(0);
 		return temp;

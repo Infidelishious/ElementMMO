@@ -41,7 +41,7 @@ public class MessageManager{
 	public void init(final Socket s)
 	{
 		this.s = s;
-		
+		System.out.println("messageManager is init");
 		input = new Runnable(){
 			public void run() {
 				try {
@@ -171,6 +171,7 @@ public class MessageManager{
 		if(!hasTextMessage())
 			return null;
 		
+		System.out.println("got a text message in messagemanager");
 		TextMessage temp = textMessages.firstElement();
 		textMessages.remove(0);
 		return temp;

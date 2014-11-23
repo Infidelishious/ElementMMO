@@ -101,6 +101,7 @@ public class TextureSingleton {
 		sunshine = new TextureRegion(temp);
 		temp = new Texture(Gdx.files.internal("images/Shop/Music.png"));
 		music = new TextureRegion(temp);
+		shopElements = new ArrayList<TextureRegion>();
 		shopElements.add(imagination);
 		shopElements.add(giggles);
 		shopElements.add(segFaults);
@@ -114,6 +115,7 @@ public class TextureSingleton {
 		giggles = new TextureRegion(temp);
 		temp =  new Texture(Gdx.files.internal("images/SegFaults.png"));
 		segFaults = new TextureRegion(temp);
+		elements = new ArrayList<TextureRegion>();
 		elements.add(imagination);
 		elements.add(giggles);
 		elements.add(segFaults);

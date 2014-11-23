@@ -20,7 +20,7 @@ public class TextureSingleton {
 			//playersprites.get(COP).get(UP);
 	public ArrayList<ArrayList<TextureRegion>> playerSprites;
 	
-	public Texture white;
+	public Texture white, gray;
 	public BitmapFont scoreFont, nameFont;
 	public Texture cop, spikey, chika, nakedMan;
 	public ArrayList<TextureRegion> copList, spikeyList, chikaList, nakedManList, shopElements, elements;
@@ -42,6 +42,7 @@ public class TextureSingleton {
 	{
 		//This is where textures are loaded
 		white = new Texture(Gdx.files.internal("images/white.png"));
+		gray = new Texture(Gdx.files.internal("images/gray.png"));
 		playerSprites = new ArrayList<ArrayList<TextureRegion>>();
 		scoreFont = new BitmapFont(Gdx.files.internal("fonts/Fipps-Regular.fnt"), Gdx.files.internal("fonts/Fipps-Regular_0.tga"), false);
 		nameFont = new BitmapFont(Gdx.files.internal("fonts/FlxRegular.fnt"), Gdx.files.internal("fonts/FlxRegular_0.tga"), false);
@@ -69,16 +70,16 @@ public class TextureSingleton {
 		tree1 = new TextureRegion(temp);
 		temp = new Texture(Gdx.files.internal("images/tree2.png"));
 		tree2 = new TextureRegion(temp);
-		for(int i = 0; i < 9; i++) {
+		for(int i = 0; i < 10; i++) {
 			copList.add(new TextureRegion(cop, i * 16, 0, 16, 21));
 		}
-		for(int i = 0; i < 9; i++) {
+		for(int i = 0; i < 10; i++) {
 			spikeyList.add(new TextureRegion(spikey, i * 16, 0, 16, 21));
 		}
-		for(int i = 0; i < 9; i++) {
+		for(int i = 0; i < 10; i++) {
 			chikaList.add(new TextureRegion(chika, i * 16, 0, 16, 21));
 		}
-		for(int i = 0; i < 9; i++) {
+		for(int i = 0; i < 10; i++) {
 			nakedManList.add(new TextureRegion(nakedMan, i * 16, 0, 16, 21));
 		}
 		

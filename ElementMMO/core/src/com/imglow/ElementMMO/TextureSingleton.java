@@ -24,7 +24,8 @@ public class TextureSingleton {
 	public BitmapFont scoreFont, nameFont;
 	public Texture cop, spikey, chika, nakedMan;
 	public ArrayList<TextureRegion> copList, spikeyList, chikaList, nakedManList, shopElements, elements;
-	public TextureRegion grass, bush, tree1, tree2, imagination, hunger, music, giggles, segFaults, sunshine;
+	public TextureRegion grass, bush, tree1, tree2, imagination, hunger, music, giggles, segFaults, sunshine, drought,
+							entropy, trig, choco, synergy, hugs;
 	
 	public Music mainMusic;
 	public Music battleMusic;
@@ -104,6 +105,15 @@ public class TextureSingleton {
 		music = new TextureRegion(temp);
 		temp = new Texture(Gdx.files.internal("images/Shop/Hunger.png"));
 		hunger = new TextureRegion(temp);
+		temp = new Texture(Gdx.files.internal("images/Shop/Drought.png"));
+		drought = new TextureRegion(temp);
+		temp = new Texture(Gdx.files.internal("images/Shop/Entropy.png"));
+		entropy = new TextureRegion(temp);
+		temp = new Texture(Gdx.files.internal("images/Shop/Trigonometry.png"));
+		trig = new TextureRegion(temp);
+		temp = new Texture(Gdx.files.internal("images/Shop/Chocolate.png"));
+		choco = new TextureRegion(temp);
+		
 		shopElements = new ArrayList<TextureRegion>();
 		shopElements.add(imagination);
 		shopElements.add(giggles);
@@ -111,6 +121,10 @@ public class TextureSingleton {
 		shopElements.add(sunshine);
 		shopElements.add(music);
 		shopElements.add(hunger);
+		shopElements.add(drought);
+		shopElements.add(entropy);
+		shopElements.add(trig);
+		shopElements.add(choco);
 		
 		//Adding elements in main Arraylist//
 		temp =  new Texture(Gdx.files.internal("images/Elements/Imagination.png"));
@@ -125,12 +139,27 @@ public class TextureSingleton {
 		music = new TextureRegion(temp);
 		temp = new Texture(Gdx.files.internal("images/Elements/Sunshine.png"));
 		sunshine = new TextureRegion(temp);
+		temp = new Texture(Gdx.files.internal("images/Elements/Drought.png"));
+		drought = new TextureRegion(temp);
+		temp = new Texture(Gdx.files.internal("images/Elements/Entropy.png"));
+		entropy = new TextureRegion(temp);
+		temp = new Texture(Gdx.files.internal("images/Elements/Trigonometry.png"));
+		trig = new TextureRegion(temp);
+		temp = new Texture(Gdx.files.internal("images/Elements/Chocolate.png"));
+		choco = new TextureRegion(temp);
+		
 		
 		elements = new ArrayList<TextureRegion>();
 		elements.add(imagination);
 		elements.add(giggles);
 		elements.add(segFaults);
 		elements.add(hunger);
+		elements.add(sunshine);
+		elements.add(drought);
+		elements.add(entropy);
+		elements.add(music);
+		elements.add(trig);
+		elements.add(choco);
 	}
 	
 	public void EnterBattle() {			//Changing music when entering the battle.

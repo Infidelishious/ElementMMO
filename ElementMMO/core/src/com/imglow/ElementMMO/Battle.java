@@ -239,9 +239,9 @@ public class Battle implements Drawable
 				new OnClickListener()
 				{
 					@Override
-					public void onClick(Vector3 pos) 
+					public void onClick(Button source, Vector3 pos) 
 					{
-						System.out.println("clicked.");
+						System.out.println("clicked");
 					}
 				}
 				);
@@ -257,11 +257,13 @@ public class Battle implements Drawable
 			currentPlayerInventoryButtons[inventoryElementNum] = new Button(currentPlayerInventoryImages[inventoryElementNum], 0, 0, 0, 0, 
 			new OnClickListener()
 			{
+
 				@Override
-				public void onClick(Vector3 pos) 
+				public void onClick(Button source, Vector3 pos) 
 				{
-					//do nothing
+					
 				}
+
 			}
 			);
 			inventoryElementNum++;

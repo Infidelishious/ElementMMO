@@ -6,10 +6,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Battle implements Drawable
-{
-	
-	TextureRegion currentPlayerImage;
-	TextureRegion otherPlayerImage;
+{	
+	Texture currentPlayerImage;
+	Texture otherPlayerImage;
 	
 	Texture[] currentPlayerHealthImages;
 	Texture[] otherPlayerHealthImages;
@@ -19,8 +18,24 @@ public class Battle implements Drawable
 	Texture currentPlayerBattleElementImage;
 	Texture otherPlayerBattleElementImage;
 	
-	public Battle()
+	CurrentPlayer currentPlayer;
+	OtherPlayer otherPlayer;
+	
+	SpriteBatch sb;
+	
+	public Battle(CurrentPlayer currentPlayer, OtherPlayer otherPlayer)
 	{
+		this.sb = sb;
+		this.currentPlayer = currentPlayer;
+		this.otherPlayer = otherPlayer;
+		
+		currentPlayerImage = TextureSingleton.getInstance().white;
+		otherPlayerImage = TextureSingleton.getInstance().white;
+		
+		currentPlayerHealthImages = new Texture[3];
+		otherPlayerHealthImages = new Texture[3];
+		playerInventoryImages = new Texture[6];
+		
 		//load the players information into the GUI.
 		
 		//client-event of choosing an element to use is sent to the server.
@@ -84,11 +99,19 @@ public class Battle implements Drawable
 	public void assignTextures()
 	{
 		//assign player sprites
+		currentPlayerImage = TextureSingleton.getInstance().playerSprites.get(currentPlayer.type).get(TextureSingleton.STAND);
+		otherPlayerImage = TextureSingleton.getInstance().playerSprites.get(otherPlayer.type).get(TextureSingleton.STAND);
 		
 		//assign health amounts
-				
+		currentPlayerHealthImages = new Texture[3];
+		
+		otherPlayerHealthImages = new Texture[3];
+		
 		//assign element textures
+		playerInventoryImages = new Texture[6];
 		
 		//assign battle element slots
+		currentPlayerBattleElementImage = TextureSingleton.getInstance().playerSprites.get(currentPlayer.type).get(TextureSingleton.STAND);
+		otherPlayerBattleElementImage = TextureSingleton.getInstance().playerSprites.get(otherPlayer.type).get(TextureSingleton.STAND);
 	}
 }

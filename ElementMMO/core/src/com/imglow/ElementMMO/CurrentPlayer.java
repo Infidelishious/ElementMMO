@@ -18,6 +18,8 @@ public class CurrentPlayer extends Player{
 	
 	public CurrentPlayer()
 	{
+		owned = new ArrayList<Boolean>();
+		using = new ArrayList<Boolean>();
 		money = 1000;
 		for(int i = 0; i < 12; i++)
 		{

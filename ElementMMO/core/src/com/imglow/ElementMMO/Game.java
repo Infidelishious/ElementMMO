@@ -18,7 +18,7 @@ public class Game implements Drawable{
 	public CurrentPlayer player;
 	
 	public ArrayList<OtherPlayer> otherPlayers;
-	
+	public ChatArea chat;
 	private static Game instance;
 	
 	private Battle bg;
@@ -28,7 +28,7 @@ public class Game implements Drawable{
 	public void init(MainClient client) {
 		this.client = client;
 		grid = new Cell[WIDTH][HEIGHT];
-		bg = new Battle();
+		//bg = new Battle();
 		
 		for(int y = 0; y < HEIGHT; y++)
 		{
@@ -59,18 +59,24 @@ public class Game implements Drawable{
 		
 		//if battle draw battle
 		
-		bg.draw(sb);
-		
-		if(Gdx.input.isKeyPressed(Input.Keys.W))
-			player.move(Player.UP);
-		if(Gdx.input.isKeyPressed(Input.Keys.S))
-			player.move(Player.DOWN);
-		if(Gdx.input.isKeyPressed(Input.Keys.D))
-			player.move(Player.RIGHT);
-		if(Gdx.input.isKeyPressed(Input.Keys.A))
-			player.move(Player.LEFT);
-		
+		//bg.draw(sb);
+		if(chat == null)
+		{
+			if(player !=null) {
+				if(Gdx.input.isKeyPressed(Input.Keys.W))
+					player.move(Player.UP);
+				else 	if(Gdx.input.isKeyPressed(Input.Keys.S))
+					player.move(Player.DOWN);
+				else if(Gdx.input.isKeyPressed(Input.Keys.D))
+					player.move(Player.RIGHT);
+				else if(Gdx.input.isKeyPressed(Input.Keys.A))
+					player.move(Player.LEFT);
+			}
+			if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER))
+				chat = new ChatArea();
+		}
 		if(player != null)
 			player.draw(sb);
+		if(chat != null) chat.draw(sb);
 	}
 }

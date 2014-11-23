@@ -32,9 +32,8 @@ public class MainClient extends ApplicationAdapter {
 	public void create () {
 		thiss = this; 
 		ClickController.getInstance().initalize(this);
-		batch = new SpriteBatch();
 		initalizeAssets();
-
+		
 		camera = new OrthographicCamera(WIDTH, HEIGHT);
 		batch = new SpriteBatch();
 		Game.getInstance().init(this);
@@ -85,7 +84,5 @@ public class MainClient extends ApplicationAdapter {
 			//char keyboard = rightInput();
 			
 		}
-	}
-	
-	
+	}	
 }

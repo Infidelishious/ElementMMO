@@ -18,12 +18,15 @@ public class Game implements Drawable{
 	public ArrayList<OtherPlayer> otherPlayers;
 	
 	private static Game instance;
+	
+	private BattleGUI bg;
 
 	protected Game(){}
 	
 	public void init(MainClient client) {
 		this.client = client;
 		grid = new Cell[WIDTH][HEIGHT];
+		bg = new BattleGUI();
 		
 		for(int y = 0; y < HEIGHT; y++)
 		{
@@ -51,8 +54,8 @@ public class Game implements Drawable{
 			}
 		}
 		
+		//if battle draw battle
+		
+			bg.draw(sb);
 	}
-	
-	
-
 }

@@ -57,8 +57,6 @@ public class MessageManager{
 					System.out.println( "IOExceptionin Client constructor: " + ioe.getMessage() );
 				}
 			}
-
-
 		};
 		new Thread(input).start();
 		

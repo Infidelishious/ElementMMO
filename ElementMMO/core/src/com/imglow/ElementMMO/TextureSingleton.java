@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -29,6 +30,7 @@ public class TextureSingleton {
 	
 	public Music mainMusic;
 	public Music battleMusic;
+	public Sound cannotAccess;
 	
 	protected TextureSingleton(){}
 
@@ -102,6 +104,10 @@ public class TextureSingleton {
 		////Battle music shit////
 		battleMusic = Gdx.audio.newMusic(Gdx.files.internal("sound/battle.mp3"));
 		
+		
+		////More music shit////
+		cannotAccess = Gdx.audio.newSound(Gdx.files.internal("sound/accessDenied.mp3"));
+		
 		// Adding elements to shop ArrayList & initalizing shop//
 		temp = new Texture(Gdx.files.internal("images/Shop/Imagination.png"));
 		imagination = new TextureRegion(temp);
@@ -137,8 +143,8 @@ public class TextureSingleton {
 		shopElements.add(giggles);
 		shopElements.add(segFaults);
 		shopElements.add(sunshine);
-		shopElements.add(music);
 		shopElements.add(hunger);
+		shopElements.add(music);
 		shopElements.add(drought);
 		shopElements.add(entropy);
 		shopElements.add(trig);
@@ -177,8 +183,8 @@ public class TextureSingleton {
 		elements.add(giggles);
 		elements.add(segFaults);
 		elements.add(sunshine);
-		elements.add(music);
 		elements.add(hunger);
+		elements.add(music);
 		elements.add(drought);
 		elements.add(entropy);
 		elements.add(trig);
@@ -197,4 +203,9 @@ public class TextureSingleton {
 		battleMusic.pause();
 		mainMusic.play();
 	}
+	
+	public void playAccessDenied() {
+		cannotAccess.play();
+	}
+	
 }

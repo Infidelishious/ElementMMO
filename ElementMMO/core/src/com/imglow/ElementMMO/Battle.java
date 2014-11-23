@@ -1,15 +1,38 @@
 package com.imglow.ElementMMO;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Battle implements Drawable
-{
+{	
+	TextureRegion currentPlayerImage;
+	TextureRegion otherPlayerImage;
 	
-	public Battle()
+	Texture[] currentPlayerHealthImages;
+	Texture[] otherPlayerHealthImages;
+	
+	Texture[] playerInventoryImages;
+	
+	TextureRegion currentPlayerBattleElementImage;
+	TextureRegion otherPlayerBattleElementImage;
+	
+	CurrentPlayer currentPlayer;
+	OtherPlayer otherPlayer;
+	
+	SpriteBatch sb;
+	
+	public Battle(CurrentPlayer currentPlayer, OtherPlayer otherPlayer)
 	{
+		this.sb = sb;
+		this.currentPlayer = currentPlayer;
+		this.otherPlayer = otherPlayer;
+		
+		currentPlayerHealthImages = new Texture[3];
+		otherPlayerHealthImages = new Texture[3];
+		playerInventoryImages = new Texture[6];
+		
 		//load the players information into the GUI.
 		
 		//client-event of choosing an element to use is sent to the server.
@@ -36,9 +59,9 @@ public class Battle implements Drawable
 		//draw player sprites
 		
 		//this player
-		sb.draw(TextureSingleton.getInstance().playerSprites.get(TextureSingleton.COP).get(TextureSingleton.STAND), -MainClient.HEIGHT/2+50, 0, Player.WIDTH*2, Player.HEIGHT*2);
+		sb.draw(TextureSingleton.getInstance().playerSprites.get(TextureSingleton.COP).get(TextureSingleton.STAND), -MainClient.HEIGHT/2+50, 0, Player.WIDTH, Player.HEIGHT);
 		//other player
-		sb.draw(TextureSingleton.getInstance().playerSprites.get(TextureSingleton.COP).get(TextureSingleton.STAND), MainClient.HEIGHT/2-125, 0, Player.WIDTH*2, Player.HEIGHT*2);
+		sb.draw(TextureSingleton.getInstance().playerSprites.get(TextureSingleton.COP).get(TextureSingleton.STAND), MainClient.HEIGHT/2-125, 0, Player.WIDTH, Player.HEIGHT);
 
 		//draw health amounts
 		Texture tempFullHeartTexture = new Texture(Gdx.files.internal("full_heart.jpg"));
@@ -53,12 +76,57 @@ public class Battle implements Drawable
 		sb.draw(tempFullHeartTexture, MainClient.WIDTH/4-65, 100, 16, 16);
 		sb.draw(tempFullHeartTexture, MainClient.WIDTH/4-85, 100, 16, 16);
 
+		//draw space for element slots
+		sb.draw(new Texture(Gdx.files.internal("grey.jpg")), -MainClient.WIDTH/4+150, -MainClient.HEIGHT/4+10, MainClient.WIDTH/4, MainClient.HEIGHT/4-50);
 		
 		//draw element slots
-		
-		
+		sb.draw(TextureSingleton.getInstance().imagination, -MainClient.WIDTH/4+180, -80);
+		sb.draw(TextureSingleton.getInstance().imagination, -MainClient.WIDTH/4+180, -120);
+		sb.draw(TextureSingleton.getInstance().imagination, -MainClient.WIDTH/4+180, -160);
+		sb.draw(TextureSingleton.getInstance().imagination, -MainClient.WIDTH/4+340, -80);
+		sb.draw(TextureSingleton.getInstance().imagination, -MainClient.WIDTH/4+340, -120);
+		sb.draw(TextureSingleton.getInstance().imagination, -MainClient.WIDTH/4+340, -160);
+
 		//draw battle element slots
+		sb.draw(TextureSingleton.getInstance().imagination, -200, 0);
+		sb.draw(new Texture(Gdx.files.internal("vs.jpg")), -25, 0, 30, 30);
+		sb.draw(TextureSingleton.getInstance().imagination, 100, 0);
+	}
+
+	public void assignTextures()
+	{
+		//assign player sprites
+		currentPlayerImage = TextureSingleton.getInstance().playerSprites.get(currentPlayer.type).get(TextureSingleton.STAND);
+		otherPlayerImage = TextureSingleton.getInstance().playerSprites.get(otherPlayer.type).get(TextureSingleton.STAND);
 		
-		//draw run button
+		//assign health amounts
+		currentPlayerHealthImages = new Texture[3];
+		//assigns hearts left to right
+		switch(currentPlayer.helth)
+		{
+			case 0:
+				break;
+			case 1:
+				break;
+			case 2:
+				break;
+			case 3:
+				break;
+			case 4:
+				break;
+			case 5: 
+				break;
+			case 6:
+				break;
+		}
+		
+		otherPlayerHealthImages = new Texture[3];
+		
+		//assign element textures
+		playerInventoryImages = new Texture[6];
+		
+		//assign battle element slots
+		currentPlayerBattleElementImage = TextureSingleton.getInstance().playerSprites.get(currentPlayer.type).get(TextureSingleton.STAND);
+		otherPlayerBattleElementImage = TextureSingleton.getInstance().playerSprites.get(otherPlayer.type).get(TextureSingleton.STAND);
 	}
 }

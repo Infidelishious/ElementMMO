@@ -16,7 +16,7 @@ public class Cell implements Drawable {
 		this.type = type;
 		if(type == GRASS)
 		{
-			this.spr = new TextureRegion(TextureSingleton.getInstance().white,0,0,2,2);
+			this.spr = new TextureRegion(TextureSingleton.getInstance().grass,0,0,2,2);
 		}
 	}
 

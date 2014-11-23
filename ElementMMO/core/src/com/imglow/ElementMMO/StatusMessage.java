@@ -1,6 +1,7 @@
 package com.imglow.ElementMMO;
 
-public class StatusMessage extends Message {
-	
+import java.util.Vector;
 
+public class StatusMessage extends Message {
+	Vector<MovmentMessage> playerPosition;
 }

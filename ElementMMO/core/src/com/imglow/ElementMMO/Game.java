@@ -28,7 +28,7 @@ public class Game implements Drawable{
 	public void init(MainClient client) {
 		this.client = client;
 		grid = new Cell[WIDTH][HEIGHT];
-//		bg = new Battle();
+		bg = new Battle();
 		
 		for(int y = 0; y < HEIGHT; y++)
 		{
@@ -59,7 +59,7 @@ public class Game implements Drawable{
 		
 		//if battle draw battle
 		
-		//bg.draw(sb);
+		bg.draw(sb);
 		
 		if(Gdx.input.isKeyPressed(Input.Keys.W))
 			player.move(Player.UP);

@@ -59,7 +59,7 @@ public class Store implements Drawable, ClickListener
 		updateUsingCount();
 		
 		// get the arraylist from textureRegion for the appropriate things
-		abilities.add(new TextureRegion(TextureSingleton.getInstance().white,0,0,60,20) );
+		abilities = textures.shopElements;
 		
 		// get the negation sound
 		// negatory = new Sound(TextureSingleton.getInstance().negatory);
@@ -72,7 +72,24 @@ public class Store implements Drawable, ClickListener
 		
 		// there is also a banner on top that has width 80*3, height 144
 		// sb.draw(imagetodraw, xcoordinate, coordinate, width, height)
+		// draw the banner
 		
+		
+		// draw each button
+		for(int row = 1; row < 5; row++)
+		{
+			for(int col = 0; col < 3; col++)
+			{
+				if(row*3 + col < abilities.size())
+				{
+					sb.draw(abilities.get(row*3 + col),
+							(x - Game.getInstance().dX) + buttonWidth* col,
+							(y - Game.getInstance().dY) + buttonHeight*row,
+							buttonWidth,
+							buttonHeight); 
+				}
+			}
+		}
 	}
 	
 	public void updateUsingCount()

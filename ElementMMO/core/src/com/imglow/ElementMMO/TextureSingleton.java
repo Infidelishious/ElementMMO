@@ -23,8 +23,9 @@ public class TextureSingleton {
 	public Texture white;
 	public BitmapFont scoreFont, nameFont;
 	public Texture cop, spikey, chika, nakedMan;
-	public ArrayList<TextureRegion> copList, spikeyList, chikaList, nakedManList;
-	public TextureRegion grass, bush, tree1, tree2;
+	public ArrayList<TextureRegion> copList, spikeyList, chikaList, nakedManList, shopElements, elements;
+	public TextureRegion grass, bush, tree1, tree2, imagination, hunger, music, giggles, segFaults, sunshine;
+	
 	public Music mainMusic;
 	public Music battleMusic;
 	
@@ -49,7 +50,7 @@ public class TextureSingleton {
 		cop = new Texture(Gdx.files.internal("images/cop.png"));
 		spikey = new Texture(Gdx.files.internal("images/Spikey.png"));
 		chika = new Texture(Gdx.files.internal("images/chika.png"));
-		nakedMan = new Texture(Gdx.files.internal("images/nake_man.png"));
+		nakedMan = new Texture(Gdx.files.internal("images/naked_man.png"));
 		nakedManList = new ArrayList<TextureRegion>();	
 		copList = new ArrayList<TextureRegion>();
 		spikeyList = new ArrayList<TextureRegion>();
@@ -63,7 +64,7 @@ public class TextureSingleton {
 		Texture temp = new Texture(Gdx.files.internal("images/grass.png"));		//using to initialized all the green stuff
 		grass = new TextureRegion(temp);
 		temp = new Texture(Gdx.files.internal("images/bush.png"));
-		bush = new TextureRegion(bush);
+		bush = new TextureRegion(temp);
 		temp = new Texture(Gdx.files.internal("images/tree1.png"));
 		tree1 = new TextureRegion(temp);
 		temp = new Texture(Gdx.files.internal("images/tree2.png"));
@@ -88,6 +89,34 @@ public class TextureSingleton {
 		
 		////Battle music shit////
 		battleMusic = Gdx.audio.newMusic(Gdx.files.internal("sound/battle.mp3"));
+		
+		// Adding elements to shop ArrayList//
+		temp = new Texture(Gdx.files.internal("images/Shop/Imagination.png"));
+		imagination = new TextureRegion(temp);
+		temp = new Texture(Gdx.files.internal("images/Shop/Giggles.png"));
+		giggles = new TextureRegion(temp);
+		temp = new Texture(Gdx.files.internal("images/Shop/SegFaults.png"));
+		segFaults = new TextureRegion(temp);
+		temp = new Texture(Gdx.files.internal("images/Shop/Sunshine.png"));
+		sunshine = new TextureRegion(temp);
+		temp = new Texture(Gdx.files.internal("images/Shop/Music.png"));
+		music = new TextureRegion(temp);
+		shopElements.add(imagination);
+		shopElements.add(giggles);
+		shopElements.add(segFaults);
+		shopElements.add(sunshine);
+		shopElements.add(music);
+		
+		//Adding elements in main Arraylist//
+		temp =  new Texture(Gdx.files.internal("images/Imagination.png"));
+		imagination = new TextureRegion(temp);
+		temp =  new Texture(Gdx.files.internal("images/giggles.png"));
+		giggles = new TextureRegion(temp);
+		temp =  new Texture(Gdx.files.internal("images/SegFaults.png"));
+		segFaults = new TextureRegion(temp);
+		elements.add(imagination);
+		elements.add(giggles);
+		elements.add(segFaults);
 	}
 	
 	public void EnterBattle() {			//Changing music when entering the battle.

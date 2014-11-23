@@ -9,7 +9,7 @@ public class Button implements ClickListener {
 	float x, y, width, height;
 	private OnClickListener l;
 	
-	public Button(TextureRegion spr, int x, int y, int width, int height, OnClickListener l)
+	public Button(TextureRegion spr, float x, float y, float width, float height, OnClickListener l)
 	{
 		this.l = l;
 		this.width = width;

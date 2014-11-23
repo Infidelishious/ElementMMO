@@ -145,6 +145,16 @@ public class MessageManager{
 		return temp;
 	}
 	
+	public StatusMessage getLastStatusMessage()
+	{
+		if(!hasStatusMessage())
+			return null;
+		
+		StatusMessage temp = statusMessages.lastElement();
+		statusMessages.removeAllElements();
+		return temp;
+	}
+	
 	public boolean hasEventMessage()
 	{
 		return !eventMessages.isEmpty();

@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.Vector;
 
 import com.imglow.ElementMMO.BattleMessage;
@@ -14,23 +16,39 @@ import com.imglow.ElementMMO.TextMessage;
 
 class ServerThread extends Thread {
 
+	String user;
 	Socket mySocket;
 	ServerLauncher sl;
 	Vector<Message> queue;
-	private Runnable output, input;
+	Timer timer;
+	TimerTask timerTask;
+	private Thread output, input;
+	MovmentMessage lastMVMessage;
 
 	Object msgLock = new Object();
+	protected Vector<MovmentMessage> movementMessages;
 
-	public ServerThread (Socket initSocket, ServerLauncher sl)
+	public ServerThread (Socket initSocket, final ServerLauncher sl)
 	{
 		mySocket = initSocket;
 		this.sl = sl;
+		
+		final ServerThread thiss = this;
 		queue = new Vector<Message>();
+		movementMessages = new Vector<MovmentMessage>(); 
+		
+		timerTask = new TimerTask(){
+			@Override
+			public void run() {
+				output.interrupt();
+				input.interrupt();
+				sl.serverThreads.remove(thiss);
+			}};
 	}
 
 	public void run()
 	{		
-		output= new Runnable(){
+		output= new Thread(new Runnable(){
 			public void run() {
 				try {
 					ObjectOutputStream br = new ObjectOutputStream(mySocket.getOutputStream());
@@ -60,10 +78,10 @@ class ServerThread extends Thread {
 					System.out.println( "IOExceptionin Client constructor: " + ioe.getMessage() );
 				}
 			}
-		};
-		new Thread(output).start();
+		});
+		output.start();
 
-		input = new Runnable(){
+		input = new Thread(new Runnable(){
 
 			@Override
 			public void run() {
@@ -75,16 +93,17 @@ class ServerThread extends Thread {
 					{
 						Message msg;
 						try {
+							if(timer != null)
+								timer.cancel();
+							
+							timer = new Timer();
+							timer.schedule(timerTask, 1000);
+							
 							msg = (Message) is.readObject();
-							//							System.out.println("Message from: " + msg.from); 
-							//							if(msg instanceof MovmentMessage)
-							//							{
-							//								MovmentMessage mm = (MovmentMessage) msg;
-							//								System.out.println("Position: " + mm.x + "," + mm.y);
-							//							}
-
+							if(user == null)
+								user = msg.from;
 							if(msg instanceof MovmentMessage)
-								sl.movementMessages.add((MovmentMessage) msg);
+								lastMVMessage = (MovmentMessage) msg;
 							else if(msg instanceof EventMessage)
 								sl.eventMessages.add((EventMessage) msg);
 							else if(msg instanceof BattleMessage)
@@ -103,8 +122,8 @@ class ServerThread extends Thread {
 				//catch (InterruptedException ie) { System.out.println("InterruptedException: " + ie.getMessage()); }
 
 			}
-		};
-		new Thread(input).start();
+		});
+		input.start();
 	}
 
 	public void SendMessage(Message msg)
@@ -116,4 +135,10 @@ class ServerThread extends Thread {
 		}
 	}
 
+	public MovmentMessage getLastMovmentMesssage()
+	{
+		if(movementMessages.isEmpty()) return null;
+		
+		return lastMVMessage;
+	}
 }

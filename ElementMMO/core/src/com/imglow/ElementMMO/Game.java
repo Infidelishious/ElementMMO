@@ -1,6 +1,9 @@
 package com.imglow.ElementMMO;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.Vector;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -16,23 +19,32 @@ public class Game implements Drawable{
 	Cell[][] grid;
 	Cell[][] border;
 	MainClient client;
+	Timer timer;
+	TimerTask timerTask;
 	
 	public CurrentPlayer player;
-	
-	public ArrayList<OtherPlayer> otherPlayers;
+	public Vector<OtherPlayer> otherPlayers;
 	public ChatArea chat;
 	private static Game instance;
-	
 	private Battle bg;
-	
 	public Store store;
+	public StatusUpdater statusUpdater;
 
 	protected Game(){}
 	
-	public void init(MainClient client) {
-		
+	public void init(final MainClient client) {
 		this.client = client;
 		grid = new Cell[WIDTH][HEIGHT];
+		
+		timer = new Timer();
+		
+		timerTask = new TimerTask(){
+			@Override
+			public void run() {
+				statusUpdater.interrupt();
+				client.sql.disconnected();
+				Gdx.app.exit();
+			}};
 		
 		// make the stores
 		for(int x = (WIDTH / 10)*4; x < (WIDTH / 10)*6; x++)
@@ -140,6 +152,13 @@ public class Game implements Drawable{
 			if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER))
 				chat = new ChatArea();
 		}
+		
+		
+		for(OtherPlayer i : otherPlayers)
+		{
+			i.draw(sb);
+		}
+		
 		if(player != null)
 			player.draw(sb);
 		if(chat != null)
@@ -149,5 +168,65 @@ public class Game implements Drawable{
 			store.draw(sb);
 			
 			
+	}
+
+	private class StatusUpdater extends Thread
+	{
+		Game game;
+		
+		public StatusUpdater(Game game)
+		{	
+			super(new Runnable(){
+
+				@Override
+				public void run() {
+					while (true)
+					{
+						
+						synchronized(this)
+						{
+							try {
+								wait(10);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+						
+						Message msg;
+						
+						if(MessageManager.getInstance().hasStatusMessage())
+						{
+							timer.cancel();
+							timer = new Timer();
+							timer.schedule(timerTask, 1000);
+							
+							StatusMessage ms = MessageManager.getInstance().getLastStatusMessage();
+							
+							otherPlayers.removeAllElements();
+							
+							for(MovmentMessage i : ms.playerPosition)
+							{
+								if(i.from.equals(player.name)) continue;
+								
+								OtherPlayer op = new OtherPlayer();
+								op.team1 = i.team1;
+								op.type = i.type;
+								op.x = i.x;
+								op.y = i.y;
+								op.moving = i.moving;
+								op.moveDirection = i.direction;
+								
+								otherPlayers.add(op);
+							}
+						}
+
+					}
+					
+				}
+				
+			});
+		}
+		
 	}
 }

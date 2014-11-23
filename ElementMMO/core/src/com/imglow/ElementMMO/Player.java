@@ -14,13 +14,14 @@ public abstract class Player implements Drawable{
 			HEIGHT = 84;
 	
 	public static float SPEED = 0.2f;
+	public boolean moving = false;
 	
 	String name;
 	
 	float y = 1;
 	float x, px, py, time = 0;
 	
-	
+	int moveDirection = NOT_MOVING;
 	
 	int type, 
 		lw = DOWN, 

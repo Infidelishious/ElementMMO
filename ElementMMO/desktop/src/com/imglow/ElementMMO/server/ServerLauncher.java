@@ -90,9 +90,15 @@ public class ServerLauncher {
 						sendMessage(getTextMessage());
 					}
 
-
+					StatusMessage sm = new StatusMessage();
+					sm.from = "server";
+					sm.playerPosition = new Vector<MovmentMessage>();
+					
+					for(ServerThread i : serverThreads)
+					{
+						sm.playerPosition.add(i.getLastMovmentMesssage());
+					}
 				}
-
 			}
 		};
 		new Thread(think).start();

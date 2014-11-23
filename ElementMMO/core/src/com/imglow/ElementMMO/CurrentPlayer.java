@@ -10,7 +10,6 @@ public class CurrentPlayer extends Player{
 	int money, moveDirection = NOT_MOVING;
 	
 	int currX, currY, usingCount;
-	boolean moving = false;
 	boolean blocked = false;
 	// should only enter store
 	// from the edge!!!

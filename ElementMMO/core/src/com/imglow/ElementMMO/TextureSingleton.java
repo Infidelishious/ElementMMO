@@ -23,8 +23,8 @@ public class TextureSingleton {
 	public Texture white, gray;
 	public BitmapFont scoreFont, nameFont;
 	public Texture cop, spikey, chika, nakedMan;
-	public ArrayList<TextureRegion> copList, spikeyList, chikaList, nakedManList, shopElements, elements;
-	public TextureRegion grass, bush, tree1, tree2, imagination, hunger, music, giggles, segFaults, sunshine, drought,
+	public ArrayList<TextureRegion> copList, spikeyList, chikaList, nakedManList, shopElements, elements, Grass;
+	public TextureRegion grass, whiteGrass, blackGrass, bush, tree1, tree2, imagination, hunger, music, giggles, segFaults, sunshine, drought,
 							entropy, trig, choco, synergy, hugs;
 	
 	public Music mainMusic;
@@ -63,14 +63,24 @@ public class TextureSingleton {
 		playerSprites.add(chikaList);	
 		playerSprites.add(nakedManList);
 		
-		Texture temp = new Texture(Gdx.files.internal("images/grass.png"));		//using to initialized all the green stuff
+		Texture temp = new Texture(Gdx.files.internal("images/grass.png"));		//temp is a whore for initializing stuff
+		//I'm going green now.
 		grass = new TextureRegion(temp);
+		temp = new Texture(Gdx.files.internal("images/whitegrass.png"));
+		whiteGrass = new TextureRegion(temp);
+		temp = new Texture(Gdx.files.internal("images/blackgrass.png"));
+		blackGrass = new TextureRegion(temp);
 		temp = new Texture(Gdx.files.internal("images/bush.png"));
 		bush = new TextureRegion(temp);
 		temp = new Texture(Gdx.files.internal("images/tree1.png"));
 		tree1 = new TextureRegion(temp);
 		temp = new Texture(Gdx.files.internal("images/tree2.png"));
 		tree2 = new TextureRegion(temp);
+		Grass = new ArrayList<TextureRegion>();
+		Grass.add(grass);
+		Grass.add(whiteGrass);
+		Grass.add(blackGrass);
+		//Done with that green shit. Not I create people for I am the CREATOR!!!!
 		for(int i = 0; i < 10; i++) {
 			copList.add(new TextureRegion(cop, i * 16, 0, 16, 21));
 		}
@@ -113,6 +123,11 @@ public class TextureSingleton {
 		trig = new TextureRegion(temp);
 		temp = new Texture(Gdx.files.internal("images/Shop/Chocolate.png"));
 		choco = new TextureRegion(temp);
+		temp = new Texture(Gdx.files.internal("images/Shop/Synergy.png"));
+		synergy = new TextureRegion(temp);
+		temp = new Texture(Gdx.files.internal("images/Shop/Hugs.png"));
+		hugs = new TextureRegion(temp);
+		
 		
 		shopElements = new ArrayList<TextureRegion>();
 		shopElements.add(imagination);
@@ -125,6 +140,8 @@ public class TextureSingleton {
 		shopElements.add(entropy);
 		shopElements.add(trig);
 		shopElements.add(choco);
+		shopElements.add(synergy);
+		shopElements.add(hugs);
 		
 		//Adding elements in main Arraylist//
 		temp =  new Texture(Gdx.files.internal("images/Elements/Imagination.png"));
@@ -147,7 +164,10 @@ public class TextureSingleton {
 		trig = new TextureRegion(temp);
 		temp = new Texture(Gdx.files.internal("images/Elements/Chocolate.png"));
 		choco = new TextureRegion(temp);
-		
+		temp = new Texture(Gdx.files.internal("images/Elements/Synergy.png"));
+		synergy = new TextureRegion(temp);
+		temp = new Texture(Gdx.files.internal("images/Elements/Hugs.png"));
+		hugs = new TextureRegion(temp);
 		
 		elements = new ArrayList<TextureRegion>();
 		elements.add(imagination);
@@ -160,6 +180,8 @@ public class TextureSingleton {
 		elements.add(music);
 		elements.add(trig);
 		elements.add(choco);
+		elements.add(synergy);
+		elements.add(hugs);
 	}
 	
 	public void EnterBattle() {			//Changing music when entering the battle.

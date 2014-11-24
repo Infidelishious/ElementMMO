@@ -57,10 +57,10 @@ public class HUD implements Drawable {
 		sb.setColor(Color.WHITE);
 		HUDFont.setColor(0.0f,0.0f,1.0f,1.0f);	// blue
 		HUDFont.setScale(3.0f);
-		HUDFont.draw(sb, "0", -50, (screenH/2) - 20);
+		HUDFont.draw(sb, "0", -100 - 20, (screenH/2) - 20);	// subtracting roughly text width from x
 		HUDFont.setColor(1.0f,0.0f,0.0f,1.0f);	// blue
 		HUDFont.setScale(3.0f);
-		HUDFont.draw(sb, "0", 50, (screenH/2) - 20);
+		HUDFont.draw(sb, "0", 100 - 20, (screenH/2) - 20);	// subtracting roughly text width from x
 	}
 	
 	

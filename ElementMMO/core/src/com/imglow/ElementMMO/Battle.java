@@ -26,6 +26,8 @@ public class Battle implements Drawable
 	TextureRegion[] currentPlayerInventoryImages;
 	Button[] currentPlayerInventoryButtons;
 	
+	Button goButton;
+	
 	TextureRegion currentPlayerBattleElementImage;
 	TextureRegion otherPlayerBattleElementImage;
 	
@@ -49,6 +51,16 @@ public class Battle implements Drawable
 		halfHeartTexture = TextureSingleton.getInstance().halfHeart;
 		noHeartTexture = TextureSingleton.getInstance().noHeart;
 		
+		goButton = new Button(TextureSingleton.getInstance().go, 0, 0, 0, 0, new OnClickListener()
+		{
+			@Override
+			public void onClick(Button source, Vector3 pos) 
+			{
+				
+			}
+			
+		});
+		
 		TextureSingleton.getInstance().EnterBattle();
 		//load the players information into the GUI.
 		assignTextures();
@@ -71,9 +83,10 @@ public class Battle implements Drawable
 		
 		//draw BATTLE!
 		
-		// Texture tempBattleTexture = new Texture(Gdx.files.internal("battle_header.jpg"));
-		// sb.draw(tempBattleTexture, -50, 150);
-		
+		 sb.draw(TextureSingleton.getInstance().battle, -100, 100, 200, 60);
+		 
+		 sb.draw(goButton.spr, -40, 0, 60, 60);
+		 
 		//draw player sprites
 
 		sb.draw(currentPlayerImage, -MainClient.HEIGHT/2+50, 0, Player.WIDTH, Player.HEIGHT);

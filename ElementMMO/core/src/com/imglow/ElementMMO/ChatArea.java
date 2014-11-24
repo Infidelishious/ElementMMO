@@ -21,15 +21,16 @@ public class ChatArea implements Drawable{
 
 	@Override
 	public void draw(SpriteBatch sb)
-	{
-		
-		
+	{		
 		if(first) chatText += "> "; 
 		BitmapFont chatFont = TextureSingleton.getInstance().scoreFont;
 		chatFont.setColor(0.0f,0.0f,0.0f,1.0f);
 		chatFont.setScale(2.0f);
 		chatFont.draw(sb, chatText, -MainClient.WIDTH/2 + 30, -MainClient.HEIGHT/2 + 75);
-		if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER) && first != true) sendMessage(chatText);
+		if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER) && first != true) 
+		{
+			sendMessage(chatText);
+		}
 		if(Gdx.input.isKeyJustPressed(Input.Keys.BACKSPACE) && chatText.length() > 2)
 			chatText = chatText.substring(0, chatText.length() - 1);
 		if(chatText.length() < 50)
@@ -73,10 +74,8 @@ public class ChatArea implements Drawable{
 			else if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_0)) chatText += "0";
 			else if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) chatText += " ";
 			else if(Gdx.input.isKeyJustPressed(Input.Keys.SLASH)) chatText += "/";
-
 		}
 		showMessage(sb);
-
 	}
 	
 	public void showMessage(SpriteBatch sb)
@@ -201,7 +200,6 @@ public class ChatArea implements Drawable{
 								name = "";
 								indexHold = chatText2.indexOf(",",indexHold + 1);
 							}
-							
 						}
 					}
 				}

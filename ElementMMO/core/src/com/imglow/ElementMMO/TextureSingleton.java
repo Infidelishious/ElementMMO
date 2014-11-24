@@ -22,7 +22,7 @@ public class TextureSingleton {
 	public ArrayList<ArrayList<TextureRegion>> playerSprites;
 	
 	public Texture white, gray;
-	public BitmapFont scoreFont, nameFont;
+	public BitmapFont scoreFont, nameFont, instructionFont;
 	public Texture cop, spikey, chika, nakedMan;
 	public ArrayList<TextureRegion> copList, spikeyList, chikaList, nakedManList, shopElements, elements, grassArray, storeArray;
 	public TextureRegion grass, whiteGrass, blackGrass, bush, tree1, tree2, imagination, hunger, music, giggles, segFaults, sunshine, drought,
@@ -50,6 +50,7 @@ public class TextureSingleton {
 		playerSprites = new ArrayList<ArrayList<TextureRegion>>();
 		scoreFont = new BitmapFont(Gdx.files.internal("fonts/Fipps-Regular.fnt"), Gdx.files.internal("fonts/Fipps-Regular_0.tga"), false);
 		nameFont = new BitmapFont(Gdx.files.internal("fonts/FlxRegular.fnt"), Gdx.files.internal("fonts/FlxRegular_0.tga"), false);
+		instructionFont = new BitmapFont(Gdx.files.internal("fonts/Fipps-Regular.fnt"), Gdx.files.internal("fonts/Fipps-Regular_0.tga"), false);
 		whiteRegion = new TextureRegion(white);
 		grayRegion = new TextureRegion(gray);
 		battle = new TextureRegion(new Texture(Gdx.files.internal("images/Battle.png")));

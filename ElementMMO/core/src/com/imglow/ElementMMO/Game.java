@@ -32,8 +32,7 @@ public class Game implements Drawable{
 	public StatusUpdater statusUpdater;
 
 	protected Game(){
-		otherPlayers = new Vector<OtherPlayer>();
-		hud = new HUD();
+		
 	}
 	
 	public void init(final MainClient client) {
@@ -116,6 +115,8 @@ public class Game implements Drawable{
 		
 		player = new CurrentPlayer(3, "Diglit", true);
 		
+		// otherPlayers = new Vector<OtherPlayer>();
+		hud = new HUD();
 		// OtherPlayer temp = new OtherPlayer();
 		// bg = new Battle(player,temp);
 	}
@@ -157,12 +158,12 @@ public class Game implements Drawable{
 				chat = new ChatArea();
 		}
 		
-		
+		/*
 		for(OtherPlayer i : otherPlayers)
 		{
 			i.draw(sb);
 		}
-		
+		*/
 		if(player != null)
 			player.draw(sb);
 		

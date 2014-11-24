@@ -12,6 +12,7 @@ public class InstructionsPane implements Drawable
 	public InstructionsPane()
 	{
 		INSTRUCTION_FONT.setColor(Color.BLACK);
+		INSTRUCTION_FONT.setScale(1);
 	}
 
 	@Override
@@ -24,7 +25,7 @@ public class InstructionsPane implements Drawable
 			@Override
 			public void onClick(Button source, Vector3 pos) 
 			{
-				if((pos.x < -200 || pos.x > 200) || (pos.y < 0 || pos.y > 200))
+				if((pos.x < -200 || pos.x > 200) || (pos.y < 100 || pos.y > 300))
 				{
 					close();
 				}
@@ -32,11 +33,13 @@ public class InstructionsPane implements Drawable
 
 		});
 		
-		sb.draw(TextureSingleton.getInstance().whiteRegion, -200, 0, 400, 200);
-		INSTRUCTION_FONT.draw(sb, "Welcome to our game!", -190, 190);
-		INSTRUCTION_FONT.draw(sb, "Here's how to play:", -190, 170);
-		INSTRUCTION_FONT.draw(sb, "1. Run around and explore the world!", -190, 150);
-		INSTRUCTION_FONT.draw(sb, "2. Run around and explore the world!", -190, 150);
+		sb.draw(TextureSingleton.getInstance().whiteRegion, -250, 100, 525, 200);
+		INSTRUCTION_FONT.draw(sb, "Welcome to our game!", -225, 290);
+		INSTRUCTION_FONT.draw(sb, "Here's how to play:", -220, 260);
+		INSTRUCTION_FONT.draw(sb, "1. Run around and explore the world! ( use WASD )", -220, 230);
+		INSTRUCTION_FONT.draw(sb, "2. Find people on the other team and battle!", -220, 200);
+		INSTRUCTION_FONT.draw(sb, "3. Buy battle elements at the stores!", -220, 170);
+		INSTRUCTION_FONT.draw(sb, "Close this by clicking anywhere outside the window", -240, 120);
 	}
 	
 	public void close()

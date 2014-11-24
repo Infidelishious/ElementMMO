@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public class CurrentPlayer extends Player{
 
 	int money, moveDirection = NOT_MOVING;
-	
+
 	int currX, currY, usingCount;
 	boolean blocked = false;
 	// should only enter store
@@ -232,7 +232,8 @@ public class CurrentPlayer extends Player{
 			if(Game.getInstance().otherPlayers.get(i).x == this.x &&
 					Game.getInstance().otherPlayers.get(i).y == this.y)
 			{
-				Game.getInstance().bg = new Battle(this, Game.getInstance().otherPlayers.get(i));
+				if(Game.getInstance().bg == null)
+					Game.getInstance().bg = new Battle(this, Game.getInstance().otherPlayers.get(i));
 			}
 		}
 		if(!blocked)

@@ -38,7 +38,11 @@ public class Battle implements Drawable
 	OtherPlayer otherPlayer;
 	
 	// SpriteBatch sb;
-	int selected;
+	String messageToSend;
+	
+	static int TEN_SECONDS = 600;
+	int timeRemaining = TEN_SECONDS;
+	
 	public Battle(final CurrentPlayer currentPlayer, final OtherPlayer otherPlayer)
 	{
 		// this.sb = sb;
@@ -53,7 +57,7 @@ public class Battle implements Drawable
 		noHeartTexture = TextureSingleton.getInstance().noHeart;
 		
 		currentPlayerBattleElementNum = -1;
-		
+		/*
 		goButton = new Button(TextureSingleton.getInstance().go, -40, 0, 60, 60, new OnClickListener()
 		{
 			@Override
@@ -66,7 +70,7 @@ public class Battle implements Drawable
 				MessageManager.getInstance().sendMessageToServer(startBattleMessage);
 			}
 		});
-		
+		*/
 		TextureSingleton.getInstance().EnterBattle();
 		//load the players information into the GUI.
 		assignTextures();
@@ -85,6 +89,11 @@ public class Battle implements Drawable
 	{
 		//draw window
 		
+		BattleMessage fromEnemy = MessageManager.getInstance().getBattleMessage();
+		if(fromEnemy != null)
+		{
+			// we've made contact!!!
+		}
 		sb.draw(TextureSingleton.getInstance().white, -MainClient.WIDTH/4, -MainClient.HEIGHT/4, MainClient.WIDTH/2, MainClient.HEIGHT/2);		
 		
 		//draw BATTLE!
@@ -274,6 +283,12 @@ public class Battle implements Drawable
 					{
 						assignHealth();
 						currentPlayerBattleElementImage = source.spr;
+						source.spr = TextureSingleton.getInstance().goGrayed;
+						BattleMessage startBattleMessage = new BattleMessage();
+						startBattleMessage.to = otherPlayer.name;
+						startBattleMessage.event = "" + currentPlayerBattleElementNum;
+						messageToSend = startBattleMessage.event;
+						MessageManager.getInstance().sendMessageToServer(startBattleMessage);
 					}
 				}
 				);
@@ -303,5 +318,14 @@ public class Battle implements Drawable
 		//assign battle element slots as whitespace until event causes them to be otherwise
 		// currentPlayerBattleElementImage = TextureSingleton.getInstance().whiteGrass;
 		// otherPlayerBattleElementImage = TextureSingleton.getInstance().whiteGrass;
+	}
+	
+	public void dispose()
+	{
+		for(int i = 0; i < 6; i++)
+		{
+			currentPlayerInventoryButtons[i].dispose();
+		}
+		Game.getInstance().bg = null;
 	}
 }

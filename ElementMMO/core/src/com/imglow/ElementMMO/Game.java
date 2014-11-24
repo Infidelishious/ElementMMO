@@ -25,6 +25,7 @@ public class Game implements Drawable{
 	public Battle bg;
 	public Store store;
 	public InstructionsPane instructions;
+	public HUD hud;
 
 	protected Game()
 	{
@@ -37,6 +38,7 @@ public class Game implements Drawable{
 
 		timer = new Timer();
 		instructions = new InstructionsPane();
+		hud = new HUD();
 		timerTask = new TimerTask(){
 			@Override
 			public void run() {
@@ -130,40 +132,48 @@ public class Game implements Drawable{
 		//if battle draw battle
 		
 		// bg.draw(sb);
-		
-		if(chat == null)
+		if(bg != null)
+			bg.draw(sb);
+		else
 		{
-			if(player !=null) {
-				if(Gdx.input.isKeyPressed(Input.Keys.W))
-					player.move(Player.UP);
-				else 	if(Gdx.input.isKeyPressed(Input.Keys.S))
-					player.move(Player.DOWN);
-				else if(Gdx.input.isKeyPressed(Input.Keys.D))
-					player.move(Player.RIGHT);
-				else if(Gdx.input.isKeyPressed(Input.Keys.A))
-					player.move(Player.LEFT);
+			if(chat == null)
+			{
+				if(player !=null) {
+					if(Gdx.input.isKeyPressed(Input.Keys.W))
+						player.move(Player.UP);
+					else 	if(Gdx.input.isKeyPressed(Input.Keys.S))
+						player.move(Player.DOWN);
+					else if(Gdx.input.isKeyPressed(Input.Keys.D))
+						player.move(Player.RIGHT);
+					else if(Gdx.input.isKeyPressed(Input.Keys.A))
+						player.move(Player.LEFT);
+				}
+				if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER))
+					chat = new ChatArea();
 			}
-			if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER))
-				chat = new ChatArea();
-		}
-		
-		StatusUpdate();
-		
-		for(OtherPlayer i : otherPlayers)
-		{
-			i.draw(sb);
-		}
-		
-		if(player != null)
-			player.draw(sb);
-		if(chat != null)
-			chat.draw(sb);
-		
-		if(store != null)
-			store.draw(sb);
 			
-		if(instructions != null)
-			instructions.draw(sb);
+			StatusUpdate();
+			
+			for(OtherPlayer i : otherPlayers)
+			{
+				i.draw(sb);
+			}
+			
+			if(player != null)
+				player.draw(sb);
+			
+			if(chat != null)
+				chat.draw(sb);
+			
+			if(store != null)
+				store.draw(sb);
+				
+			if(instructions != null)
+				instructions.draw(sb);
+			
+			if(hud != null)
+				hud.draw(sb);
+		}
 	}
 
 	private void StatusUpdate()
@@ -182,7 +192,7 @@ public class Game implements Drawable{
 			
 			otherPlayers.removeAllElements();
 			
-			System.out.println("Other Players: " + ms.playerPosition.size());
+//			System.out.println("Other Players: " + ms.playerPosition.size());
 			
 			for(MovmentMessage i : ms.playerPosition)
 			{

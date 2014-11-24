@@ -190,7 +190,7 @@ public class MessageManager{
 		return !battleMessages.isEmpty();
 	}
 
-	public Message getBattleMessage()
+	public BattleMessage getBattleMessage()
 	{
 		if(!hasBattleMessage())
 			return null;

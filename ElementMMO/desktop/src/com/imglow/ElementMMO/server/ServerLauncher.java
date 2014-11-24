@@ -26,6 +26,7 @@ public class ServerLauncher {
 	//This is for you josh!
 	public ServerLauncher (final int port)
 	{
+		System.out.println("****Server Starting****");
 		final ServerLauncher thiss = this;
 		queue = new Vector<Message>();
 		textMessages = new Vector<TextMessage>();
@@ -133,7 +134,6 @@ public class ServerLauncher {
 
 	public void sendMessage(Message msg)
 	{
-		System.out.println("send message");
 		queue.add(msg);
 		synchronized(msgLock)
 		{

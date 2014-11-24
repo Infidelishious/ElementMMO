@@ -1,5 +1,6 @@
 package com.imglow.ElementMMO;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -10,7 +11,7 @@ public class HUD implements Drawable {
 	// VARS START ----------------------------
 	
 	// position & dimension data
-	static final float screenW = 1280, screenH = 100;
+	static final float screenW = 1280, screenH = 720;
 	//static final float moneyW = 0, moneyH = 0;	// TODO - ADJUST MONEY DRAW POSITION SO UP IN TOP LEFT CORNER OF SCREEN
 	
 	// references
@@ -46,9 +47,11 @@ public class HUD implements Drawable {
 	public void draw (SpriteBatch sb)
 	{
 		// draw the money at money coordinates
-		HUDFont.setColor(0.0f,0.0f,0.0f,1.0f);
-		HUDFont.draw(sb , "" + currentPlayer.money , -(screenW/2) + 20, -(screenH/2) + 20);
-		sb.setColor(1.0f,1.0f,1.0f,1.0f);
+		//HUDFont.setColor(0.0f,0.0f,0.0f,1.0f);
+		sb.setColor(Color.WHITE);
+		HUDFont.setColor(1.0f,1.0f,1.0f,1.0f);
+		HUDFont.setScale(2.0f);
+		HUDFont.draw(sb , "$ " + currentPlayer.money , -(screenW/2) + 20, (screenH/2) - 20);
 	}
 	
 	

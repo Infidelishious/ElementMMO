@@ -14,7 +14,7 @@ public class OtherPlayer extends Player{
 		else
 			sb.setColor(1f,0.5f,0.5f,1f);
 		
-		sb.draw(spr, (x - Game.getInstance().dX) * Cell.LENGTH, (y - 1 - Game.getInstance().dY) * Cell.LENGTH, WIDTH, HEIGHT); 	
+		sb.draw(spr, (x - 0.5f - Game.getInstance().dX) * Cell.LENGTH, (y - 0.5f - Game.getInstance().dY) * Cell.LENGTH, WIDTH, HEIGHT); 	
 		
 		sb.setColor(Color.WHITE);
 	}

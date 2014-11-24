@@ -182,7 +182,7 @@ public class Game implements Drawable{
 			
 			otherPlayers.removeAllElements();
 			
-			System.out.println("Other Players: " + ms.playerPosition.size());
+//			System.out.println("Other Players: " + ms.playerPosition.size());
 			
 			for(MovmentMessage i : ms.playerPosition)
 			{

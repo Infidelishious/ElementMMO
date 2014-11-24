@@ -28,10 +28,12 @@ public class Game implements Drawable{
 	private static Game instance;
 	private Battle bg;
 	public Store store;
+	public HUD hud;
 	public StatusUpdater statusUpdater;
 
 	protected Game(){
 		otherPlayers = new Vector<OtherPlayer>();
+		hud = new HUD();
 	}
 	
 	public void init(final MainClient client) {
@@ -163,11 +165,15 @@ public class Game implements Drawable{
 		
 		if(player != null)
 			player.draw(sb);
+		
 		if(chat != null)
 			chat.draw(sb);
 		
 		if(store != null)
 			store.draw(sb);
+		
+		if(hud != null)
+			hud.draw(sb);
 			
 			
 	}

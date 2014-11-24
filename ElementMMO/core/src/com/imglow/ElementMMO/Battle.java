@@ -11,17 +11,17 @@ public class Battle implements Drawable
 	TextureRegion currentPlayerImage;
 	TextureRegion otherPlayerImage;
 	
-	Texture halfHeartTexture;
-	Texture fullHeartTexture;
-	Texture noHeartTexture;
+	TextureRegion halfHeartTexture;
+	TextureRegion fullHeartTexture;
+	TextureRegion noHeartTexture;
 	
-	Texture currentPlayerHeartImage1;
-	Texture currentPlayerHeartImage2;
-	Texture currentPlayerHeartImage3;
+	TextureRegion currentPlayerHeartImage1;
+	TextureRegion currentPlayerHeartImage2;
+	TextureRegion currentPlayerHeartImage3;
 
-	Texture otherPlayerHeartImage1;
-	Texture otherPlayerHeartImage2;
-	Texture otherPlayerHeartImage3;
+	TextureRegion otherPlayerHeartImage1;
+	TextureRegion otherPlayerHeartImage2;
+	TextureRegion otherPlayerHeartImage3;
 	
 	TextureRegion[] currentPlayerInventoryImages;
 	Button[] currentPlayerInventoryButtons;
@@ -42,9 +42,9 @@ public class Battle implements Drawable
 		currentPlayerInventoryImages = new TextureRegion[6];
 		currentPlayerInventoryButtons = new Button[6];
 		
-		fullHeartTexture = new Texture(Gdx.files.internal("images/full_heart.png"));
-		halfHeartTexture = new Texture(Gdx.files.internal("images/half_heart.png"));
-		noHeartTexture = new Texture(Gdx.files.internal("images/no_heart.png"));
+		fullHeartTexture = TextureSingleton.getInstance().fullHeart;
+		halfHeartTexture = TextureSingleton.getInstance().halfHeart;
+		noHeartTexture = TextureSingleton.getInstance().noHeart;
 		
 		TextureSingleton.getInstance().EnterBattle();
 		//load the players information into the GUI.
@@ -280,6 +280,7 @@ public class Battle implements Drawable
 				@Override
 				public void onClick(Button source, Vector3 pos) 
 				{
+					// does jack shit
 					System.out.println("White space clicked");
 				}
 

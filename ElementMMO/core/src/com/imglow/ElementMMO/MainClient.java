@@ -26,6 +26,7 @@ public class MainClient extends ApplicationAdapter {
 	
 	public MainClient()
 	{
+		Game.getInstance().player = new CurrentPlayer(2, "Diglet", true);
 	}
 	
 	public MainClient(Socket s, SQL sql, int playerType, String name, boolean team1)

@@ -205,7 +205,7 @@ public class CurrentPlayer extends Player{
 		if(!blocked)
 		{
 			moving = true;
-			System.out.println("move");
+//			System.out.println("move");
 		}
 		moveNudge();
 		
@@ -273,6 +273,8 @@ public class CurrentPlayer extends Player{
 		mm.y = y;
 		mm.moving = moving;
 		mm.from = name;
+		mm.type = type;
+		mm.team1 = team1;
 		MessageManager.getInstance().sendMessageToServer(mm);
 		
 	}

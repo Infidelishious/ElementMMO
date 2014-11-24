@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
@@ -26,17 +27,16 @@ class ServerThread extends Thread {
 	MovmentMessage lastMVMessage;
 
 	Object msgLock = new Object();
-	protected Vector<MovmentMessage> movementMessages;
 
 	public ServerThread (Socket initSocket, final ServerLauncher sl)
 	{
 		mySocket = initSocket;
 		this.sl = sl;
-		
+
 		final ServerThread thiss = this;
 		queue = new Vector<Message>();
-		movementMessages = new Vector<MovmentMessage>(); 
-		
+//		movementMessages = new Vector<MovmentMessage>(); 
+
 		timerTask = new TimerTask(){
 			@Override
 			public void run() {
@@ -67,8 +67,7 @@ class ServerThread extends Thread {
 								try {
 									msgLock.wait();
 								} catch (InterruptedException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
+									break;
 								}
 							}
 						}
@@ -85,42 +84,51 @@ class ServerThread extends Thread {
 
 			@Override
 			public void run() {
+				ObjectInputStream is;
+				
 				try
-				{
-					ObjectInputStream is = new ObjectInputStream(mySocket.getInputStream());
-
-					while (true)
-					{
-						Message msg;
-						try {
-							if(timer != null)
-								timer.cancel();
-							
-							timer = new Timer();
-							timer.schedule(timerTask, 1000);
-							
-							msg = (Message) is.readObject();
-							if(user == null)
-								user = msg.from;
-							if(msg instanceof MovmentMessage)
-								lastMVMessage = (MovmentMessage) msg;
-							else if(msg instanceof EventMessage)
-								sl.eventMessages.add((EventMessage) msg);
-							else if(msg instanceof BattleMessage)
-								sl.battleMessages.add((BattleMessage) msg);
-							else
-								sl.textMessages.add((TextMessage) msg);
-
-						} catch (ClassNotFoundException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-
-					}
+				{	
+					is = new ObjectInputStream(mySocket.getInputStream());
 				}
-				catch (IOException ioe) { System.out.println("IOException in ServerGameplayThread run(): " + ioe.getMessage()); }
-				//catch (InterruptedException ie) { System.out.println("InterruptedException: " + ie.getMessage()); }
+				catch (Exception ioe) { 
+						System.out.println("Exception in ServerThread.input.run(): "); 
+						ioe.printStackTrace();
+						timerTask.run();
+						return;
+					};
+				
 
+				while (true)
+				{
+					Message msg;
+					try {
+						msg = (Message) is.readObject();
+						
+						if(user == null)
+							user = msg.from;
+						
+//						System.out.println("Msg from:" + msg.from);
+						
+						if(msg instanceof MovmentMessage)
+							lastMVMessage = (MovmentMessage) msg;
+						else if(msg instanceof EventMessage)
+							sl.eventMessages.add((EventMessage) msg);
+						else if(msg instanceof BattleMessage)
+							sl.battleMessages.add((BattleMessage) msg);
+						else
+							sl.textMessages.add((TextMessage) msg);
+
+					}catch (SocketException e) {
+						System.out.println("Socket Closed");
+						timerTask.run();
+						break;
+					} 
+					catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+
+				}
 			}
 		});
 		input.start();
@@ -137,8 +145,8 @@ class ServerThread extends Thread {
 
 	public MovmentMessage getLastMovmentMesssage()
 	{
-		if(movementMessages.isEmpty()) return null;
-		
+//		if(movementMessages.isEmpty()) return null;
+
 		return lastMVMessage;
 	}
 }

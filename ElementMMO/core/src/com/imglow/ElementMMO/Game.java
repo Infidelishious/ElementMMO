@@ -28,7 +28,6 @@ public class Game implements Drawable{
 	private static Game instance;
 	private Battle bg;
 	public Store store;
-	public StatusUpdater statusUpdater;
 
 	protected Game(){
 		otherPlayers = new Vector<OtherPlayer>();
@@ -43,7 +42,6 @@ public class Game implements Drawable{
 		timerTask = new TimerTask(){
 			@Override
 			public void run() {
-				statusUpdater.interrupt();
 				client.sql.disconnected();
 				Gdx.app.exit();
 			}};
@@ -111,11 +109,6 @@ public class Game implements Drawable{
 				}
 			}
 		}
-		
-		player = new CurrentPlayer(3, "Diglit", true);
-		
-		// OtherPlayer temp = new OtherPlayer();
-		// bg = new Battle(player,temp);
 	}
 	
 	public static Game getInstance() {
@@ -155,6 +148,7 @@ public class Game implements Drawable{
 				chat = new ChatArea();
 		}
 		
+		StatusUpdate();
 		
 		for(OtherPlayer i : otherPlayers)
 		{
@@ -172,63 +166,42 @@ public class Game implements Drawable{
 			
 	}
 
-	private class StatusUpdater extends Thread
-	{
-		Game game;
+	private void StatusUpdate()
+	{	
+		if(player == null) return;;
 		
-		public StatusUpdater(Game game)
-		{	
-			super(new Runnable(){
-
-				@Override
-				public void run() {
-					while (true)
-					{
-						
-						synchronized(this)
-						{
-							try {
-								wait(10);
-							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						}
-						
-						Message msg;
-						
-						if(MessageManager.getInstance().hasStatusMessage())
-						{
-							timer.cancel();
-							timer = new Timer();
-							timer.schedule(timerTask, 1000);
-							
-							StatusMessage ms = MessageManager.getInstance().getLastStatusMessage();
-							
-							otherPlayers.removeAllElements();
-							
-							for(MovmentMessage i : ms.playerPosition)
-							{
-								if(i.from.equals(player.name)) continue;
-								
-								OtherPlayer op = new OtherPlayer();
-								op.team1 = i.team1;
-								op.type = i.type;
-								op.x = i.x;
-								op.y = i.y;
-								op.moving = i.moving;
-								op.moveDirection = i.direction;
-								
-								otherPlayers.add(op);
-							}
-						}
-
-					}
-					
-				}
+		Message msg;
+		
+		if(MessageManager.getInstance().hasStatusMessage())
+		{
+	//							timer.cancel();
+	//							timer = new Timer();
+	//							timer.schedule(timerTask, 1000);
+			
+			StatusMessage ms = MessageManager.getInstance().getLastStatusMessage();
+			
+			otherPlayers.removeAllElements();
+			
+			System.out.println("Other Players: " + ms.playerPosition.size());
+			
+			for(MovmentMessage i : ms.playerPosition)
+			{
+	//								System.out.println(i.toString());
+				if(i == null) continue;
+				if(i.from.equals(player.name)) continue;
 				
-			});
+				OtherPlayer op = new OtherPlayer();
+				op.team1 = i.team1;
+				op.type = i.type;
+				op.x = i.x;
+				op.y = i.y;
+				op.moving = i.moving;
+				op.moveDirection = i.direction;
+				
+				otherPlayers.add(op);
+			}
+			
 		}
-		
+	
 	}
 }

@@ -42,24 +42,28 @@ public class ServerLauncher {
 					if(queue.size() > 0)
 					{
 						Message msg = queue.get(0);
-						for(ServerThread i : serverThreads)
+						if(msg != null)
 						{
-							i.SendMessage(deepClone(msg));
+							for(ServerThread i : serverThreads)
+							{
+								i.SendMessage(deepClone(msg));
+								System.out.println("Message sent from : " + msg.from + " to " + i.user);
+							}
 						}
 						queue.remove(0);
 					}
-					else
-					{
-						synchronized(msgLock)
-						{
-							try {
-								msgLock.wait();
-							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
-						}
-					}
+//					else
+//					{
+//						synchronized(msgLock)
+//						{
+//							try {
+//								msgLock.wait();
+//							} catch (InterruptedException e) {
+//								// TODO Auto-generated catch block
+//								e.printStackTrace();
+//							}
+//						}
+//					}
 
 				}
 			}
@@ -80,6 +84,9 @@ public class ServerLauncher {
 						}
 					}
 					
+//					System.out.println(serverThreads.size() + "usuers");
+					if(serverThreads.size() == 0) continue;
+					
 					while(hasBattleMessage())
 					{
 						sendMessage(getBattleMessage());
@@ -96,8 +103,11 @@ public class ServerLauncher {
 					
 					for(ServerThread i : serverThreads)
 					{
-						sm.playerPosition.add(i.getLastMovmentMesssage());
+						if(i.getLastMovmentMesssage() != null)
+							sm.playerPosition.add(i.getLastMovmentMesssage());
 					}
+					
+					sendMessage(sm);
 				}
 			}
 		};
@@ -112,6 +122,7 @@ public class ServerLauncher {
 					{
 						Socket s = ss.accept();
 						ServerThread st = new ServerThread(s, thiss);
+						serverThreads.add(st);
 						st.start();
 					}
 				}
@@ -122,6 +133,7 @@ public class ServerLauncher {
 
 	public void sendMessage(Message msg)
 	{
+		System.out.println("send message");
 		queue.add(msg);
 		synchronized(msgLock)
 		{

@@ -18,7 +18,8 @@ public class SQLManager implements SQL {
 	
 	// VARIABLES START --------------------------------------------------------
 	
-	public static final String DB_ADDRESS = "jdbc:mysql://localhost/";
+	//public static final String DB_ADDRESS = "jdbc:mysql://localhost/";
+	public String DB_ADDRESS = "jdbc:mysql://";
 	public static final String DB_NAME = "elementmmo";
 	public static final String DRIVER = "com.mysql.jdbc.Driver";
 	public static final String USER = "root";
@@ -33,8 +34,9 @@ public class SQLManager implements SQL {
 	
 	
 	
-	public SQLManager ()
+	public SQLManager (String host)
 	{
+		DB_ADDRESS += host;
 		//queryLock = new ReentrantLock();
 		
 		// establish connection with sql database

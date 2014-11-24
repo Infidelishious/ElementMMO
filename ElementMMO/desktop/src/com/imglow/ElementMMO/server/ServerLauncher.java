@@ -24,6 +24,7 @@ public class ServerLauncher {
 	Vector<Message> playerPositions;
 	Object msgLock = new Object();
 	Runnable think, output;
+	int blueScore = 0, redScore = 0;
 
 	//This is for you josh!
 	public ServerLauncher (final int port)
@@ -47,10 +48,13 @@ public class ServerLauncher {
 						Message msg = queue.get(0);
 						if(msg != null)
 						{
-							for(ServerThread i : serverThreads)
+							synchronized(thiss)
 							{
-								i.SendMessage(deepClone(msg));
-								System.out.println("Message sent from : " + msg.from + " to " + i.user);
+								for(ServerThread i : serverThreads)
+								{
+									i.SendMessage(deepClone(msg));
+									System.out.println("Message sent from : " + msg.from + " to " + i.user);
+								}
 							}
 						}
 						queue.remove(0);
@@ -99,6 +103,12 @@ public class ServerLauncher {
 					{
 						sendMessage(getTextMessage());
 					}
+					
+					while(hasEventMessage())
+					{
+//						EventM
+						sendMessage(getEventMessage());
+					}
 
 					StatusMessage sm = new StatusMessage();
 					sm.from = "server";
@@ -125,7 +135,10 @@ public class ServerLauncher {
 					{
 						Socket s = ss.accept();
 						ServerThread st = new ServerThread(s, thiss);
-						serverThreads.add(st);
+						synchronized(thiss)
+						{
+							serverThreads.add(st);
+						}
 						st.start();
 					}
 				}

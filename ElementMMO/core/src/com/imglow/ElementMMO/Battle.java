@@ -1,7 +1,9 @@
 package com.imglow.ElementMMO;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector3;
@@ -26,7 +28,7 @@ public class Battle implements Drawable
 	TextureRegion[] currentPlayerInventoryImages;
 	Button[] currentPlayerInventoryButtons;
 	
-	Button goButton;
+	// Button goButton;
 	
 	TextureRegion currentPlayerBattleElementImage;
 	TextureRegion otherPlayerBattleElementImage;
@@ -39,12 +41,15 @@ public class Battle implements Drawable
 	
 	// SpriteBatch sb;
 	String messageToSend;
+	String messageReceived;
 	
-	static int TEN_SECONDS = 600;
-	int timeRemaining = TEN_SECONDS;
+	static int MAX_TIME = 60*10; // 60 times per second * 10
+	int timeRemaining = MAX_TIME;
 	
 	public Battle(final CurrentPlayer currentPlayer, final OtherPlayer otherPlayer)
 	{
+		messageToSend = "";
+		messageReceived = "";
 		// this.sb = sb;
 		this.currentPlayer = currentPlayer;
 		this.otherPlayer = otherPlayer;
@@ -87,20 +92,148 @@ public class Battle implements Drawable
 	@Override
 	public void draw(SpriteBatch sb) 
 	{
-		//draw window
 		
-		BattleMessage fromEnemy = MessageManager.getInstance().getBattleMessage();
-		if(fromEnemy != null)
+		// when doing the battle, only calculate your own shit
+		// don't worry about your opponent's stuff.
+		// trust his to work
+		
+		
+		//draw window
+		// reset the timer
+		timeRemaining--;
+		if(timeRemaining <= 0)
 		{
-			// we've made contact!!!
+			// reset
+			currentPlayerBattleElementImage = null;
+			// if MAX_TIME seconds elapses
+			// if we have not yet received a message from enemy
+			// then damage them
+			if(messageReceived.equals(""))
+			{
+				otherPlayer.health--;
+				BattleMessage toSend = new BattleMessage();
+				toSend.from = currentPlayer.name;
+				toSend.to = otherPlayer.name;
+				toSend.event = "TDM";
+				MessageManager.getInstance().sendMessageToServer(toSend);
+			}
+			
+			// reset the timer
+			timeRemaining = MAX_TIME;
 		}
+		
+		// if u have no health left
+		// game over man
+		if(otherPlayer.health <= 0)
+		{
+			// they ran out of health
+			Game.getInstance().player.money+= 200;
+			// we stay where we are
+			// we do not go back to spawn
+			dispose();
+			
+		}
+		else if(currentPlayer.health <= 0)
+		{
+			BattleMessage toSend = new BattleMessage();
+			toSend.to = otherPlayer.name;
+			toSend.from = currentPlayer.name;
+			toSend.event = "GOM";
+			MessageManager.getInstance().sendMessageToServer(toSend);
+			Game.getInstance().player.sendToSpawn();
+			// you died!!
+			Game.getInstance().player.health = 6;
+			// close the battle thing
+			
+			dispose();
+		}
+		else
+		{
+			// get a message
+			BattleMessage fromEnemy = MessageManager.getInstance().getBattleMessage();
+			if(fromEnemy != null)
+			{
+				// is it to us
+				System.out.println("fromEnemy.to is " + fromEnemy.to);
+				System.out.println("fromEnemy.event is " + fromEnemy.event);
+				if(fromEnemy.to.equals(Game.getInstance().player.name))
+				{
+					// enemy has sent us something!!
+					messageReceived = fromEnemy.event;
+					if(messageReceived.equals("GOM"))
+					{
+						// we r done
+						// they ran out of health
+						Game.getInstance().player.money+= 200;
+						// set his health to the temp health
+						Game.getInstance().player.health = currentPlayer.health;
+						// we stay in the outside
+						// we do not go back to spawn
+						dispose();
+					
+					}
+					else if(messageReceived.equals("TDM"))
+					{
+						// the enemy waited 10 seconds
+						// and we did not send a message
+						// we are punished for our transgression
+						timeRemaining = MAX_TIME;
+						// make sure everytime we do dis
+						
+						currentPlayer.health--;
+						// reset messagereceived
+						messageReceived = "";
+					}
+					else if(messageToSend != "")
+					{
+						// messageRecieved = RA#
+						// messageToSend = RA#
+						// DANNG
+						// compare the messageReceived
+						// with our messageToSend
+						int playerAttack = Integer.parseInt(messageToSend.substring(2));
+						int enemyAttack = Integer.parseInt(messageReceived.substring(2));
+						
+						int battleResult = BattleLogics.battle(playerAttack, enemyAttack);
+						
+						// only calculate the battle result for your own self!!!
+						// do not calculate for opponent
+						if(battleResult == -1)
+						{
+							// we lost boys
+							currentPlayer.health-= 2;
+							
+						}
+						else if(battleResult == 0)
+						{
+							// a tie is acceptable
+							// i guess
+							currentPlayer.health--;
+							otherPlayer.health--;
+						}
+						else // battleResult == 1
+						{
+							// WE WON!!!
+							// enemy damages himself pew pew
+							otherPlayer.health-= 2;
+						}
+						// reset our messagelistener things
+						messageToSend = "";
+						messageReceived = "";
+						timeRemaining = MAX_TIME;
+					}
+				}
+					
+			}
+		}
+		assignHealth();
 		sb.draw(TextureSingleton.getInstance().white, -MainClient.WIDTH/4, -MainClient.HEIGHT/4, MainClient.WIDTH/2, MainClient.HEIGHT/2);		
 		
 		//draw BATTLE!
 		
 		 sb.draw(TextureSingleton.getInstance().battle, -100, 100, 200, 60);
 		 
-		 sb.draw(goButton.spr, -40, 0, 60, 60);
+		 // sb.draw(goButton.spr, -40, 0, 60, 60);
 		 
 		//draw player sprites
 
@@ -164,6 +297,15 @@ public class Battle implements Drawable
 			sb.draw(TextureSingleton.getInstance().whiteRegion,-200,0);
 		// sb.draw(new Texture(Gdx.files.internal("vs.jpg")), -25, 0, 30, 30);
 		sb.draw(TextureSingleton.getInstance().whiteRegion, 100, 0);
+		
+		BitmapFont timerDraw = TextureSingleton.getInstance().scoreFont;
+		sb.setColor(Color.BLACK);
+		timerDraw.setColor(Color.BLACK);
+		timerDraw.draw(sb , "" + timeRemaining , -14, 0);
+		sb.setColor(Color.WHITE);
+		//sb.setColor(Color.WHITE);
+		
+		// scoreFont.draw
 	}
 	
 	
@@ -283,10 +425,16 @@ public class Battle implements Drawable
 					{
 						assignHealth();
 						currentPlayerBattleElementImage = source.spr;
-						source.spr = TextureSingleton.getInstance().goGrayed;
+						// source.spr = TextureSingleton.getInstance().goGrayed;
 						BattleMessage startBattleMessage = new BattleMessage();
 						startBattleMessage.to = otherPlayer.name;
-						startBattleMessage.event = "" + currentPlayerBattleElementNum;
+						startBattleMessage.from = currentPlayer.name;
+						// messages to send
+						// RA# means that you are doing a regular attack of type #
+						// TDM take damage man, opp has stalled, so opp takes damage
+						// GOM game over man, currentplayer has no health
+						// so end the battle
+						startBattleMessage.event = "RA" + currentPlayerBattleElementNum;
 						messageToSend = startBattleMessage.event;
 						MessageManager.getInstance().sendMessageToServer(startBattleMessage);
 					}
@@ -326,6 +474,7 @@ public class Battle implements Drawable
 		{
 			currentPlayerInventoryButtons[i].dispose();
 		}
+		TextureSingleton.getInstance().ExitBattle();
 		Game.getInstance().bg = null;
 	}
 }

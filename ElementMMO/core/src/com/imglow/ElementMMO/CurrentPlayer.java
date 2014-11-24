@@ -56,7 +56,7 @@ public class CurrentPlayer extends Player{
 		sendToSpawn();
 	}
 	
-	private void sendToSpawn() {
+	public void sendToSpawn() {
 		if(team1)
 		{
 			x = Game.WIDTH/2;
@@ -233,9 +233,44 @@ public class CurrentPlayer extends Player{
 					Game.getInstance().otherPlayers.get(i).y == this.y)
 			{
 				if(Game.getInstance().bg == null)
+				{
 					Game.getInstance().bg = new Battle(this, Game.getInstance().otherPlayers.get(i));
+					// start the other player
+					EventMessage message = new EventMessage();
+					message.from = Game.getInstance().player.name;
+					message.to = Game.getInstance().otherPlayers.get(i).name;
+					message.event = "StartBattle";
+					MessageManager.getInstance().sendMessageToServer(message);
+				}
 			}
 		}
+		
+		// this makes sure that if your opponent has started a fight,
+		
+		// you start a fight
+		EventMessage receivedMessage = MessageManager.getInstance().getEventMessage();
+		if(receivedMessage != null)
+		{
+			if(receivedMessage.to.equals(Game.getInstance().player.name) )
+			{
+				// he's called you out boyo!!
+				// figure out which other
+				for(int i = 0; i < Game.getInstance().otherPlayers.size(); i++)
+				{
+					if(Game.getInstance().otherPlayers.get(i).name.equals(receivedMessage.from))
+					{
+						
+						// we found the mofo
+						if(Game.getInstance().bg == null)
+						{
+							Game.getInstance().bg = new Battle(this, Game.getInstance().otherPlayers.get(i));
+						}
+					}
+				}
+			}
+					
+		}
+		
 		if(!blocked)
 		{
 			if(moving)

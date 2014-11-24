@@ -36,7 +36,7 @@ public class SQLManager implements SQL {
 	
 	public SQLManager (String host)
 	{
-		DB_ADDRESS += host;
+		DB_ADDRESS += host + "/";
 		//queryLock = new ReentrantLock();
 		
 		// establish connection with sql database

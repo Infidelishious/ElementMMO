@@ -30,7 +30,9 @@ public class Game implements Drawable{
 	public Store store;
 	public StatusUpdater statusUpdater;
 
-	protected Game(){}
+	protected Game(){
+		otherPlayers = new Vector<OtherPlayer>();
+	}
 	
 	public void init(final MainClient client) {
 		this.client = client;

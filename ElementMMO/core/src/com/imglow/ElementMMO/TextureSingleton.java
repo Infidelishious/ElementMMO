@@ -24,10 +24,10 @@ public class TextureSingleton {
 	public Texture white, gray;
 	public BitmapFont scoreFont, nameFont;
 	public Texture cop, spikey, chika, nakedMan;
-	public ArrayList<TextureRegion> copList, spikeyList, chikaList, nakedManList, shopElements, elements, grassArray;
+	public ArrayList<TextureRegion> copList, spikeyList, chikaList, nakedManList, shopElements, elements, grassArray, storeArray;
 	public TextureRegion grass, whiteGrass, blackGrass, bush, tree1, tree2, imagination, hunger, music, giggles, segFaults, sunshine, drought,
 							entropy, trig, choco, synergy, hugs, shop, whiteRegion, grayRegion, battle, go, goGrayed, vs, fullHeart,
-							halfHeart, noHeart;
+							halfHeart, noHeart, storeCorner, storeEmpty, storeFlowers, storeSide, storeStall1, storeStall2, storePot;
 	
 	public Music mainMusic;
 	public Music battleMusic;
@@ -82,6 +82,30 @@ public class TextureSingleton {
 		whiteGrass = new TextureRegion(temp);
 		temp = new Texture(Gdx.files.internal("images/blackgrass.png"));
 		blackGrass = new TextureRegion(temp);
+		
+		temp = new Texture(Gdx.files.internal("images/storeCorner.png"));
+		storeCorner = new TextureRegion(temp);
+		temp = new Texture(Gdx.files.internal("images/storeEmpty.png"));
+		storeEmpty = new TextureRegion(temp);
+		temp = new Texture(Gdx.files.internal("images/storeFlowers.png"));
+		storeFlowers = new TextureRegion(temp);
+		temp = new Texture(Gdx.files.internal("images/storeSide.png"));
+		storeSide = new TextureRegion(temp);
+		temp = new Texture(Gdx.files.internal("images/storeStall1.png"));
+		storeStall1 = new TextureRegion(temp);
+		temp = new Texture(Gdx.files.internal("images/storeStall2.png"));
+		storeStall2 = new TextureRegion(temp);
+		temp = new Texture(Gdx.files.internal("images/storePot.png"));
+		storePot = new TextureRegion(temp);
+		storeArray = new ArrayList<TextureRegion>();
+		storeArray.add(storeEmpty);
+		storeArray.add(storeEmpty);
+		storeArray.add(storeEmpty);
+		storeArray.add(storeFlowers);
+		storeArray.add(storeStall1);
+		storeArray.add(storeStall2);
+		storeArray.add(storePot);
+		
 		temp = new Texture(Gdx.files.internal("images/bush.png"));
 		bush = new TextureRegion(temp);
 		temp = new Texture(Gdx.files.internal("images/tree1.png"));

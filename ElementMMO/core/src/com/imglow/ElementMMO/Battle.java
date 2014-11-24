@@ -64,7 +64,6 @@ public class Battle implements Drawable
 				startBattleMessage.to = otherPlayer.name;
 				startBattleMessage.event = "" + currentPlayerBattleElementNum;
 				MessageManager.getInstance().sendMessageToServer(startBattleMessage);
-				//
 			}
 		});
 		

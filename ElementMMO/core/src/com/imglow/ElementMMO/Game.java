@@ -1,15 +1,11 @@
 package com.imglow.ElementMMO;
 
-import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Vector;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Game implements Drawable{
@@ -28,17 +24,19 @@ public class Game implements Drawable{
 	private static Game instance;
 	private Battle bg;
 	public Store store;
+	public InstructionsPane instructions;
 
-	protected Game(){
+	protected Game()
+	{
 		otherPlayers = new Vector<OtherPlayer>();
 	}
 	
 	public void init(final MainClient client) {
 		this.client = client;
 		grid = new Cell[WIDTH][HEIGHT];
-		
+
 		timer = new Timer();
-		
+		instructions = new InstructionsPane();
 		timerTask = new TimerTask(){
 			@Override
 			public void run() {
@@ -120,6 +118,7 @@ public class Game implements Drawable{
 
 	@Override
 	public void draw(SpriteBatch sb) {
+		
 		for(int y = 0; y < HEIGHT; y++)
 		{
 			for(int x = 0; x < WIDTH; x++)
@@ -163,7 +162,8 @@ public class Game implements Drawable{
 		if(store != null)
 			store.draw(sb);
 			
-			
+		if(instructions != null)
+			instructions.draw(sb);
 	}
 
 	private void StatusUpdate()

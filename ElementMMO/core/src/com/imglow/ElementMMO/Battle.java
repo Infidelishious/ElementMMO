@@ -39,6 +39,10 @@ public class Battle implements Drawable
 	
 	// SpriteBatch sb;
 	int selected;
+	
+	static int TEN_SECONDS = 600;
+	int timeRemaining = TEN_SECONDS;
+	
 	public Battle(final CurrentPlayer currentPlayer, final OtherPlayer otherPlayer)
 	{
 		// this.sb = sb;
@@ -53,7 +57,7 @@ public class Battle implements Drawable
 		noHeartTexture = TextureSingleton.getInstance().noHeart;
 		
 		currentPlayerBattleElementNum = -1;
-		
+		/*
 		goButton = new Button(TextureSingleton.getInstance().go, -40, 0, 60, 60, new OnClickListener()
 		{
 			@Override
@@ -66,7 +70,7 @@ public class Battle implements Drawable
 				MessageManager.getInstance().sendMessageToServer(startBattleMessage);
 			}
 		});
-		
+		*/
 		TextureSingleton.getInstance().EnterBattle();
 		//load the players information into the GUI.
 		assignTextures();
@@ -253,6 +257,7 @@ public class Battle implements Drawable
 		for(int i = 0; i < 12; i++)
 		{
 			//if all inventory spots have been exhausted
+			selected = i;
 			if(inventoryElementNum >= 6)
 			{
 				//stop checking whether further elements are owned by current player
@@ -274,6 +279,11 @@ public class Battle implements Drawable
 					{
 						assignHealth();
 						currentPlayerBattleElementImage = source.spr;
+						source.spr = TextureSingleton.getInstance().goGrayed;
+						BattleMessage startBattleMessage = new BattleMessage();
+						startBattleMessage.to = otherPlayer.name;
+						startBattleMessage.event = "" + currentPlayerBattleElementNum;
+						MessageManager.getInstance().sendMessageToServer(startBattleMessage);
 					}
 				}
 				);
@@ -303,5 +313,14 @@ public class Battle implements Drawable
 		//assign battle element slots as whitespace until event causes them to be otherwise
 		// currentPlayerBattleElementImage = TextureSingleton.getInstance().whiteGrass;
 		// otherPlayerBattleElementImage = TextureSingleton.getInstance().whiteGrass;
+	}
+	
+	public void dispose()
+	{
+		for(int i = 0; i < 6; i++)
+		{
+			currentPlayerInventoryButtons[i].dispose();
+		}
+		Game.getInstance().bg = null;
 	}
 }

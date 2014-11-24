@@ -22,8 +22,8 @@ public class SQLManager implements SQL {
 	public String DB_ADDRESS = "jdbc:mysql://";
 	public static final String DB_NAME = "elementmmo";
 	public static final String DRIVER = "com.mysql.jdbc.Driver";
-	public static final String USER = "root";
-	public static final String PASSWORD = "rootPassword";
+	public static final String USER = "user";
+	public static final String PASSWORD = "1234";
 	
 	Connection myConnection;
 	PreparedStatement myPS;

@@ -13,6 +13,8 @@ import com.imglow.ElementMMO.TextMessage;
 
 public class ServerLauncher {
 
+	static int PORT = 25565;
+	
 	Vector<Message> queue;
 	Vector<TextMessage> textMessages;
 	Vector<MovmentMessage> movementMessages;
@@ -225,7 +227,7 @@ public class ServerLauncher {
 	
 	public static void main (String[] args)
 	{
-		ServerLauncher gameServer = new ServerLauncher(1337);
+		ServerLauncher gameServer = new ServerLauncher(PORT);
 	}
 }
 

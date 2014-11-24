@@ -33,7 +33,7 @@ public class LoginFrame extends JFrame {
 	Socket mySocket;
 	SQLManager mySQLManager;
 	String hostname = "127.0.0.1";
-	int port = 1337;
+	int port = 25565;
 
 	// gui elements
 	JPanel mainPanel;

@@ -39,11 +39,12 @@ public class Battle implements Drawable
 	
 	// SpriteBatch sb;
 	int selected;
-	public Battle(CurrentPlayer currentPlayer, OtherPlayer otherPlayer)
+	public Battle(final CurrentPlayer currentPlayer, final OtherPlayer otherPlayer)
 	{
 		// this.sb = sb;
 		this.currentPlayer = currentPlayer;
 		this.otherPlayer = otherPlayer;
+				
 		currentPlayerInventoryImages = new TextureRegion[6];
 		currentPlayerInventoryButtons = new Button[6];
 		
@@ -51,14 +52,20 @@ public class Battle implements Drawable
 		halfHeartTexture = TextureSingleton.getInstance().halfHeart;
 		noHeartTexture = TextureSingleton.getInstance().noHeart;
 		
-		goButton = new Button(TextureSingleton.getInstance().go, 0, 0, 0, 0, new OnClickListener()
+		currentPlayerBattleElementNum = -1;
+		
+		goButton = new Button(TextureSingleton.getInstance().go, -40, 0, 60, 60, new OnClickListener()
 		{
 			@Override
 			public void onClick(Button source, Vector3 pos) 
 			{
-				
+				source.spr = TextureSingleton.getInstance().goGrayed;
+				BattleMessage startBattleMessage = new BattleMessage();
+				startBattleMessage.to = otherPlayer.name;
+				startBattleMessage.event = "" + currentPlayerBattleElementNum;
+				MessageManager.getInstance().sendMessageToServer(startBattleMessage);
+				//
 			}
-			
 		});
 		
 		TextureSingleton.getInstance().EnterBattle();
@@ -261,7 +268,6 @@ public class Battle implements Drawable
 				currentPlayerInventoryImages[inventoryElementNum] = TextureSingleton.getInstance().elements.get(i);
 				//indicate that one should now move to the next available spot
 				currentPlayerInventoryButtons[inventoryElementNum] = new Button(currentPlayerInventoryImages[inventoryElementNum], 0, 0, 0, 0, 
-						
 				new OnClickListener()
 				{
 					@Override

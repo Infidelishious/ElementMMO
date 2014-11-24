@@ -16,7 +16,7 @@ public class TextureSingleton {
 	//////////////IF YOU TOUCH THIS CODE I WILL PEE ON YOUR MOM////////////////
 	public static int COP = 0, SPIKEY = 1, CHIKA = 2, NAKED_MAN = 3;
 	public static int STAND = 0, FACE_UP = 1, FACE_LEFT = 2, WALK_DOWN = 3, WALK_UP = 4, WALK_LEFT_1 = 5,
-						WALK_LEFT_2 = 6, WALK_RIGHT_1 = 7, WALK_RIGHT_2 = 8, FACE_RIGHT = 9;
+						WALK_LEFT_2 = 6, WALK_RIGHT_1 = 7, WALK_RIGHT_2 = 8, FACE_RIGHT = 9, WALK_DOWN_2 = 10, WALK_UP_2 = 11;
 	
 			//playersprites.get(COP).get(UP);
 	public ArrayList<ArrayList<TextureRegion>> playerSprites;
@@ -119,16 +119,16 @@ public class TextureSingleton {
 		grassArray.add(whiteGrass);
 		grassArray.add(blackGrass);
 		//Done with that green shit. Not I create people for I am the CREATOR!!!!
-		for(int i = 0; i < 10; i++) {
+		for(int i = 0; i < 12; i++) {
 			copList.add(new TextureRegion(cop, i * 16, 0, 16, 21));
 		}
-		for(int i = 0; i < 10; i++) {
+		for(int i = 0; i < 12; i++) {
 			spikeyList.add(new TextureRegion(spikey, i * 16, 0, 16, 21));
 		}
-		for(int i = 0; i < 10; i++) {
+		for(int i = 0; i < 12; i++) {
 			chikaList.add(new TextureRegion(chika, i * 16, 0, 16, 21));
 		}
-		for(int i = 0; i < 10; i++) {
+		for(int i = 0; i < 12; i++) {
 			nakedManList.add(new TextureRegion(nakedMan, i * 16, 0, 16, 21));
 		}
 		

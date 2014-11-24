@@ -26,6 +26,9 @@ public class HUD implements Drawable {
 	
 	// VARS END ------------------------------
 	
+	TextureRegion currentPlayerHeartImage1;
+	TextureRegion currentPlayerHeartImage2;
+	TextureRegion currentPlayerHeartImage3;
 	
 	
 	public HUD ()
@@ -36,6 +39,9 @@ public class HUD implements Drawable {
 		currentPlayer = game.player;
 		HUDFont = TextureSingleton.getInstance().scoreFont;
 		
+		currentPlayerHeartImage1 = TextureSingleton.getInstance().fullHeart;
+		currentPlayerHeartImage2 = TextureSingleton.getInstance().fullHeart;
+		currentPlayerHeartImage3 = TextureSingleton.getInstance().fullHeart;
 		// get hud values
 		// TODO - SCORE IS NOT YET BEING KEPT IN GAME TO BE GRABBED HERE FOR THE HUD DISPLAY
 		//money = game.player.money;
@@ -46,6 +52,7 @@ public class HUD implements Drawable {
 	@Override
 	public void draw (SpriteBatch sb)
 	{
+		assignHealth();
 		// draw the money at money coordinates
 		//HUDFont.setColor(0.0f,0.0f,0.0f,1.0f);
 		sb.setColor(Color.WHITE);
@@ -61,6 +68,12 @@ public class HUD implements Drawable {
 		HUDFont.setColor(1.0f,0.0f,0.0f,1.0f);	// blue
 		HUDFont.setScale(3.0f);
 		HUDFont.draw(sb, "0", 100 - 20, (screenH/2) - 20);	// subtracting roughly text width from x
+		
+		sb.draw(currentPlayerHeartImage1, -(screenW/2) + 20, (screenH/2) - 100, 40, 40);
+		
+		sb.draw(currentPlayerHeartImage2, -(screenW/2) + 70, (screenH/2) - 100, 40, 40);
+		
+		sb.draw(currentPlayerHeartImage2, -(screenW/2) + 120, (screenH/2) - 100, 40, 40);
 	}
 	
 	
@@ -69,6 +82,48 @@ public class HUD implements Drawable {
 	public void updateHUD ()
 	{
 		
+	}
+	
+	public void assignHealth()
+	{
+		switch(Game.getInstance().player.health)
+		{
+		case 0:
+			currentPlayerHeartImage1 = TextureSingleton.getInstance().noHeart;
+			currentPlayerHeartImage2 = TextureSingleton.getInstance().noHeart;
+			currentPlayerHeartImage3 = TextureSingleton.getInstance().noHeart;
+			break;
+		case 1:
+			currentPlayerHeartImage1 = TextureSingleton.getInstance().halfHeart;
+			currentPlayerHeartImage2 = TextureSingleton.getInstance().noHeart;
+			currentPlayerHeartImage3 = TextureSingleton.getInstance().noHeart;
+			break;
+		case 2:
+			currentPlayerHeartImage1 = TextureSingleton.getInstance().fullHeart;
+			currentPlayerHeartImage2 = TextureSingleton.getInstance().noHeart;
+			currentPlayerHeartImage3 = TextureSingleton.getInstance().noHeart;
+			break;
+		case 3:
+			currentPlayerHeartImage1 = TextureSingleton.getInstance().fullHeart;
+			currentPlayerHeartImage2 = TextureSingleton.getInstance().halfHeart;
+			currentPlayerHeartImage3 = TextureSingleton.getInstance().noHeart;
+			break;
+		case 4:
+			currentPlayerHeartImage1 = TextureSingleton.getInstance().fullHeart;
+			currentPlayerHeartImage2 = TextureSingleton.getInstance().fullHeart;
+			currentPlayerHeartImage3 = TextureSingleton.getInstance().noHeart;
+			break;
+		case 5: 
+			currentPlayerHeartImage1 = TextureSingleton.getInstance().fullHeart;
+			currentPlayerHeartImage2 = TextureSingleton.getInstance().fullHeart;
+			currentPlayerHeartImage3 = TextureSingleton.getInstance().halfHeart;
+			break;
+		case 6:
+			currentPlayerHeartImage1 = TextureSingleton.getInstance().fullHeart;
+			currentPlayerHeartImage2 = TextureSingleton.getInstance().fullHeart;
+			currentPlayerHeartImage3 = TextureSingleton.getInstance().fullHeart;
+			break;
+		}
 	}
 	
 	

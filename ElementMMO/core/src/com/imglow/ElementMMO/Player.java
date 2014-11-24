@@ -44,7 +44,7 @@ public abstract class Player implements Drawable{
 		if(px > x) //moving left
 		{
 			if(frame1)
-				spr = ts.playerSprites.get(type).get(TextureSingleton.WALK_LEFT_1);
+					spr = ts.playerSprites.get(type).get(TextureSingleton.WALK_LEFT_1);
 			else
 				spr = ts.playerSprites.get(type).get(TextureSingleton.WALK_LEFT_2);
 			
@@ -64,7 +64,7 @@ public abstract class Player implements Drawable{
 			if(frame1)
 				spr = ts.playerSprites.get(type).get(TextureSingleton.WALK_DOWN);
 			else
-				spr = ts.playerSprites.get(type).get(TextureSingleton.STAND);
+				spr = ts.playerSprites.get(type).get(TextureSingleton.WALK_DOWN_2);
 			
 			lw = DOWN;
 		}
@@ -73,7 +73,7 @@ public abstract class Player implements Drawable{
 			if(frame1)
 				spr = ts.playerSprites.get(type).get(TextureSingleton.WALK_UP);
 			else
-				spr = ts.playerSprites.get(type).get(TextureSingleton.FACE_UP);
+				spr = ts.playerSprites.get(type).get(TextureSingleton.WALK_UP_2);
 			
 			lw = UP;
 		}

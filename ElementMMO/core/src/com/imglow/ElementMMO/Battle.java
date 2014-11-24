@@ -162,8 +162,17 @@ public class Battle implements Drawable
 				
 				// game over man
 				// each player shud calc it themselves
+				
+				
 				if(currentPlayerHealth > otherPlayerHealth)
 				{
+					
+					// if they both have 1 health and then get hit
+					// at the same time
+					// then the most dmg they could take
+					// is 1
+					// so currentPlayerHealth will never be < 0 at this point
+					
 					Game.getInstance().player.money+= 200;
 					/*
 					for(int i = 0; i < Game.getInstance().otherPlayers.size(); i++)
@@ -405,7 +414,7 @@ public class Battle implements Drawable
 		else
 			sb.draw(TextureSingleton.getInstance().whiteRegion,100,0);
 		// sb.draw(new Texture(Gdx.files.internal("vs.jpg")), -25, 0, 30, 30);
-		sb.draw(TextureSingleton.getInstance().whiteRegion, 100, 0);
+		// sb.draw(TextureSingleton.getInstance().whiteRegion, 75, 0);
 
 		if(pausedRemaining <= 0)
 		{

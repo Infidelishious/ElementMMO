@@ -13,6 +13,7 @@ public class ChatArea implements Drawable{
 	String recievedMessage;
 	String str1, str2, str3, str4;
 	int count = 0;
+	boolean toPrintOrNotToPrint = false;
 	ChatArea() {
 		chatText = new String("");
 		first = true;
@@ -20,6 +21,7 @@ public class ChatArea implements Drawable{
 		str2 = new String (""); 
 		str3 = new String (""); 
 		str4 = new String("");
+
 	}
 
 
@@ -33,12 +35,16 @@ public class ChatArea implements Drawable{
 		if(visible)
 		{
 			chatFont.draw(sb, chatText, -MainClient.WIDTH/2 + 30, -MainClient.HEIGHT/2 + 75);
-			if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) sendMessage(chatText.substring(2));
+			if(chatText.equals("> ") && Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+				chatText = "";
+				visible = false;
+				showMessage(sb);
+			}
+			else if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) sendMessage(chatText.substring(2));
 			if(Gdx.input.isKeyJustPressed(Input.Keys.BACKSPACE) && chatText.length() > 2)
 				chatText = chatText.substring(0, chatText.length() - 1);
 			if(chatText.length() < 50)
 			{
-				first = false;
 				if(Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) || Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT)) {
 					if(Gdx.input.isKeyJustPressed(Input.Keys.A)) chatText += "A";
 					else if(Gdx.input.isKeyJustPressed(Input.Keys.B)) chatText += "B";
@@ -119,70 +125,110 @@ public class ChatArea implements Drawable{
 				chatText = "> "; 
 			}
 		}
-		showMessage(sb);
+		if(!first)
+			showMessage(sb);
 
 	}
 
 	public void showMessage(SpriteBatch sb)
 	{
-		TextMessage msg;
+		TextMessage msg = msg = MessageManager.getInstance().getTextMessage();
 		BitmapFont messageFont = TextureSingleton.getInstance().scoreFont;
-		if(count < 1){
-			while(MessageManager.getInstance().hasTextMessage())
-			{
-				msg = MessageManager.getInstance().getTextMessage();
-				str1 = msg.from + ": " + msg.msg;
-				System.out.println(str1);
-				count++;
+		if(shouldIShow(msg)){
+			if(count < 1){
+				while(msg != null)
+				{
+					str1 = msg.from + ": " + msg.msg;
+					System.out.println(str1);
+					count++;
+				}
+			}
+			if(count == 1){
+				while(msg != null) {
+
+					//					msg = MessageManager.getInstance().getTextMessage();
+					str2 = str1;
+					str1 = msg.from + ": " + msg.msg;
+					count++;
+
+				}
+			}
+			else if(count == 2){
+				while(msg != null) {
+
+					//msg = MessageManager.getInstance().getTextMessage();
+					str3 = str2;
+					str2 = str1;
+					str1 = msg.from + ": " + msg.msg;
+					count++;
+				}
+
+			}
+			else if(count == 3){
+				while(msg != null) {
+
+					//msg = MessageManager.getInstance().getTextMessage();
+					str4 = str3;
+					str3 = str2;
+					str2 = str1;
+					str1 = msg.from + ": " + msg.msg;
+
+				}
 			}
 		}
-		else if(count == 1){
-			while(MessageManager.getInstance().hasTextMessage()) {
-				msg = MessageManager.getInstance().getTextMessage();
-				str2 = str1;
-				str1 = msg.from + ": " + msg.msg;
-				count++;
-			}
-		}
-		else if(count == 2){
-			while(MessageManager.getInstance().hasTextMessage()) {
-				msg = MessageManager.getInstance().getTextMessage();
-				str3 = str2;
-				str2 = str1;
-				str1 = msg.from + ": " + msg.msg;
-				count++;
-			}
-		}
-		else if(count == 3){
-			while(MessageManager.getInstance().hasTextMessage()) {
-				msg = MessageManager.getInstance().getTextMessage();
-				str4 = str3;
-				str3 = str2;
-				str2 = str1;
-				str1 = msg.from + ": " + msg.msg;
-			}
-		}
+		//		if(shouldIShow(msg)){
+		//			toPrintOrNotToPrint = true;
+		//		}
+		//if(toPrintOrNotToPrint){
 		messageFont.draw(sb, str1, -MainClient.WIDTH/2 + 30, -MainClient.HEIGHT/2 + 150);
 		messageFont.draw(sb, str2, -MainClient.WIDTH/2 + 30, -MainClient.HEIGHT/2 + 200);
 		messageFont.draw(sb, str3, -MainClient.WIDTH/2 + 30, -MainClient.HEIGHT/2 + 250);
 		messageFont.draw(sb, str4, -MainClient.WIDTH/2 + 30, -MainClient.HEIGHT/2 + 300);
-
-		System.out.println(str1);
-
+		//}
 	}
 
+	private boolean shouldIShow(TextMessage msg) {
+		String temp = new String ("");
+		if(msg.msg != null){
+			if(Game.getInstance().player.team1) {
+				temp = "team1";
+			}
+			else if(!Game.getInstance().player.team1){
+				temp = "team2";
+			}
+
+			if(msg.to.equals(temp)) {
+				System.out.println("it should show somewhere" + msg.msg);
+				return true;
+			}
+			else if(msg.to.equals("all")) {
+				return true;
+			}
+			else if(msg.to.equals(Game.getInstance().player.name))
+				return true;
+			else 
+				return false;
+		}
+		else {
+			return false;
+		}
+	}
 
 	private void sendMessage(String chatText2)
 	{
+		first = false;
 		TextMessage msg = new TextMessage();
 		CurrentPlayer temp = Game.getInstance().player;
 		msg.from = temp.name;
 		if(!chatText2.isEmpty()){
 			if(!chatText2.substring(0,1).equals("/")){
-				if(temp.team1)
+				msg.msg = chatText2;
+				if(temp.team1){
 					msg.to = "team1";
-				else
+				}
+				else{
 					msg.to = "team2";
+				}
 				MessageManager.getInstance().sendMessageToServer(msg);
 			}
 			// now parse it, to see who to send it to
@@ -296,8 +342,6 @@ public class ChatArea implements Drawable{
 			}
 			else
 				msg.msg = chatText2;
-
-			System.out.println("message is " + msg.msg);
 
 			visible = false;
 		} 

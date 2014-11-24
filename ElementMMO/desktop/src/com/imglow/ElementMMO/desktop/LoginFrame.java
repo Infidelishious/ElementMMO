@@ -160,7 +160,7 @@ public class LoginFrame extends JFrame {
 				else if (i==2) unscaledImage = ImageIO.read(new File("chika.png"));
 				else if (i==0) unscaledImage = ImageIO.read(new File("cop.png"));
 				else unscaledImage = ImageIO.read(new File("naked_man.png"));
-				scaledImage = unscaledImage.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+				scaledImage = unscaledImage.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
 				charLabels[i] = new JLabel(new ImageIcon(scaledImage));
 				charLabels[i].setOpaque(false);
 				charLabels[i].addMouseListener(new CharSelectListener(i, this));
@@ -196,7 +196,7 @@ public class LoginFrame extends JFrame {
 			for (int i=0; i<teamLabels.length; i++) {
 				if (i==0) unscaledImage = ImageIO.read(new File("blueteam.png"));
 				else unscaledImage = ImageIO.read(new File("redteam.png"));
-				scaledImage = unscaledImage.getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+				scaledImage = unscaledImage.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
 				teamLabels[i] = new JLabel(new ImageIcon(scaledImage));
 				teamOptionsPanel.add(teamLabels[i]);
 			}

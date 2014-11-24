@@ -36,7 +36,7 @@ public class Cell implements Drawable {
 		}
 		else if(type == STORE)
 		{
-			this.spr = TextureSingleton.getInstance().whiteRegion;
+			this.spr = TextureSingleton.getInstance().storeArray.get((int)(TextureSingleton.getInstance().storeArray.size() * Math.random()));
 		}
 	}
 
@@ -68,6 +68,16 @@ public class Cell implements Drawable {
 		if(type != GRASS && type != STORE)
 		{
 			sb.draw(TextureSingleton.getInstance().grass,
+					tempx,
+					tempy,
+					LENGTH,
+					LENGTH);
+			// draw grasses smushy smush
+		}
+		// draw the store bottom underneath all the store creations
+		if(type == STORE)
+		{
+			sb.draw(TextureSingleton.getInstance().storeEmpty,
 					tempx,
 					tempy,
 					LENGTH,

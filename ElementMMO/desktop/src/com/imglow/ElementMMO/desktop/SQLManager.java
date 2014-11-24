@@ -40,7 +40,6 @@ public class SQLManager implements SQL {
 		// establish connection with sql database
 		try {
 			Class.forName(DRIVER);
-			System.out.println("test1");
 			myConnection = DriverManager.getConnection(DB_ADDRESS + DB_NAME, USER, PASSWORD);
 		}
 		catch (SQLException sqle) { System.out.println("SQLException in SQL Manager Constructor: " + sqle.getMessage()); }

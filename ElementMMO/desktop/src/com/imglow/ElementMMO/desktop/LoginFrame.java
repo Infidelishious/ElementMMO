@@ -38,6 +38,7 @@ public class LoginFrame extends JFrame {
 	// gui elements
 	JPanel mainPanel;
 	JPanel loginPanel;
+	JTextField hostField;
 	JLabel loginErrorLabel;
 	JLabel charErrorLabel;
 	JLabel teamErrorLabel;
@@ -65,7 +66,7 @@ public class LoginFrame extends JFrame {
 		mainPanel = new JPanel(new CardLayout());	// holds login and char select panels as cards
 		
 		// login panel
-		loginPanel = new JPanel(new BorderLayout()) {
+		JPanel loginTopPanel = new JPanel(new BorderLayout()) {
 			protected void paintComponent (Graphics g) {
 				try {
 					super.paintComponent(g);
@@ -74,12 +75,18 @@ public class LoginFrame extends JFrame {
 					g.drawImage(logo, 210, 80, loginPanel);
 				} catch (IOException ioe) { System.out.println(ioe.getMessage()); }
 			}
-		};	// empty, provides border inset
+		};	// holds login panel in center, host grid panel in south
+		JPanel hostPanel = new JPanel(new BorderLayout());	// holds host label and text field
+		JPanel hostGridPanel = new JPanel(new GridLayout(1,7));	// holds host text field in lower left corner of screen
+		loginPanel = new JPanel(new BorderLayout());
 		JPanel stuffPanel = new JPanel(new BorderLayout());	// holds all elements
 		JPanel fieldsPanel = new JPanel(new GridLayout(2,1));	// holds text fields
 		JPanel buttonsPanel = new JPanel(new GridLayout(1,2));	// holds buttons
 		
 		// login panel elements
+		JLabel hostLabel = new JLabel("Host: ");
+		hostLabel.setForeground(Color.WHITE);
+		hostField = new JTextField(hostname);
 		JLabel loginLabel = new JLabel("Log In:");
 		loginLabel.setForeground(Color.WHITE);
 		JTextField userField = new JTextField("(username)");
@@ -107,11 +114,28 @@ public class LoginFrame extends JFrame {
 		stuffPanel.add(fieldsPanel, BorderLayout.CENTER);
 		stuffPanel.add(buttonsPanel, BorderLayout.SOUTH);
 		stuffPanel.setOpaque(false);
+		hostGridPanel.add(hostField);
+		for (int i=0; i<6; i++) {
+			JLabel emptyLabel = new JLabel();
+			emptyLabel.setOpaque(false);
+			hostGridPanel.add(emptyLabel);
+		}
+		//hostGridPanel.setBackground(Color.BLACK);
+		hostGridPanel.setOpaque(false);
+		hostPanel.add(hostLabel, BorderLayout.WEST);
+		hostPanel.add(hostGridPanel, BorderLayout.CENTER);
+		//hostPanel.setBackground(Color.BLACK);
+		hostPanel.setOpaque(false);
 		loginPanel.add(stuffPanel, BorderLayout.CENTER);
 		loginPanel.add(loginErrorLabel, BorderLayout.SOUTH);
-		loginPanel.setBorder(new EmptyBorder(220, 420, 330, 420));
-		loginPanel.setBackground(Color.BLACK);
-		loginPanel.repaint();
+		loginPanel.setBorder(new EmptyBorder(280, 420, 270, 420));
+		//loginPanel.setBackground(Color.BLACK);
+		loginPanel.setOpaque(false);
+		//loginPanel.repaint();
+		loginTopPanel.add(loginPanel, BorderLayout.CENTER);
+		loginTopPanel.add(hostPanel, BorderLayout.SOUTH);
+		loginTopPanel.setBackground(Color.BLACK);
+		loginTopPanel.repaint();
 		
 		// character select panel
 		JPanel charSelectPanel = new JPanel(new BorderLayout());	// empty, provides border inset
@@ -190,7 +214,8 @@ public class LoginFrame extends JFrame {
 		teamSelectPanel.setBackground(Color.BLACK);
 		
 		// add login and char select panels to main panel as cards
-		mainPanel.add(loginPanel, "login");
+		//mainPanel.add(loginPanel, "login");
+		mainPanel.add(loginTopPanel, "login");
 		mainPanel.add(charSelectPanel, "charselect");
 		mainPanel.add(teamSelectPanel, "teamselect");
 		add(mainPanel);
@@ -390,7 +415,11 @@ public class LoginFrame extends JFrame {
 	boolean isValidUsername (String user)
 	{
 		// disallow system tokens
-		if (user.equals("msg") || user.equals("all") || user.equals("team1") || user.equals("team2")) return false;
+		String[] badNames = { "msg", "all", "team1", "team2", "server" };
+		for (int i=0; i<badNames.length; i++) {
+			if (user.equals(badNames[i])) return false;
+		}
+		//if (user.equals("msg") || user.equals("all") || user.equals("team1") || user.equals("team2")) return false;
 		
 		// disallow whitespace
 		for (int i=0; i<user.length(); i++) {
@@ -408,7 +437,7 @@ public class LoginFrame extends JFrame {
 	{
 		try {
 			// initialize socket
-			mySocket = new Socket(hostname, port);
+			mySocket = new Socket(hostField.getText(), port);
 
 			// make this frame invisible
 			setVisible(false);

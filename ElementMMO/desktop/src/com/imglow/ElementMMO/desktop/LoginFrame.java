@@ -60,7 +60,7 @@ public class LoginFrame extends JFrame {
 		setResizable(false);
 		setLocation(0, 0);
 		
-		mySQLManager = new SQLManager();
+		//mySQLManager = new SQLManager();
 		
 		// main card panel
 		mainPanel = new JPanel(new CardLayout());	// holds login and char select panels as cards
@@ -244,6 +244,9 @@ public class LoginFrame extends JFrame {
 		// Override actionperformed
 		public void actionPerformed (ActionEvent ae)
 		{
+			// connect
+			if (!connect()) return;
+						
 			// get entered text
 			String userAttempt = userF.getText();
 			String pwAttempt = pwF.getText();
@@ -432,12 +435,29 @@ public class LoginFrame extends JFrame {
 	
 	
 	
-	// Start main game client
-	void startGame (String user, int charID, boolean team1)
+	// Connect to server
+	boolean connect ()
 	{
 		try {
 			// initialize socket
 			mySocket = new Socket(hostField.getText(), port);
+			
+			// create SQL manager
+			mySQLManager = new SQLManager(hostField.getText());
+			
+			return true;
+		}
+		catch (Exception ioe) { displayLoginError(5); displayLoginError(6); return false; }
+	}
+	
+	
+	
+	// Start main game client
+	void startGame (String user, int charID, boolean team1)
+	{
+		//try {
+			// initialize socket
+			//mySocket = new Socket(hostField.getText(), port);
 
 			// make this frame invisible
 			setVisible(false);
@@ -450,8 +470,8 @@ public class LoginFrame extends JFrame {
 			new LwjglApplication(new MainClient(mySocket, mySQLManager, charID, user, team1), config);
 			
 			dispose();
-		}
-		catch (IOException ioe) { System.out.println("IOException in CharSelectListener: " + ioe.getMessage()); }
+		//}
+		//catch (IOException ioe) { System.out.println("IOException in CharSelectListener: " + ioe.getMessage()); }
 	}
 	
 	

@@ -26,7 +26,7 @@ public class TextureSingleton {
 	public Texture cop, spikey, chika, nakedMan;
 	public ArrayList<TextureRegion> copList, spikeyList, chikaList, nakedManList, shopElements, elements, grassArray;
 	public TextureRegion grass, whiteGrass, blackGrass, bush, tree1, tree2, imagination, hunger, music, giggles, segFaults, sunshine, drought,
-							entropy, trig, choco, synergy, hugs, shop, whiteRegion, grayRegion;
+							entropy, trig, choco, synergy, hugs, shop, whiteRegion, grayRegion, battle, go, goGrayed, vs;
 	
 	public Music mainMusic;
 	public Music battleMusic;
@@ -51,6 +51,10 @@ public class TextureSingleton {
 		nameFont = new BitmapFont(Gdx.files.internal("fonts/FlxRegular.fnt"), Gdx.files.internal("fonts/FlxRegular_0.tga"), false);
 		whiteRegion = new TextureRegion(white);
 		grayRegion = new TextureRegion(gray);
+		battle = new TextureRegion(new Texture(Gdx.files.internal("images/Battle.png")));
+		goGrayed = new TextureRegion(new Texture(Gdx.files.internal("images/GoGrayed.png")));
+		go = new TextureRegion(new Texture(Gdx.files.internal("images/Go.png")));
+		vs = new TextureRegion(new Texture(Gdx.files.internal("images/Vs.png")));
 		
 		//This one is for the player.. #PS4 reference
 		cop = new Texture(Gdx.files.internal("images/cop.png"));

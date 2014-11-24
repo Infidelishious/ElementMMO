@@ -24,13 +24,14 @@ public class ChatArea implements Drawable{
 	{
 		
 		
-		if(first) chatText += " >"; 
+		if(first) chatText += "> "; 
 		BitmapFont chatFont = TextureSingleton.getInstance().scoreFont;
 		chatFont.setColor(0.0f,0.0f,0.0f,1.0f);
 		chatFont.setScale(2.0f);
 		chatFont.draw(sb, chatText, -MainClient.WIDTH/2 + 30, -MainClient.HEIGHT/2 + 75);
 		if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER) && first != true) sendMessage(chatText);
-		if(Gdx.input.isKeyJustPressed(Input.Keys.BACKSPACE) && !chatText.equals("> ")) chatText = chatText.replace(chatText.substring(chatText.length() - 1), "");
+		if(Gdx.input.isKeyJustPressed(Input.Keys.BACKSPACE) && chatText.length() > 2)
+			chatText = chatText.substring(0, chatText.length() - 1);
 		if(chatText.length() < 50)
 		{
 			first = false;
@@ -71,6 +72,7 @@ public class ChatArea implements Drawable{
 			else if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_9)) chatText += "9";
 			else if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_0)) chatText += "0";
 			else if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) chatText += " ";
+			else if(Gdx.input.isKeyJustPressed(Input.Keys.SLASH)) chatText += "/";
 
 		}
 		showMessage(sb);
@@ -122,30 +124,30 @@ public class ChatArea implements Drawable{
 		
 		//team has no specific heading
 		// all and user/group both start with /
-		if(chatText2.length() > 1)
+		if(chatText2.length() > 2)
 		{
-			if(chatText2.substring(0,1).equals("//"))
+			if(chatText2.substring(2,3).equals("//"))
 			{
 				// this means they were chatting specifically to people!!
 				
-				if(chatText2.length() > 4)
+				if(chatText2.length() > 6)
 				{
 					// all starts with all
-					if(chatText2.substring(1,4).equals("all"))
+					if(chatText2.substring(3,6).equals("all"))
 					{
-						msg.msg = chatText2.substring(4);
+						msg.msg = chatText2.substring(6);
 						msg.to = "all";
 						System.out.println("message sent to all");
 						MessageManager.getInstance().sendMessageToServer(msg);
 					}
 					// user/group starts with msg
-					else if(chatText2.substring(1,5).equals("msg "))
+					else if(chatText2.substring(3,7).equals("msg "))
 					{
 						
 						// we need the second slash,
 						// to mark where we stop looking for users
 						// to read in
-						if(chatText2.indexOf("/",4) == -1)
+						if(chatText2.indexOf("/",6) == -1)
 						{
 							// not proper format!!
 							msg.msg = chatText2;
@@ -153,9 +155,9 @@ public class ChatArea implements Drawable{
 						else // there is a second slash!!
 						{
 							// everything after the second slash is the message
-							msg.msg = chatText2.substring(chatText2.indexOf("/",4));
+							msg.msg = chatText2.substring(chatText2.indexOf("/",6));
 							String name = "";
-							int indexHold = 4;
+							int indexHold = 6;
 							// boolean correctFormat = false;
 							ArrayList<String> peopleToMessage = new ArrayList<String>();
 							

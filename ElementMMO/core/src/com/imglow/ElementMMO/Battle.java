@@ -38,7 +38,7 @@ public class Battle implements Drawable
 	OtherPlayer otherPlayer;
 	
 	// SpriteBatch sb;
-	int selected;
+	String messageToSend;
 	
 	static int TEN_SECONDS = 600;
 	int timeRemaining = TEN_SECONDS;
@@ -89,6 +89,11 @@ public class Battle implements Drawable
 	{
 		//draw window
 		
+		BattleMessage fromEnemy = MessageManager.getInstance().getBattleMessage();
+		if(fromEnemy != null)
+		{
+			// we've made contact!!!
+		}
 		sb.draw(TextureSingleton.getInstance().white, -MainClient.WIDTH/4, -MainClient.HEIGHT/4, MainClient.WIDTH/2, MainClient.HEIGHT/2);		
 		
 		//draw BATTLE!
@@ -257,7 +262,6 @@ public class Battle implements Drawable
 		for(int i = 0; i < 12; i++)
 		{
 			//if all inventory spots have been exhausted
-			selected = i;
 			if(inventoryElementNum >= 6)
 			{
 				//stop checking whether further elements are owned by current player
@@ -283,6 +287,7 @@ public class Battle implements Drawable
 						BattleMessage startBattleMessage = new BattleMessage();
 						startBattleMessage.to = otherPlayer.name;
 						startBattleMessage.event = "" + currentPlayerBattleElementNum;
+						messageToSend = startBattleMessage.event;
 						MessageManager.getInstance().sendMessageToServer(startBattleMessage);
 					}
 				}

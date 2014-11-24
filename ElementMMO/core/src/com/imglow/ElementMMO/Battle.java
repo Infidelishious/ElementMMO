@@ -29,6 +29,9 @@ public class Battle implements Drawable
 	TextureRegion currentPlayerBattleElementImage;
 	TextureRegion otherPlayerBattleElementImage;
 	
+	int currentPlayerBattleElementNum;
+	int otherPlayerBattleElementNum;
+	
 	CurrentPlayer currentPlayer;
 	OtherPlayer otherPlayer;
 	
@@ -51,7 +54,6 @@ public class Battle implements Drawable
 		assignTextures();
 		
 		//client-event of choosing an element to use is sent to the server.
-		
 		
 		//other player's message is taken from the server
 		
@@ -241,26 +243,19 @@ public class Battle implements Drawable
 			//if the player owns a given item
 			if(currentPlayer.using.get(i))
 			{
+				currentPlayerBattleElementNum = i;
 				//add that item to their inventory display at the next available spot
 				currentPlayerInventoryImages[inventoryElementNum] = TextureSingleton.getInstance().elements.get(i);
 				//indicate that one should now move to the next available spot
 				currentPlayerInventoryButtons[inventoryElementNum] = new Button(currentPlayerInventoryImages[inventoryElementNum], 0, 0, 0, 0, 
+						
 				new OnClickListener()
 				{
 					@Override
 					public void onClick(Button source, Vector3 pos) 
 					{
-						System.out.println("clicked on a real button XD");
-						otherPlayer.health--;
-						System.out.println("inflicted damage!!!");
 						assignHealth();
-						for(int i = 0; i < 6; i++)
-						{
-							if(currentPlayerInventoryButtons[i] == source)
-							{
-								currentPlayerBattleElementImage = source.spr;
-							}
-						}
+						currentPlayerBattleElementImage = source.spr;
 					}
 				}
 				);
@@ -276,14 +271,12 @@ public class Battle implements Drawable
 			currentPlayerInventoryButtons[inventoryElementNum] = new Button(currentPlayerInventoryImages[inventoryElementNum], 0, 0, 0, 0, 
 			new OnClickListener()
 			{
-
 				@Override
 				public void onClick(Button source, Vector3 pos) 
 				{
 					// does jack shit
 					System.out.println("White space clicked");
 				}
-
 			}
 			);
 			inventoryElementNum++;

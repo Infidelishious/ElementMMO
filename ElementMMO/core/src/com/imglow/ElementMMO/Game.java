@@ -22,7 +22,7 @@ public class Game implements Drawable{
 	public Vector<OtherPlayer> otherPlayers;
 	public ChatArea chat;
 	private static Game instance;
-	private Battle bg;
+	public Battle bg;
 	public Store store;
 	public InstructionsPane instructions;
 

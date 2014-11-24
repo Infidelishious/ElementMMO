@@ -227,6 +227,14 @@ public class CurrentPlayer extends Player{
 	@Override
 	public void draw(SpriteBatch sb) {
 		updateSprite();
+		for(int i = 0; i < Game.getInstance().otherPlayers.size(); i++)
+		{
+			if(Game.getInstance().otherPlayers.get(i).x == this.x &&
+					Game.getInstance().otherPlayers.get(i).y == this.y)
+			{
+				Game.getInstance().bg = new Battle(this, Game.getInstance().otherPlayers.get(i));
+			}
+		}
 		if(!blocked)
 		{
 			if(moving)

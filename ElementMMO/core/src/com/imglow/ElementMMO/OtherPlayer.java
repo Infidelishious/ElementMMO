@@ -1,5 +1,6 @@
 package com.imglow.ElementMMO;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class OtherPlayer extends Player{
@@ -8,7 +9,14 @@ public class OtherPlayer extends Player{
 	public void draw(SpriteBatch sb) {
 		updateSprite();
 
-		sb.draw(spr, (x - Game.getInstance().dX) * Cell.LENGTH, (y - Game.getInstance().dY) * Cell.LENGTH, WIDTH, HEIGHT); 	
+		if(team1)
+			sb.setColor(0.5f,0.5f,1f,1f);
+		else
+			sb.setColor(1f,0.5f,0.5f,1f);
+		
+		sb.draw(spr, (x - Game.getInstance().dX) * Cell.LENGTH, (y - 1 - Game.getInstance().dY) * Cell.LENGTH, WIDTH, HEIGHT); 	
+		
+		sb.setColor(Color.WHITE);
 	}
 
 	protected void updateSprite() {

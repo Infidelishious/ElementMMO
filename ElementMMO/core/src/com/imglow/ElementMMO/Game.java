@@ -207,6 +207,7 @@ public class Game implements Drawable{
 				op.y = i.y;
 				op.moving = i.moving;
 				op.moveDirection = i.direction;
+				op.name = i.from;
 				
 				otherPlayers.add(op);
 			}

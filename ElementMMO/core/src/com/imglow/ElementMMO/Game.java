@@ -80,6 +80,7 @@ public class Game implements Drawable{
 			
 		}
 		
+		// draw the bushes
 		for(int x = 1; x < WIDTH - 1; x++)
 		{
 			if(x < WIDTH/4 || x > 3*WIDTH/4)
@@ -176,7 +177,7 @@ public class Game implements Drawable{
 		}
 	}
 
-	private void StatusUpdate()
+	public void StatusUpdate()
 	{	
 		if(player == null) return;;
 		

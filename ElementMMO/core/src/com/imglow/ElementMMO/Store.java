@@ -183,8 +183,8 @@ public class Store implements Drawable, ClickListener
 
 		
 		// draw the money
-		moneyFont.setColor(0.0f,0.0f,0.0f,1.0f);
-		moneyFont.draw(sb , "" + currentPlayer.money , x , y + storeHeight - 15);
+		// moneyFont.setColor(0.0f,0.0f,0.0f,1.0f);
+		// moneyFont.draw(sb , "" + currentPlayer.money , x , y + storeHeight - 15);
 		sb.setColor(1.0f,1.0f,1.0f,1.0f);
 		
 		// draw each button

@@ -105,7 +105,7 @@ public class CurrentPlayer extends Player{
 			}
 			if(team1)
 			{
-				if(currY + 1 >= 5 * Game.getInstance().HEIGHT / 6)
+				if(currY + 1 >= 3 * Game.getInstance().HEIGHT / 4)
 				{
 					blocked = true;
 					py--;
@@ -138,7 +138,7 @@ public class CurrentPlayer extends Player{
 			}
 			if(!team1) // so you are team2 lol
 			{
-				if(currY - 1 <= Game.getInstance().HEIGHT / 6)
+				if(currY - 1 <= Game.getInstance().HEIGHT / 4)
 				{
 					blocked = true;
 					py++;
@@ -230,7 +230,8 @@ public class CurrentPlayer extends Player{
 		for(int i = 0; i < Game.getInstance().otherPlayers.size(); i++)
 		{
 			if(Game.getInstance().otherPlayers.get(i).x == this.x &&
-					Game.getInstance().otherPlayers.get(i).y == this.y)
+					Game.getInstance().otherPlayers.get(i).y == this.y &&
+					Game.getInstance().otherPlayers.get(i).team1 != this.team1) // only fight the bad guys now
 			{
 				if(Game.getInstance().bg == null)
 				{
@@ -240,6 +241,10 @@ public class CurrentPlayer extends Player{
 					message.from = Game.getInstance().player.name;
 					message.to = Game.getInstance().otherPlayers.get(i).name;
 					message.event = "StartBattle";
+					System.out.println("sentMessage in currentPlayer for battle Entering");
+					System.out.println("sm.to = " + message.to);
+					System.out.println("sm.from = " + message.from);
+					System.out.println("sm.event = " + message.event);
 					MessageManager.getInstance().sendMessageToServer(message);
 				}
 			}
@@ -251,6 +256,10 @@ public class CurrentPlayer extends Player{
 		EventMessage receivedMessage = MessageManager.getInstance().getEventMessage();
 		if(receivedMessage != null)
 		{
+			System.out.println("receivedMessage in currentPlayer for battle Entering");
+			System.out.println("rm.to = " + receivedMessage.to);
+			System.out.println("rm.from = " + receivedMessage.from);
+			System.out.println("rm.event = " + receivedMessage.event);
 			if(receivedMessage.to.equals(Game.getInstance().player.name) )
 			{
 				// he's called you out boyo!!

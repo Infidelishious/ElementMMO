@@ -24,9 +24,9 @@ public class InstructionsPane implements Drawable
 			@Override
 			public void onClick(Button source, Vector3 pos) 
 			{
-				if((pos.x < -200 || pos.x > 200) &&(pos.y < 0))
+				if((pos.x < -200 || pos.x > 200) || (pos.y < 0 || pos.y > 200))
 				{
-					System.out.println("clicked.");
+					close();
 				}
 			}
 

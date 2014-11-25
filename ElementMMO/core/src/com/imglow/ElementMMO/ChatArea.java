@@ -148,13 +148,13 @@ public class ChatArea implements Drawable{
 		MessageManager mm = MessageManager.getInstance();
 		BitmapFont messageFont = TextureSingleton.getInstance().nameFont;
 		if (mm.hasTextMessage()) {
-			System.out.println("received message... should I display it?");
+//			System.out.println("received message... should I display it?");
 			TextMessage msg = MessageManager.getInstance().getTextMessage();
 			if(shouldIShow(msg)){
-				System.out.println("I should display this message!");
+//				System.out.println("I should display this message!");
 				if(count < 1){
 					str1 = msg.from + ": " + msg.msg;
-					System.out.println(str1);
+//					System.out.println(str1);
 					count++;
 				}
 				else if(count == 1){
@@ -241,7 +241,8 @@ public class ChatArea implements Drawable{
 				}
 				else{
 					msg.to = "team2";
-				}System.out.println("sending");
+				}
+//				}System.out.println("sending");
 				MessageManager.getInstance().sendMessageToServer(msg);
 			}
 			// now parse it, to see who to send it to
@@ -262,7 +263,7 @@ public class ChatArea implements Drawable{
 
 						if(chatText2.substring(1,4).equals("ALL") || chatText2.substring(1,4).equals("all"))
 						{
-							System.out.println("reached here");
+//							System.out.println("reached here");
 							msg.msg = chatText2.substring(4);
 							msg.to = "all";
 							MessageManager.getInstance().sendMessageToServer(msg);
@@ -278,7 +279,7 @@ public class ChatArea implements Drawable{
 							msg.msg = chatText2.substring(chatText2.indexOf("/")+1);
 							String recipents = new String ("");
 							recipents = msg.msg;
-							System.out.println(msg.msg);
+//							System.out.println(msg.msg);
 							msg.msg = msg.msg.substring(msg.msg.indexOf("/")+1);
 							String name = "";
 							int indexHold = 4;
@@ -329,7 +330,7 @@ public class ChatArea implements Drawable{
 									// name = "";
 									// name = chatText2.substring(indexHold, chatText2.indexOf("/",indexHold));
 								}
-								System.out.println("message sent to " + name);
+//								System.out.println("message sent to " + name);
 								msg.to = name;
 								// msg.msg = messageText;
 								MessageManager.getInstance().sendMessageToServer(msg);
@@ -369,17 +370,17 @@ public class ChatArea implements Drawable{
 
 		// abort if message empty
 		if(chatText2.isEmpty()) {
-			System.out.println("GAH IT'S EMPTY");
+//			System.out.println("GAH IT'S EMPTY");
 			return;
 		}
 
 		if (chatText2.substring(0,1).equals("> "))
 			chatText2 = chatText2.substring(2);	// strip away "> "
-		System.out.println("chatText2 = " + chatText2);
-		System.out.println("test2");
+//		System.out.println("chatText2 = " + chatText2);
+//		System.out.println("test2");
 		// if default (team only) message
 		if (chatText2.charAt(0) != '/') {
-			System.out.println("SENDING TEAM MESSAGE");
+//			System.out.println("SENDING TEAM MESSAGE");
 			TextMessage msg = new TextMessage();
 			CurrentPlayer temp = Game.getInstance().player;
 			msg.from = temp.name;
@@ -391,12 +392,12 @@ public class ChatArea implements Drawable{
 				msg.to = "team2";
 			}
 			MessageManager.getInstance().sendMessageToServer(msg);
-			System.out.println("SENT TEAM MESSAGE");
+//			System.out.println("SENT TEAM MESSAGE");
 		}
 
 		// if "all" message
 		else if (chatText2.length() >= 5 && chatText2.substring(0,5).equals("/all ")) {
-			System.out.println("SENDING ALL MESSAGE");
+//			System.out.println("SENDING ALL MESSAGE");
 			TextMessage msg = new TextMessage();
 			CurrentPlayer temp = Game.getInstance().player;
 			msg.from = temp.name;
@@ -404,7 +405,7 @@ public class ChatArea implements Drawable{
 			msg.to = "all";
 			msg.msg = chatText2;
 			MessageManager.getInstance().sendMessageToServer(msg);
-			System.out.println("SENT ALL MESSAGE");
+//			System.out.println("SENT ALL MESSAGE");
 		}
 
 		// if message to specific user(s)
@@ -412,7 +413,7 @@ public class ChatArea implements Drawable{
 		{
 			// /msg name1, name2 """""""
 			boolean multiple = false;
-			System.out.println("SENDING TARGETED MESSAGE");
+//			System.out.println("SENDING TARGETED MESSAGE");
 			// get all recipients
 			chatText2 = chatText2.substring(5);
 			ArrayList<String> targetUsers = new ArrayList<String>();
@@ -474,7 +475,7 @@ public class ChatArea implements Drawable{
 					msg.to = targetUsers.get(i);
 					msg.msg = chatText2;
 					MessageManager.getInstance().sendMessageToServer(msg);
-					System.out.println("SENT TARGETTED MESSAGES (#" + i + ")");
+//					System.out.println("SENT TARGETTED MESSAGES (#" + i + ")");
 				}
 			}
 		}

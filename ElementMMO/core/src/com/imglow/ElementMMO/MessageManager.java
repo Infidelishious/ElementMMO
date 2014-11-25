@@ -234,4 +234,9 @@ public class MessageManager{
 	{
 		battleMessages.clear();
 	}
+	
+	public void emptyEventMessages()
+	{
+		eventMessages.clear();
+	}
 }

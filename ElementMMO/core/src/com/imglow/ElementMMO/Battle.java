@@ -112,6 +112,10 @@ public class Battle implements Drawable
 		// trust his to work
 		if(gameOver)
 		{
+			// player makes themselves invulnerable to interaction
+			// for a bit more than a second
+			Game.getInstance().player.invincible = true;
+			Game.getInstance().player.invincibleTimeRemaining = Game.getInstance().player.MAX_INVINCIBLE_TIME;
 			if(currentPlayerHealth <= 0)
 			{
 				// do nothing

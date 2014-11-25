@@ -43,7 +43,10 @@ class ServerThread extends Thread {
 			public void run() {
 				output.interrupt();
 				input.interrupt();
-				sl.serverThreads.remove(thiss);
+				synchronized(sl)
+				{
+					sl.serverThreads.remove(thiss);
+				} 
 			}};
 	}
 

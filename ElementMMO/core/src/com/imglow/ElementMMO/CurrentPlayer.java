@@ -331,7 +331,7 @@ public class CurrentPlayer extends Player{
 		mm.from = name;
 		mm.type = type;
 		mm.team1 = team1;
+		mm.invincible = invincible;
 		MessageManager.getInstance().sendMessageToServer(mm);
-		
 	}
 }

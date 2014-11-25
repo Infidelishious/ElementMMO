@@ -28,7 +28,7 @@ public abstract class Player implements Drawable{
 		lw = DOWN, 
 		health = 6;
 	
-	boolean frame1 = true, team1 = true;
+	boolean frame1 = true, team1 = true, invincible = false;
 	
 	TextureRegion spr;
 

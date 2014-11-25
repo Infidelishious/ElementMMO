@@ -4,7 +4,7 @@ public class MovmentMessage extends Message{
 
 	public float x,y;
 	public int direction;
-	public boolean moving;
+	public boolean moving, invincible;
 	
 	public MovmentMessage()
 	{

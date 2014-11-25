@@ -226,9 +226,10 @@ public class Game implements Drawable{
 		
 		if(MessageManager.getInstance().hasStatusMessage())
 		{
-	//							timer.cancel();
-	//							timer = new Timer();
-	//							timer.schedule(timerTask, 1000);
+			
+			timer.cancel();
+			timer = new Timer();
+			timer.schedule(timerTask, 1000);
 			
 			StatusMessage ms = MessageManager.getInstance().getLastStatusMessage();
 			
@@ -252,6 +253,7 @@ public class Game implements Drawable{
 				op.moving = i.moving;
 				op.moveDirection = i.direction;
 				op.name = i.from;
+				op.invincible = i.invincible;
 				
 				otherPlayers.add(op);
 			}

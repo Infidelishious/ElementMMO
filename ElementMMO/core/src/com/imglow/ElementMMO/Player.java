@@ -16,6 +16,7 @@ public abstract class Player implements Drawable{
 	public static float SPEED = 0.2f;
 	public boolean moving = false;
 	
+	
 	String name;
 	
 	float y = 1;

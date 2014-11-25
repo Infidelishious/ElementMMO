@@ -9,14 +9,15 @@ public class CurrentPlayer extends Player{
 
 	int money, moveDirection = NOT_MOVING;
 
-	int currX, currY, usingCount;
+	int usingCount;
 	boolean blocked = false;
 	// should only enter store
 	// from the edge!!!
 	boolean shouldEnterStore;
-	float dist = 0;
 	ArrayList<Boolean> owned;
 	ArrayList<Boolean> using;
+	float dist = 0;
+	int currX, currY;
 	
 	public CurrentPlayer()
 	{
@@ -70,6 +71,19 @@ public class CurrentPlayer extends Player{
 		
 	}
 
+	protected void moveNudge()
+	{
+		if(moveDirection == UP)
+			y = dist + currY;
+		if(moveDirection == DOWN)
+			y = currY - dist;
+		if(moveDirection == RIGHT)
+			x = currX + dist;
+		if(moveDirection == LEFT)
+			x = currX - dist;
+		dist += SPEED;
+	}
+	
 	public void move(int direction){
 		if(moving) return;
 		currX = (int) x;
@@ -207,22 +221,11 @@ public class CurrentPlayer extends Player{
 			moving = true;
 //			System.out.println("move");
 		}
+		
 		moveNudge();
 		
 	}
 	
-	private void moveNudge()
-	{
-		if(moveDirection == UP)
-			y = dist + currY;
-		if(moveDirection == DOWN)
-			y = currY - dist;
-		if(moveDirection == RIGHT)
-			x = currX + dist;
-		if(moveDirection == LEFT)
-			x = currX - dist;
-		dist += SPEED;
-	}
 
 	@Override
 	public void draw(SpriteBatch sb) {

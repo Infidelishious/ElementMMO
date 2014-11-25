@@ -247,6 +247,8 @@ public class Game implements Drawable{
 				op.type = i.type;
 				op.x = i.x;
 				op.y = i.y;
+				op.startX = i.x;
+				op.startY = i.y;
 				op.moving = i.moving;
 				op.moveDirection = i.direction;
 				op.name = i.from;

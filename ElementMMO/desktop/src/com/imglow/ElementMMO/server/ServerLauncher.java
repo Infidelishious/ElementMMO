@@ -32,6 +32,12 @@ public class ServerLauncher {
 	public ServerLauncher (final int port)
 	{
 		System.out.println("****Server Starting****");
+		try {
+			System.out.println("IP :" + InetAddress.getLocalHost().getHostAddress());
+		} catch (UnknownHostException e1) {
+			System.out.println("IP : N/A");
+		}
+		
 		final ServerLauncher thiss = this;
 		queue = new Vector<Message>();
 		textMessages = new Vector<TextMessage>();

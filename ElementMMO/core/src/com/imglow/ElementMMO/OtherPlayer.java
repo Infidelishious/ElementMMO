@@ -5,6 +5,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class OtherPlayer extends Player{
 
+	float startX, startY;
+	
 	@Override
 	public void draw(SpriteBatch sb) {
 		updateSprite();
@@ -28,6 +30,11 @@ public class OtherPlayer extends Player{
 			frame1 = true;
 		else
 			frame1 = false;
+		
+		if(moving && (Math.floor(startX) == Math.floor(x) || Math.floor(startY) == Math.floor(y)))
+		{
+			moving = false;
+		}
 
 		if(moving)
 		{
@@ -39,6 +46,7 @@ public class OtherPlayer extends Player{
 					spr = ts.playerSprites.get(type).get(TextureSingleton.WALK_LEFT_2);
 
 				lw = LEFT;
+				x -= SPEED;
 			}
 			else if(moveDirection == RIGHT) //moving right
 			{
@@ -48,6 +56,7 @@ public class OtherPlayer extends Player{
 					spr = ts.playerSprites.get(type).get(TextureSingleton.WALK_RIGHT_2);
 
 				lw = RIGHT;
+				x += SPEED;
 			}
 			else if(moveDirection == DOWN) //moving down
 			{
@@ -57,6 +66,7 @@ public class OtherPlayer extends Player{
 					spr = ts.playerSprites.get(type).get(TextureSingleton.STAND);
 
 				lw = DOWN;
+				y += SPEED;
 			}
 			else if(moveDirection == UP) //moving up
 			{
@@ -66,6 +76,7 @@ public class OtherPlayer extends Player{
 					spr = ts.playerSprites.get(type).get(TextureSingleton.FACE_UP);
 
 				lw = UP;
+				y -= SPEED;
 			}
 		}
 		else

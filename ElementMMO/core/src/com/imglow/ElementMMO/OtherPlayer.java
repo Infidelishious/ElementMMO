@@ -31,7 +31,7 @@ public class OtherPlayer extends Player{
 		else
 			frame1 = false;
 		
-		if(moving && (Math.floor(startX) == Math.floor(x) || Math.floor(startY) == Math.floor(y)))
+		if(moving && (Math.floor(startX) != Math.floor(x) || Math.floor(startY) != Math.floor(y)))
 		{
 			moving = false;
 		}

@@ -20,7 +20,7 @@ public class HUD implements Drawable {
 	CurrentPlayer currentPlayer;
 	
 	// visual data
-	int team1Score, team2Score;
+//	int team1Score, team2Score;
 	//int money;
 	BitmapFont HUDFont;
 	
@@ -52,6 +52,7 @@ public class HUD implements Drawable {
 	@Override
 	public void draw (SpriteBatch sb)
 	{
+		Game g = Game.getInstance();
 		assignHealth();
 		// draw the money at money coordinates
 		//HUDFont.setColor(0.0f,0.0f,0.0f,1.0f);
@@ -64,24 +65,16 @@ public class HUD implements Drawable {
 		sb.setColor(Color.WHITE);
 		HUDFont.setColor(0.0f,0.0f,1.0f,1.0f);	// blue
 		HUDFont.setScale(3.0f);
-		HUDFont.draw(sb, "0", -100 - 20, (screenH/2) - 20);	// subtracting roughly text width from x
-		HUDFont.setColor(1.0f,0.0f,0.0f,1.0f);	// blue
+		HUDFont.draw(sb, "" + g.blueScore, -100 - 20, (screenH/2) - 20);	// subtracting roughly text width from x
+		HUDFont.setColor(1.0f,0.0f,0.0f,1.0f);	// red
 		HUDFont.setScale(3.0f);
-		HUDFont.draw(sb, "0", 100 - 20, (screenH/2) - 20);	// subtracting roughly text width from x
+		HUDFont.draw(sb, "" + g.redScore, 100 - 20, (screenH/2) - 20);	// subtracting roughly text width from x
 		
 		sb.draw(currentPlayerHeartImage1, -(screenW/2) + 20, (screenH/2) - 100, 40, 40);
 		
 		sb.draw(currentPlayerHeartImage2, -(screenW/2) + 70, (screenH/2) - 100, 40, 40);
 		
 		sb.draw(currentPlayerHeartImage2, -(screenW/2) + 120, (screenH/2) - 100, 40, 40);
-	}
-	
-	
-	
-	// Update HUD
-	public void updateHUD ()
-	{
-		
 	}
 	
 	public void assignHealth()
@@ -124,14 +117,6 @@ public class HUD implements Drawable {
 			currentPlayerHeartImage3 = TextureSingleton.getInstance().fullHeart;
 			break;
 		}
-	}
-	
-	
-	
-	// Update HUD scores
-	public void updateHUDScores (int newScore1, int newScore2)
-	{
-		
 	}
 
 }

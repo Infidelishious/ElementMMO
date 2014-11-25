@@ -8,11 +8,13 @@ import com.imglow.ElementMMO.BattleMessage;
 import com.imglow.ElementMMO.EventMessage;
 import com.imglow.ElementMMO.Message;
 import com.imglow.ElementMMO.MovmentMessage;
+import com.imglow.ElementMMO.ResetMessage;
 import com.imglow.ElementMMO.StatusMessage;
 import com.imglow.ElementMMO.TextMessage;
 
 public class ServerLauncher {
 
+	public final static int WINSCORE = 10;
 	static int PORT = 25565;
 	
 	Vector<Message> queue;
@@ -52,8 +54,10 @@ public class ServerLauncher {
 							{
 								for(ServerThread i : serverThreads)
 								{
-									i.SendMessage(deepClone(msg));
-									System.out.println("Message sent from : " + msg.from + " to " + i.user);
+									//Was i.SendMessage(deepClone(msg));
+									i.SendMessage(msg);
+									
+//									System.out.println("Message sent from : " + msg.from + " to " + i.user);
 								}
 							}
 						}
@@ -68,6 +72,7 @@ public class ServerLauncher {
 //							} catch (InterruptedException e) {
 //								// TODO Auto-generated catch block
 //								e.printStackTrace();
+//								return;
 //							}
 //						}
 //					}
@@ -106,9 +111,39 @@ public class ServerLauncher {
 					
 					while(hasEventMessage())
 					{
-//						EventM
-						sendMessage(getEventMessage());
-					}
+						EventMessage msg = getEventMessage();
+						
+						if(msg.to.equals("server"))
+						{
+							if(msg.event.equalsIgnoreCase("b"))
+								blueScore++;
+							else
+								redScore++;
+							
+							if(redScore >= WINSCORE)
+							{
+								blueScore = 0;
+								redScore = 0;
+								
+								ResetMessage rs = new ResetMessage();
+								rs.team1win = false;
+								
+								sendMessage(rs);
+							}
+							else if(blueScore >= WINSCORE)
+							{
+								blueScore = 0;
+								redScore = 0;
+								
+								ResetMessage rs = new ResetMessage();
+								rs.team1win = true;
+								
+								sendMessage(rs);
+							}
+						}
+						else
+							sendMessage(msg);
+					}	
 
 					StatusMessage sm = new StatusMessage();
 					sm.from = "server";
@@ -119,6 +154,9 @@ public class ServerLauncher {
 						if(i.getLastMovmentMesssage() != null)
 							sm.playerPosition.add(i.getLastMovmentMesssage());
 					}
+					
+					sm.blueScore = blueScore;
+					sm.redScore = redScore;
 					
 					sendMessage(sm);
 				}

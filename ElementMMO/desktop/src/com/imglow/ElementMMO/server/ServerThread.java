@@ -13,10 +13,11 @@ import com.imglow.ElementMMO.BattleMessage;
 import com.imglow.ElementMMO.EventMessage;
 import com.imglow.ElementMMO.Message;
 import com.imglow.ElementMMO.MovmentMessage;
+import com.imglow.ElementMMO.StatusMessage;
 import com.imglow.ElementMMO.TextMessage;
 
 class ServerThread extends Thread {
-
+	
 	String user;
 	Socket mySocket;
 	ServerLauncher sl;
@@ -108,16 +109,15 @@ class ServerThread extends Thread {
 							user = msg.from;
 						
 //						System.out.println("Msg from:" + msg.from);
-						
-						if(msg instanceof MovmentMessage)
+						if(msg.messageType == Message.MOVEMENT)
 							lastMVMessage = (MovmentMessage) msg;
-						else if(msg instanceof EventMessage)
+						else if(msg.messageType == Message.EVENT)
 							sl.eventMessages.add((EventMessage) msg);
-						else if(msg instanceof BattleMessage)
+						else if(msg.messageType == Message.BATTLE)
 							sl.battleMessages.add((BattleMessage) msg);
 						else
 							sl.textMessages.add((TextMessage) msg);
-
+						
 					}catch (SocketException e) {
 						System.out.println("Socket Closed");
 						timerTask.run();

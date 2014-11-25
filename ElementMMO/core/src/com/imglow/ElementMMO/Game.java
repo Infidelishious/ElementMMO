@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public class Game implements Drawable{
 	public static int WIDTH = 40, HEIGHT = 80;
 	
+	int blueScore = 0, redScore = 0;
 	float dX = 1, dY = 1;
 	Cell[][] grid;
 	Cell[][] border;
@@ -180,9 +181,13 @@ public class Game implements Drawable{
 
 	public void StatusUpdate()
 	{	
-		if(player == null) return;;
+		if(player == null) return;
 		
-		Message msg;
+		if(MessageManager.getInstance().hasResetMessage())
+		{
+			teamWon(MessageManager.getInstance().getWinningTeam());
+			return;
+		}
 		
 		if(MessageManager.getInstance().hasStatusMessage())
 		{
@@ -214,7 +219,14 @@ public class Game implements Drawable{
 				otherPlayers.add(op);
 			}
 			
+			redScore = ms.redScore;
+			blueScore = ms.blueScore;
 		}
 	
+	}
+
+	private void teamWon(boolean winningTeam) {
+		// TODO Auto-generated method stub
+		
 	}
 }

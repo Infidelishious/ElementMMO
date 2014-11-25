@@ -614,6 +614,19 @@ public class Battle implements Drawable
 		// currentPlayerBattleElementImage = TextureSingleton.getInstance().whiteGrass;
 		// otherPlayerBattleElementImage = TextureSingleton.getInstance().whiteGrass;
 	}
+	
+	public void tellSeverToIncrementScore(boolean team1)
+	{
+		EventMessage msg = new EventMessage();
+		msg.to = "server";
+		
+		if(team1)
+			msg.event = "b";
+		else
+			msg.event = "r";
+		
+		MessageManager.getInstance().sendMessageToServer(msg);
+	}
 
 	public void dispose()
 	{

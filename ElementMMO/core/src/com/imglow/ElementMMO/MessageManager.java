@@ -20,7 +20,11 @@ public class MessageManager{
 	
 	Socket s;
 	Runnable input, output;
-	Object msgLock = new Object();
+	Object msgLock = new Object(),
+			teamLock = new Object();
+	
+	private boolean resetMsg = false;
+	private boolean teamWon = true;
 
 	protected MessageManager(){
 		queue = new Vector<Message>();
@@ -51,12 +55,20 @@ public class MessageManager{
 //						System.out.println( "Waiting for message" );
 						try {
 							Message msg = (Message) br.readObject();
-							if(msg instanceof StatusMessage)
+							if(msg.messageType == Message.STATUS)
 								statusMessages.add((StatusMessage) msg);
-							else if(msg instanceof EventMessage)
+							else if(msg.messageType == Message.EVENT)
 								eventMessages.add((EventMessage) msg);
-							else if(msg instanceof BattleMessage)
+							else if(msg.messageType == Message.BATTLE)
 								battleMessages.add((BattleMessage) msg);
+							else if(msg.messageType == Message.RESET)
+							{
+								synchronized(teamLock)
+								{
+									resetMsg = true;
+									teamWon = ((ResetMessage)msg).team1win;
+								}
+							}
 							else
 								textMessages.add((TextMessage) msg);
 						} catch (ClassNotFoundException e) {
@@ -123,6 +135,14 @@ public class MessageManager{
 					msgLock.notifyAll();
 				}
 			}}).start();
+	}
+	
+	public boolean getWinningTeam()
+	{
+		synchronized(teamLock)
+		{
+			return teamWon;
+		}
 	}
 	
 	public boolean messageQueued()
@@ -200,4 +220,13 @@ public class MessageManager{
 		return temp;
 	}
 	
+	public boolean hasResetMessage()
+	{
+		if(resetMsg == true)
+		{
+			resetMsg = false;
+			return true;
+		}
+		return false;
+	}
 }

@@ -31,7 +31,7 @@ public class OtherPlayer extends Player{
 		else
 			frame1 = false;
 		
-		if(moving && (Math.abs(startX - x) > 2 || Math.abs(startY - y) > 2))
+		if(moving && (Math.abs(startX - x) > 3 || Math.abs(startY - y) > 3))
 		{
 			moving = false;
 		}

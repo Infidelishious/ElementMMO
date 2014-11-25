@@ -62,10 +62,10 @@ public class TextureSingleton {
 		noHeart = new TextureRegion(new Texture(Gdx.files.internal("images/no_heart.png")));
 		nothing = new TextureRegion(new Texture(Gdx.files.internal("images/nothing.png")));
 		msgBox = new TextureRegion(new Texture(Gdx.files.internal("images/msgbox.png")));
-		win = new TextureRegion(new Texture(Gdx.files.internal("images/win.png")));
+		// win = new TextureRegion(new Texture(Gdx.files.internal("images/win.png")));
 		tie = new TextureRegion(new Texture(Gdx.files.internal("images/tie.png")));
 		lose = new TextureRegion(new Texture(Gdx.files.internal("images/lose.png")));
-		victory = new TextureRegion(new Texture(Gdx.files.internal("images/victory.png")));
+		// victory = new TextureRegion(new Texture(Gdx.files.internal("images/victory.png")));
 		defeat = new TextureRegion(new Texture(Gdx.files.internal("images/defeat.png")));
 		
 		//This one is for the player.. #PS4 reference

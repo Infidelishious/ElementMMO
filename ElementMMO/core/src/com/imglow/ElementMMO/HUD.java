@@ -74,7 +74,7 @@ public class HUD implements Drawable {
 		
 		sb.draw(currentPlayerHeartImage2, -(screenW/2) + 70, (screenH/2) - 100, 40, 40);
 		
-		sb.draw(currentPlayerHeartImage2, -(screenW/2) + 120, (screenH/2) - 100, 40, 40);
+		sb.draw(currentPlayerHeartImage3, -(screenW/2) + 120, (screenH/2) - 100, 40, 40);
 	}
 	
 	public void assignHealth()

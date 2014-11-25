@@ -32,6 +32,7 @@ public class Battle implements Drawable
 
 	TextureRegion currentPlayerBattleElementImage;
 	TextureRegion otherPlayerBattleElementImage;
+	TextureRegion CombatResult;
 
 	int currentPlayerBattleElementNum;
 	int otherPlayerBattleElementNum;
@@ -58,6 +59,7 @@ public class Battle implements Drawable
 
 	public Battle(final CurrentPlayer currentPlayer, final OtherPlayer otherPlayer)
 	{
+		System.out.println("battle started! for player " + currentPlayer.name);
 		gameOver = false;
 		messageToSend = "";
 		messageReceived = "";
@@ -110,6 +112,9 @@ public class Battle implements Drawable
 		// when doing the battle, only calculate your own shit
 		// don't worry about your opponent's stuff.
 		// trust his to work
+		Game game = Game.getInstance();
+		MessageManager messageManager = MessageManager.getInstance();
+		TextureSingleton textureSingleton = TextureSingleton.getInstance();
 		if(pausedRemaining == 1)
 		{
 			// right before pause,
@@ -124,29 +129,56 @@ public class Battle implements Drawable
 		}
 		else
 		{
+			CombatResult = null;
 			if(gameOver)
 			{
 				// player makes themselves invulnerable to interaction
 				// for a bit more than a second
-				Game.getInstance().player.invincible = true;
-				Game.getInstance().player.invincibleTimeRemaining = Game.getInstance().player.MAX_INVINCIBLE_TIME;
+				System.out.println("in game over");
+				game.player.invincible = true;
+				game.player.invincibleTimeRemaining = CurrentPlayer.INVINCIBLE_TIME;
 				if(currentPlayerHealth <= 0)
 				{
+					System.out.println("ok we died");
 					// do nothing
-					Game.getInstance().player.health = 6;
-					Game.getInstance().player.sendToSpawn();
+					game.player.health = 6;
+					System.out.println("sent to spawn");
+					game.player.sendToSpawn();
+					
+					for(int i = 0; i < game.otherPlayers.size(); i++)
+					{
+						if(game.otherPlayers.get(i).name.equals(otherPlayer.name))
+						{
+							game.otherPlayers.get(i).health = otherPlayerHealth;
+							break;
+						}
+					}
+					// CombatResult = TextureSingleton.getInstance().defeat;
+					
 				}
 				else if(otherPlayerHealth <= 0)
 				{
 					// do nothing
 					// save your current health and collect the moolah
 					
-					System.out.println("currentPlayerHealth is " + currentPlayerHealth);
-					Game.getInstance().player.health = currentPlayerHealth;
-					Game.getInstance().player.money+= 200;
+					System.out.println("we won!");
+					game.player.health = currentPlayerHealth;
+					
+					game.player.money+= 200;
+					tellSeverToIncrementScore(Game.getInstance().player.team1);
+					
+					// we don't have to reset the health for otherplayer
+					// because player's are automatically created
+					// with full health
+					
 
 				}
-				Game.getInstance().hud.assignHealth();
+				game.hud.assignHealth();
+				
+				// stop the calls
+				messageManager.emptyBattleMessages();
+				messageManager.emptyEventMessages();
+				
 				dispose();
 			}
 			else
@@ -170,7 +202,7 @@ public class Battle implements Drawable
 						toSend.from = currentPlayer.name;
 						toSend.to = otherPlayer.name;
 						toSend.event = "TDM";
-						MessageManager.getInstance().sendMessageToServer(toSend);
+						messageManager.sendMessageToServer(toSend);
 						// resett the images
 						currentPlayerBattleElementImage = null;
 						otherPlayerBattleElementImage = null;
@@ -184,9 +216,9 @@ public class Battle implements Drawable
 				{
 					// we are afk!!!
 					// time to leave
-					Game.getInstance().player.sendToSpawn();
+					game.player.sendToSpawn();
 					// you died!!
-					Game.getInstance().player.health = 6;
+					game.player.health = 6;
 					// currentPlayer.health = 6;
 					BattleMessage toSend = new BattleMessage();
 					toSend.from = currentPlayer.name;
@@ -194,7 +226,7 @@ public class Battle implements Drawable
 					// we lost
 					// let them know
 					toSend.event = "OHL";
-					MessageManager.getInstance().sendMessageToServer(toSend);
+					messageManager.sendMessageToServer(toSend);
 					pausedRemaining = PAUSED_TIME;
 					gameOver = true;
 					//dispose();
@@ -206,8 +238,16 @@ public class Battle implements Drawable
 
 					// game over man
 					// each player shud calc it themselves
-					Game.getInstance().player.invincible = true;
-					Game.getInstance().player.invincibleTimeRemaining = Game.getInstance().player.MAX_INVINCIBLE_TIME;
+					if(otherPlayerHealth <= 0)
+					{
+						CombatResult = textureSingleton.victory;
+					}
+					else if(currentPlayerHealth <= 0)
+					{
+						CombatResult = textureSingleton.defeat;
+					}
+					game.player.invincible = true;
+					game.player.invincibleTimeRemaining = CurrentPlayer.INVINCIBLE_TIME;
 					pausedRemaining = PAUSED_TIME;
 					gameOver = true;
 
@@ -231,17 +271,18 @@ public class Battle implements Drawable
 				{
 					// get a message
 					// get the latest update from the front
-					BattleMessage fromEnemy = MessageManager.getInstance().getBattleMessage();
+					BattleMessage fromEnemy = messageManager.getBattleMessage();
 					if(fromEnemy != null)
 					{
 						// is it to us
 						System.out.println("fromEnemy.to is " + fromEnemy.to);
 						System.out.println("fromEnemy.event is " + fromEnemy.event);
-						if(fromEnemy.to.equals(currentPlayer.name))
+						if(fromEnemy.to.equals(currentPlayer.name) && fromEnemy.from.equals(otherPlayer.name))
 						{
 							// enemy has sent us something!!
 							messageReceived = fromEnemy.event;
 						}
+						
 					}
 
 
@@ -299,9 +340,9 @@ public class Battle implements Drawable
 						// our opponent is has lost!!!!!!
 
 						// time to leave
-						Game.getInstance().player.money+= 200;
-						Game.getInstance().player.invincible = true;
-						Game.getInstance().player.invincibleTimeRemaining = Game.getInstance().player.MAX_INVINCIBLE_TIME;
+						game.player.money+= 200;
+						game.player.invincible = true;
+						game.player.invincibleTimeRemaining = CurrentPlayer.INVINCIBLE_TIME;
 						pausedRemaining = PAUSED_TIME;
 						gameOver = true;
 						//dispose();
@@ -333,6 +374,7 @@ public class Battle implements Drawable
 							{
 								// we lost boys
 								currentPlayerHealth-= 2;
+								CombatResult = textureSingleton.lose;
 
 							}
 							else if(battleResult == 0)
@@ -341,19 +383,21 @@ public class Battle implements Drawable
 								// i guess
 								currentPlayerHealth--;
 								otherPlayerHealth--;
+								CombatResult = textureSingleton.tie;
 							}
 							else // battleResult == 1
 							{
 								// WE WON!!!
 								// enemy damages himself pew pew
 								otherPlayerHealth-= 2;
+								CombatResult = textureSingleton.win;
 							}
 							// reset our messagelistener things
 							messageToSend = "";
 							messageReceived = "";
 							timeRemaining = MAX_TIME;
-							currentPlayerBattleElementImage = TextureSingleton.getInstance().elements.get(playerAttack);
-							otherPlayerBattleElementImage = TextureSingleton.getInstance().elements.get(enemyAttack);
+							currentPlayerBattleElementImage = textureSingleton.elements.get(playerAttack);
+							otherPlayerBattleElementImage = textureSingleton.elements.get(enemyAttack);
 							pausedRemaining = PAUSED_TIME;
 						}
 						else
@@ -366,11 +410,11 @@ public class Battle implements Drawable
 			}
 		}
 		assignHealth();
-		sb.draw(TextureSingleton.getInstance().white, -MainClient.WIDTH/4, -MainClient.HEIGHT/4, MainClient.WIDTH/2, MainClient.HEIGHT/2);		
+		sb.draw(textureSingleton.msgBox, -MainClient.WIDTH/4, -MainClient.HEIGHT/4, MainClient.WIDTH/2, MainClient.HEIGHT/2);		
 
 		//draw BATTLE!
 
-		sb.draw(TextureSingleton.getInstance().battle, -100, 100, 200, 60);
+		sb.draw(textureSingleton.battle, -100, 100, 200, 60);
 
 		// sb.draw(goButton.spr, -40, 0, 60, 60);
 
@@ -432,24 +476,27 @@ public class Battle implements Drawable
 		//draw battle element slots
 		if(currentPlayerBattleElementImage != null)
 			sb.draw(currentPlayerBattleElementImage, -200, 0);
-		else
-			sb.draw(TextureSingleton.getInstance().whiteRegion,-200,0);
 
 		if(otherPlayerBattleElementImage != null)
 			sb.draw(otherPlayerBattleElementImage, 100, 0);
-		else
-			sb.draw(TextureSingleton.getInstance().whiteRegion,100,0);
+		
 		// sb.draw(new Texture(Gdx.files.internal("vs.jpg")), -25, 0, 30, 30);
 		// sb.draw(TextureSingleton.getInstance().whiteRegion, 75, 0);
 
 		if(pausedRemaining <= 0)
 		{
-			BitmapFont timerDraw = TextureSingleton.getInstance().scoreFont;
+			BitmapFont timerDraw = textureSingleton.scoreFont;
 			sb.setColor(Color.BLACK);
 			timerDraw.setColor(Color.BLACK);
 			int timeRemainingDigit = (timeRemaining+1)/60;
 			timerDraw.draw(sb , "" + timeRemainingDigit, -30, 0);
 			sb.setColor(Color.WHITE);
+		}
+		else
+		{
+			if(CombatResult != null)
+					sb.draw(CombatResult, -60,0,100,100);
+			
 		}
 
 		//sb.setColor(Color.WHITE);
@@ -542,8 +589,9 @@ public class Battle implements Drawable
 	public void assignTextures()
 	{
 		//assign player sprites
-		currentPlayerImage = TextureSingleton.getInstance().playerSprites.get(currentPlayer.type).get(TextureSingleton.STAND);
-		otherPlayerImage = TextureSingleton.getInstance().playerSprites.get(otherPlayer.type).get(TextureSingleton.STAND);
+		TextureSingleton textureSingleton = TextureSingleton.getInstance();
+		currentPlayerImage = textureSingleton.playerSprites.get(currentPlayer.type).get(TextureSingleton.STAND);
+		otherPlayerImage = textureSingleton.playerSprites.get(otherPlayer.type).get(TextureSingleton.STAND);
 
 		//assign health amounts
 
@@ -564,7 +612,7 @@ public class Battle implements Drawable
 			if(currentPlayer.using.get(i))
 			{
 				//add that item to their inventory display at the next available spot
-				currentPlayerInventoryImages[inventoryElementNum] = TextureSingleton.getInstance().elements.get(i);
+				currentPlayerInventoryImages[inventoryElementNum] = textureSingleton.elements.get(i);
 				//indicate that one should now move to the next available spot
 				currentPlayerInventoryButtons[inventoryElementNum] = new Button(currentPlayerInventoryImages[inventoryElementNum], 0, 0, 0, 0, 
 						new OnClickListener()
@@ -622,7 +670,7 @@ public class Battle implements Drawable
 		while(inventoryElementNum < 6)
 		{
 			//fill remaining inventory elements with white space
-			currentPlayerInventoryImages[inventoryElementNum] = TextureSingleton.getInstance().whiteRegion;
+			currentPlayerInventoryImages[inventoryElementNum] = textureSingleton.whiteRegion;
 			currentPlayerInventoryButtons[inventoryElementNum] = new Button(currentPlayerInventoryImages[inventoryElementNum], 0, 0, 0, 0, 
 					new OnClickListener()
 			{
@@ -630,6 +678,7 @@ public class Battle implements Drawable
 				public void onClick(Button source, Vector3 pos) 
 				{
 					// does jack shit
+					// this is filler because this player is nub
 					System.out.println("White space clicked");
 				}
 			}
@@ -645,6 +694,9 @@ public class Battle implements Drawable
 	//static helps debugging
 	public static void tellSeverToIncrementScore(boolean team1)
 	{
+		
+		// let them know
+		// of your crimes
 		EventMessage msg = new EventMessage();
 		msg.to = "server";
 
@@ -659,18 +711,25 @@ public class Battle implements Drawable
 
 	public void dispose()
 	{
+		// taking out the trash
 		for(int i = 0; i < 6; i++)
 		{
 			currentPlayerInventoryButtons[i].dispose();
 		}
+		// dun dun dun
 		TextureSingleton.getInstance().ExitBattle();
+		
+		// obituary
 		Game.getInstance().battle = null;
-		Game.getInstance().StatusUpdate();
 	}
 
 	public void forceEnd()
 	{
-		// TODO Auto-generated method stub
-
+		// plz die plz
+		// plz i need u to
+		// shhhhh
+		// itll all be over soon
+		dispose();
+		
 	}
 }

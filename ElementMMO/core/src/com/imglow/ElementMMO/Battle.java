@@ -615,7 +615,8 @@ public class Battle implements Drawable
 		// otherPlayerBattleElementImage = TextureSingleton.getInstance().whiteGrass;
 	}
 	
-	public void tellSeverToIncrementScore(boolean team1)
+	//static helps debugging
+	public static void tellSeverToIncrementScore(boolean team1)
 	{
 		EventMessage msg = new EventMessage();
 		msg.to = "server";
@@ -635,7 +636,12 @@ public class Battle implements Drawable
 			currentPlayerInventoryButtons[i].dispose();
 		}
 		TextureSingleton.getInstance().ExitBattle();
-		Game.getInstance().bg = null;
+		Game.getInstance().battle = null;
 		Game.getInstance().StatusUpdate();
+	}
+
+	public void forceEnd() {
+		// TODO Auto-generated method stub
+		
 	}
 }

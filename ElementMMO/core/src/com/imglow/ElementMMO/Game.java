@@ -6,6 +6,7 @@ import java.util.Vector;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Game implements Drawable{
@@ -23,10 +24,13 @@ public class Game implements Drawable{
 	public Vector<OtherPlayer> otherPlayers;
 	public ChatArea chat;
 	private static Game instance;
-	public Battle bg;
+	public Battle battle;
 	public Store store;
 	public InstructionsPane instructions;
 	public HUD hud;
+	
+	boolean showWin = false;
+	boolean teamWon = false;
 
 	protected Game()
 	{
@@ -37,7 +41,7 @@ public class Game implements Drawable{
 		this.client = client;
 		grid = new Cell[WIDTH][HEIGHT];
 		chat = new ChatArea();
-		timer = new Timer();
+		
 		instructions = new InstructionsPane();
 		hud = new HUD();
 		timerTask = new TimerTask(){
@@ -134,8 +138,8 @@ public class Game implements Drawable{
 		//if battle draw battle
 		
 		// bg.draw(sb);
-		if(bg != null)
-			bg.draw(sb);
+		if(battle != null)
+			battle.draw(sb);
 		else
 		{
 			if(!chat.visible)
@@ -149,6 +153,18 @@ public class Game implements Drawable{
 						player.move(Player.RIGHT);
 					else if(Gdx.input.isKeyPressed(Input.Keys.A))
 						player.move(Player.LEFT);
+					
+					///////////////DEBUG CODE//////////////////
+//					if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_1))
+//					{
+//						Battle.tellSeverToIncrementScore(true);
+//					}
+//					else if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_2))
+//					{
+//						Battle.tellSeverToIncrementScore(false);
+//					}
+					///////////////DEBUG CODE//////////////////
+						
 				}
 //				if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER))
 //					chat.visible = true;
@@ -176,6 +192,25 @@ public class Game implements Drawable{
 			
 			if(hud != null)
 				hud.draw(sb);
+			
+			if(showWin)
+				drawWin(sb);
+		}
+	}
+
+	private void drawWin(SpriteBatch sb) {
+		BitmapFont font = TextureSingleton.getInstance().scoreFont;
+		font.setScale(5.0f);
+		
+		if(teamWon)
+		{
+			font.setColor(0.0f,0.0f,1.0f,1.0f);	// blue
+			font.draw(sb, "BLUE WINS!", -font.getBounds("BLUE WINS!").width/2, 100);
+		}
+		else
+		{
+			font.setColor(1.0f,0.0f,0.0f,1.0f);	// blue
+			font.draw(sb, "RED WINS!", -font.getBounds("RED WINS!").width/2, 100);
 		}
 	}
 
@@ -226,7 +261,21 @@ public class Game implements Drawable{
 	}
 
 	private void teamWon(boolean winningTeam) {
-		// TODO Auto-generated method stub
+		teamWon = winningTeam;
+		showWin = true;
 		
+		Timer timer = new Timer();
+		timer.schedule(new TimerTask(){
+			@Override
+			public void run() {
+				showWin = false;
+		}}, 3000);
+		
+		if(battle != null)
+			battle.forceEnd();
+		
+		player.money = 200;
+		player.health = 6;
+		player.sendToSpawn();
 	}
 }

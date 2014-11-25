@@ -22,7 +22,7 @@ public class CurrentPlayer extends Player{
 	{
 		owned = new ArrayList<Boolean>();
 		using = new ArrayList<Boolean>();
-		money = 1000;
+		money = 200;
 		for(int i = 0; i < 12; i++)
 		{
 			owned.add(false);
@@ -233,9 +233,9 @@ public class CurrentPlayer extends Player{
 					Game.getInstance().otherPlayers.get(i).y == this.y &&
 					Game.getInstance().otherPlayers.get(i).team1 != this.team1) // only fight the bad guys now
 			{
-				if(Game.getInstance().bg == null)
+				if(Game.getInstance().battle == null)
 				{
-					Game.getInstance().bg = new Battle(this, Game.getInstance().otherPlayers.get(i));
+					Game.getInstance().battle = new Battle(this, Game.getInstance().otherPlayers.get(i));
 					// start the other player
 					EventMessage message = new EventMessage();
 					message.from = Game.getInstance().player.name;
@@ -270,9 +270,9 @@ public class CurrentPlayer extends Player{
 					{
 						
 						// we found the mofo
-						if(Game.getInstance().bg == null)
+						if(Game.getInstance().battle == null)
 						{
-							Game.getInstance().bg = new Battle(this, Game.getInstance().otherPlayers.get(i));
+							Game.getInstance().battle = new Battle(this, Game.getInstance().otherPlayers.get(i));
 						}
 					}
 				}

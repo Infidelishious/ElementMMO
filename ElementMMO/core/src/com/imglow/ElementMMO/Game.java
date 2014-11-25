@@ -35,7 +35,7 @@ public class Game implements Drawable{
 	public void init(final MainClient client) {
 		this.client = client;
 		grid = new Cell[WIDTH][HEIGHT];
-
+		chat = new ChatArea();
 		timer = new Timer();
 		instructions = new InstructionsPane();
 		hud = new HUD();
@@ -137,7 +137,7 @@ public class Game implements Drawable{
 			bg.draw(sb);
 		else
 		{
-			if(chat == null)
+			if(!chat.visible)
 			{
 				if(player !=null) {
 					if(Gdx.input.isKeyPressed(Input.Keys.W))
@@ -149,8 +149,9 @@ public class Game implements Drawable{
 					else if(Gdx.input.isKeyPressed(Input.Keys.A))
 						player.move(Player.LEFT);
 				}
-				if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER))
-					chat = new ChatArea();
+//				if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER))
+//					chat.visible = true;
+//					chat.chatText = "> ";
 			}
 			
 			StatusUpdate();

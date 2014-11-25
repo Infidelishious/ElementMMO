@@ -11,6 +11,8 @@ public class CurrentPlayer extends Player{
 
 	int usingCount;
 	boolean blocked = false;
+	static int MAX_INVINCIBLE_TIME = 100;
+	int invincibleTimeRemaining = 0;
 	// should only enter store
 	// from the edge!!!
 	boolean shouldEnterStore;
@@ -228,60 +230,73 @@ public class CurrentPlayer extends Player{
 	
 
 	@Override
-	public void draw(SpriteBatch sb) {
+	public void draw(SpriteBatch sb)
+	{
 		updateSprite();
-		for(int i = 0; i < Game.getInstance().otherPlayers.size(); i++)
+		if(!invincible || invincibleTimeRemaining > 0)
 		{
-			if(Game.getInstance().otherPlayers.get(i).x == this.x &&
-					Game.getInstance().otherPlayers.get(i).y == this.y &&
-					Game.getInstance().otherPlayers.get(i).team1 != this.team1) // only fight the bad guys now
+			invincible = false;
+			for(int i = 0; i < Game.getInstance().otherPlayers.size(); i++)
 			{
-				if(Game.getInstance().battle == null)
+				if(Game.getInstance().otherPlayers.get(i).x == this.x &&
+						Game.getInstance().otherPlayers.get(i).y == this.y &&
+						Game.getInstance().otherPlayers.get(i).team1 != this.team1 // only fight the bad guys now
+						&& Game.getInstance().otherPlayers.get(i).invincible == false) // make sure we shud
 				{
-					Game.getInstance().battle = new Battle(this, Game.getInstance().otherPlayers.get(i));
-					// start the other player
-					EventMessage message = new EventMessage();
-					message.from = Game.getInstance().player.name;
-					message.to = Game.getInstance().otherPlayers.get(i).name;
-					message.event = "StartBattle";
-					System.out.println("sentMessage in currentPlayer for battle Entering");
-					System.out.println("sm.to = " + message.to);
-					System.out.println("sm.from = " + message.from);
-					System.out.println("sm.event = " + message.event);
-					MessageManager.getInstance().sendMessageToServer(message);
-				}
-			}
-		}
-		
-		// this makes sure that if your opponent has started a fight,
-		
-		// you start a fight
-		EventMessage receivedMessage = MessageManager.getInstance().getEventMessage();
-		if(receivedMessage != null)
-		{
-			System.out.println("receivedMessage in currentPlayer for battle Entering");
-			System.out.println("rm.to = " + receivedMessage.to);
-			System.out.println("rm.from = " + receivedMessage.from);
-			System.out.println("rm.event = " + receivedMessage.event);
-			if(receivedMessage.to.equals(Game.getInstance().player.name) )
-			{
-				// he's called you out boyo!!
-				// figure out which other
-				for(int i = 0; i < Game.getInstance().otherPlayers.size(); i++)
-				{
-					if(Game.getInstance().otherPlayers.get(i).name.equals(receivedMessage.from))
+					if(Game.getInstance().battle == null)
 					{
-						
-						// we found the mofo
-						if(Game.getInstance().battle == null)
-						{
-							Game.getInstance().battle = new Battle(this, Game.getInstance().otherPlayers.get(i));
-						}
+						Game.getInstance().battle = new Battle(this, Game.getInstance().otherPlayers.get(i));
+						// start the other player
+						EventMessage message = new EventMessage();
+						message.from = Game.getInstance().player.name;
+						message.to = Game.getInstance().otherPlayers.get(i).name;
+						message.event = "StartBattle";
+						System.out.println("sentMessage in currentPlayer for battle Entering");
+						System.out.println("sm.to = " + message.to);
+						System.out.println("sm.from = " + message.from);
+						System.out.println("sm.event = " + message.event);
+						MessageManager.getInstance().sendMessageToServer(message);
 					}
 				}
 			}
-					
+			
+			// this makes sure that if your opponent has started a fight,
+			
+			// you start a fight
+			EventMessage receivedMessage = MessageManager.getInstance().getEventMessage();
+			if(receivedMessage != null)
+			{
+				System.out.println("receivedMessage in currentPlayer for battle Entering");
+				System.out.println("rm.to = " + receivedMessage.to);
+				System.out.println("rm.from = " + receivedMessage.from);
+				System.out.println("rm.event = " + receivedMessage.event);
+				if(receivedMessage.to.equals(Game.getInstance().player.name) )
+				{
+					// he's called you out boyo!!
+					// figure out which other
+					for(int i = 0; i < Game.getInstance().otherPlayers.size(); i++)
+					{
+						if(Game.getInstance().otherPlayers.get(i).name.equals(receivedMessage.from))
+						{
+							
+							// we found the mofo
+							if(Game.getInstance().battle == null)
+							{
+								Game.getInstance().battle = new Battle(this, Game.getInstance().otherPlayers.get(i));
+							}
+						}
+					}
+				}
+						
+			}
 		}
+		else
+		{
+			// invincible is true
+			invincible = true;
+			invincibleTimeRemaining--;
+		}
+		
 		
 		if(!blocked)
 		{

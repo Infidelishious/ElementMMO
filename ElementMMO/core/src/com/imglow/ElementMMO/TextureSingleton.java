@@ -25,9 +25,9 @@ public class TextureSingleton {
 	public BitmapFont scoreFont, nameFont, instructionFont;
 	public Texture cop, spikey, chika, nakedMan;
 	public ArrayList<TextureRegion> copList, spikeyList, chikaList, nakedManList, shopElements, elements, grassArray, storeArray;
-	public TextureRegion grass, whiteGrass, blackGrass, bush, tree1, tree2, imagination, hunger, music, giggles, segFaults, sunshine, drought,
-							entropy, trig, choco, synergy, hugs, shop, whiteRegion, grayRegion, battle, go, goGrayed, vs, fullHeart,
-							halfHeart, noHeart, storeCorner, storeEmpty, storeFlowers, storeSide, storeStall1, storeStall2, storePot, nothing, msgBox;
+	public TextureRegion grass, whiteGrass, blackGrass, bush, tree1, tree2, imagination, hunger, music, giggles, segFaults, sunshine, drought, entropy, 
+						trig, choco, synergy, hugs, shop, whiteRegion, grayRegion, battle, go, goGrayed, vs, fullHeart,halfHeart, noHeart, storeCorner, 
+						storeEmpty, storeFlowers, storeSide, storeStall1, storeStall2, storePot, nothing, msgBox, win, tie, lose, victory, defeat;
 	
 	public Music mainMusic;
 	public Music battleMusic;
@@ -62,6 +62,11 @@ public class TextureSingleton {
 		noHeart = new TextureRegion(new Texture(Gdx.files.internal("images/no_heart.png")));
 		nothing = new TextureRegion(new Texture(Gdx.files.internal("images/nothing.png")));
 		msgBox = new TextureRegion(new Texture(Gdx.files.internal("images/msgbox.png")));
+		win = new TextureRegion(new Texture(Gdx.files.internal("images/win.png")));
+		tie = new TextureRegion(new Texture(Gdx.files.internal("images/tie.png")));
+		lose = new TextureRegion(new Texture(Gdx.files.internal("images/lose.png")));
+		victory = new TextureRegion(new Texture(Gdx.files.internal("images/victory.png")));
+		defeat = new TextureRegion(new Texture(Gdx.files.internal("images/defeat.png")));
 		
 		//This one is for the player.. #PS4 reference
 		cop = new Texture(Gdx.files.internal("images/cop.png"));

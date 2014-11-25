@@ -21,7 +21,7 @@ public class ChatArea implements Drawable{
 		str2 = new String (""); 
 		str3 = new String (""); 
 		str4 = new String("");
-
+		
 	}
 
 
@@ -29,18 +29,29 @@ public class ChatArea implements Drawable{
 	public void draw(SpriteBatch sb)
 	{
 
-		BitmapFont chatFont = TextureSingleton.getInstance().scoreFont;
-		chatFont.setColor(0.0f,0.0f,0.0f,1.0f);
+		BitmapFont chatFont = TextureSingleton.getInstance().nameFont;
+		chatFont.setColor(1.0f,1.0f,1.0f,1.0f);
 		chatFont.setScale(2.0f);
 		if(visible)
 		{
 			chatFont.draw(sb, chatText, -MainClient.WIDTH/2 + 30, -MainClient.HEIGHT/2 + 75);
-			if(chatText.equals("> ") && Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+			/*if(chatText.equals("> ") && Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
 				chatText = "";
 				visible = false;
-				showMessage(sb);
+				//showMessage(sb);	// commented this out... don't add new message if entered empty text
 			}
-			else if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) sendMessage(chatText.substring(2));
+			else if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+				sendMessage(chatText.substring(2));
+			}*/
+			if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+				if(chatText.equals("> ")) {	// if empty message was entered
+					chatText = "";
+					visible = false;
+				}
+				else {
+					sendMessage(chatText.substring(2));
+				}
+			}
 			if(Gdx.input.isKeyJustPressed(Input.Keys.BACKSPACE) && chatText.length() > 2)
 				chatText = chatText.substring(0, chatText.length() - 1);
 			if(chatText.length() < 50)
@@ -126,53 +137,42 @@ public class ChatArea implements Drawable{
 			}
 		}
 		if(!first)
+		//if(!visible)
 			showMessage(sb);
 
 	}
 
 	public void showMessage(SpriteBatch sb)
 	{
-		TextMessage msg = msg = MessageManager.getInstance().getTextMessage();
-		BitmapFont messageFont = TextureSingleton.getInstance().scoreFont;
-		if(shouldIShow(msg)){
-			if(count < 1){
-				while(msg != null)
-				{
+		MessageManager mm = MessageManager.getInstance();
+		BitmapFont messageFont = TextureSingleton.getInstance().nameFont;
+		if (mm.hasTextMessage()) {System.out.println("have message");
+			TextMessage msg = MessageManager.getInstance().getTextMessage();
+			if(shouldIShow(msg)){
+				if(count < 1){
 					str1 = msg.from + ": " + msg.msg;
 					System.out.println(str1);
 					count++;
 				}
-			}
-			if(count == 1){
-				while(msg != null) {
-
+				else if(count == 1){
 					//					msg = MessageManager.getInstance().getTextMessage();
 					str2 = str1;
 					str1 = msg.from + ": " + msg.msg;
 					count++;
-
 				}
-			}
-			else if(count == 2){
-				while(msg != null) {
-
+				else if(count == 2){
 					//msg = MessageManager.getInstance().getTextMessage();
 					str3 = str2;
 					str2 = str1;
 					str1 = msg.from + ": " + msg.msg;
 					count++;
 				}
-
-			}
-			else if(count == 3){
-				while(msg != null) {
-
+				else if(count == 3){
 					//msg = MessageManager.getInstance().getTextMessage();
 					str4 = str3;
 					str3 = str2;
 					str2 = str1;
 					str1 = msg.from + ": " + msg.msg;
-
 				}
 			}
 		}
@@ -180,6 +180,8 @@ public class ChatArea implements Drawable{
 		//			toPrintOrNotToPrint = true;
 		//		}
 		//if(toPrintOrNotToPrint){
+		messageFont.setColor(1.0f,1.0f,1.0f,1.0f);
+		messageFont.setScale(2.0f);
 		messageFont.draw(sb, str1, -MainClient.WIDTH/2 + 30, -MainClient.HEIGHT/2 + 150);
 		messageFont.draw(sb, str2, -MainClient.WIDTH/2 + 30, -MainClient.HEIGHT/2 + 200);
 		messageFont.draw(sb, str3, -MainClient.WIDTH/2 + 30, -MainClient.HEIGHT/2 + 250);
@@ -197,13 +199,16 @@ public class ChatArea implements Drawable{
 				temp = "team2";
 			}
 
+			// if team message
 			if(msg.to.equals(temp)) {
 				System.out.println("it should show somewhere" + msg.msg);
 				return true;
 			}
+			// if global message
 			else if(msg.to.equals("all")) {
 				return true;
 			}
+			// if targeted message
 			else if(msg.to.equals(Game.getInstance().player.name))
 				return true;
 			else 
@@ -228,7 +233,7 @@ public class ChatArea implements Drawable{
 				}
 				else{
 					msg.to = "team2";
-				}
+				}System.out.println("sending");
 				MessageManager.getInstance().sendMessageToServer(msg);
 			}
 			// now parse it, to see who to send it to

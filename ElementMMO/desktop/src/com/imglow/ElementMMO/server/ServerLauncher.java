@@ -33,9 +33,9 @@ public class ServerLauncher {
 	{
 		System.out.println("****Server Starting****");
 		try {
-			System.out.println("IP :" + InetAddress.getLocalHost().getHostAddress());
+			System.out.println("IP: " + InetAddress.getLocalHost().getHostAddress());
 		} catch (UnknownHostException e1) {
-			System.out.println("IP : N/A");
+			System.out.println("IP: N/A");
 		}
 		
 		final ServerLauncher thiss = this;

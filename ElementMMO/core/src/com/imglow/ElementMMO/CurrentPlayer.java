@@ -11,7 +11,7 @@ public class CurrentPlayer extends Player{
 
 	int usingCount;
 	boolean blocked = false;
-	static int MAX_INVINCIBLE_TIME = 100;
+	static int MAX_INVINCIBLE_TIME = 60*5; // 5 seconds
 	int invincibleTimeRemaining = 0;
 	// should only enter store
 	// from the edge!!!
@@ -233,15 +233,20 @@ public class CurrentPlayer extends Player{
 	public void draw(SpriteBatch sb)
 	{
 		updateSprite();
-		if(!invincible || invincibleTimeRemaining > 0)
+		if(invincible)
+		{
+			if(Game.getInstance().battle != null)
+				Game.getInstance().battle.dispose();
+		}
+		if(invincibleTimeRemaining <= 0)
 		{
 			invincible = false;
 			for(int i = 0; i < Game.getInstance().otherPlayers.size(); i++)
 			{
 				if(Game.getInstance().otherPlayers.get(i).x == this.x &&
 						Game.getInstance().otherPlayers.get(i).y == this.y &&
-						Game.getInstance().otherPlayers.get(i).team1 != this.team1 // only fight the bad guys now
-						&& Game.getInstance().otherPlayers.get(i).invincible == false) // make sure we shud
+						Game.getInstance().otherPlayers.get(i).team1 != this.team1  &&// only fight the bad guys now
+						Game.getInstance().otherPlayers.get(i).invincible == false) // make sure we shud
 				{
 					if(Game.getInstance().battle == null)
 					{
@@ -293,7 +298,7 @@ public class CurrentPlayer extends Player{
 		else
 		{
 			// invincible is true
-			invincible = true;
+			// invincible = true;
 			invincibleTimeRemaining--;
 		}
 		

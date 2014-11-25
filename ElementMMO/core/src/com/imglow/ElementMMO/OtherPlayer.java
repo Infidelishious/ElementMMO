@@ -31,7 +31,7 @@ public class OtherPlayer extends Player{
 		else
 			frame1 = false;
 		
-		if(moving && (Math.floor(startX) != Math.floor(x) || Math.floor(startY) != Math.floor(y)))
+		if(moving && (Math.abs(startX - x) > 2 || Math.abs(startY - y) > 2))
 		{
 			moving = false;
 		}
@@ -66,7 +66,7 @@ public class OtherPlayer extends Player{
 					spr = ts.playerSprites.get(type).get(TextureSingleton.STAND);
 
 				lw = DOWN;
-				y += SPEED;
+				y -= SPEED;
 			}
 			else if(moveDirection == UP) //moving up
 			{
@@ -76,7 +76,7 @@ public class OtherPlayer extends Player{
 					spr = ts.playerSprites.get(type).get(TextureSingleton.FACE_UP);
 
 				lw = UP;
-				y -= SPEED;
+				y += SPEED;
 			}
 		}
 		else

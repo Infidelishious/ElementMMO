@@ -13,7 +13,7 @@ public abstract class Player implements Drawable{
 			WIDTH = 64,
 			HEIGHT = 84;
 	
-	public static float SPEED = 0.2f;
+	public static float SPEED = 0.1f;
 	public boolean moving = false;
 	
 	

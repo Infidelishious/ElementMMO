@@ -36,12 +36,15 @@ public class InstructionsPane implements Drawable
 		sb.setColor(Color.WHITE);
 		INSTRUCTION_FONT.setColor(Color.BLACK);
 		INSTRUCTION_FONT.setScale(1f);
-		INSTRUCTION_FONT.draw(sb, "Welcome to our game!", -260, 240);
-		INSTRUCTION_FONT.draw(sb, "Here's how to play:", -260, 210);
-		INSTRUCTION_FONT.draw(sb, "1. Run around and explore the world! ( WASD )", -210, 180);
-		INSTRUCTION_FONT.draw(sb, "2. Find people on the other team and battle!", -210, 150);
-		INSTRUCTION_FONT.draw(sb, "3. Buy battle elements at the stores!", -210, 120);
-		INSTRUCTION_FONT.draw(sb, "Close this by clicking anywhere outside the window", -260, 70);
+		INSTRUCTION_FONT.draw(sb, "Welcome to our game!", -240, 230);
+		INSTRUCTION_FONT.draw(sb, "Here's how to play:", -240, 210);
+		INSTRUCTION_FONT.draw(sb, "- Run around and explore the world! (WASD keys)", -210, 190);
+		INSTRUCTION_FONT.draw(sb, "- Find people on the other team and battle!", -210, 170);
+		INSTRUCTION_FONT.draw(sb, "- Buy battle elements at the stores!", -210, 150);
+		INSTRUCTION_FONT.draw(sb, "- Talk! Press enter to open chat, and enter to send", -210, 130);
+		INSTRUCTION_FONT.draw(sb, "- Use \"/all [msg]\" or \"/msg user1, user2/ [msg]\"", -210, 110);
+		INSTRUCTION_FONT.draw(sb, "- HAVE FUN!", -210, 90);
+		INSTRUCTION_FONT.draw(sb, "Close this by clicking anywhere outside the window!", -210, 60);
 	}
 	
 	public void close()

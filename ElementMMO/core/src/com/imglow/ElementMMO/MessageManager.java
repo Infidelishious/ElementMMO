@@ -229,4 +229,9 @@ public class MessageManager{
 		}
 		return false;
 	}
+	
+	public void emptyBattleMessages()
+	{
+		battleMessages.clear();
+	}
 }

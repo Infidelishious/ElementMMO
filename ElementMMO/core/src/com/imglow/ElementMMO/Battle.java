@@ -110,45 +110,51 @@ public class Battle implements Drawable
 		// when doing the battle, only calculate your own shit
 		// don't worry about your opponent's stuff.
 		// trust his to work
-		if(gameOver)
+		if(pausedRemaining == 1)
 		{
-			// player makes themselves invulnerable to interaction
-			// for a bit more than a second
-			Game.getInstance().player.invincible = true;
-			Game.getInstance().player.invincibleTimeRemaining = Game.getInstance().player.MAX_INVINCIBLE_TIME;
-			if(currentPlayerHealth <= 0)
-			{
-				// do nothing
-				Game.getInstance().player.health = 6;
-				Game.getInstance().player.sendToSpawn();
-			}
-			else if(otherPlayerHealth <= 0)
-			{
-				// do nothing
-				Game.getInstance().player.money+= 200;
-				
-			}
-			dispose();
+			// right before pause,
+			// reset the images
+			otherPlayerBattleElementImage = null;
+			currentPlayerBattleElementImage = null;
+			timeRemaining = MAX_TIME;
+		}
+		if(pausedRemaining > 0)
+		{
+			pausedRemaining--;
 		}
 		else
 		{
-			if(pausedRemaining == 1)
+			if(gameOver)
 			{
-				// right before pause,
-				// reset the images
-				otherPlayerBattleElementImage = null;
-				currentPlayerBattleElementImage = null;
-				timeRemaining = MAX_TIME;
-			}
-			if(pausedRemaining > 0)
-			{
-				pausedRemaining--;
+				// player makes themselves invulnerable to interaction
+				// for a bit more than a second
+				Game.getInstance().player.invincible = true;
+				Game.getInstance().player.invincibleTimeRemaining = Game.getInstance().player.MAX_INVINCIBLE_TIME;
+				if(currentPlayerHealth <= 0)
+				{
+					// do nothing
+					Game.getInstance().player.health = 6;
+					Game.getInstance().player.sendToSpawn();
+				}
+				else if(otherPlayerHealth <= 0)
+				{
+					// do nothing
+					// save your current health and collect the moolah
+					
+					System.out.println("currentPlayerHealth is " + currentPlayerHealth);
+					Game.getInstance().player.health = currentPlayerHealth;
+					Game.getInstance().player.money+= 200;
+
+				}
+				Game.getInstance().hud.assignHealth();
+				dispose();
 			}
 			else
 			{
+
 				// we can't see the other player's image after
 				// the pause
-	
+
 				//draw window
 				// reset the timer
 				timeRemaining--;
@@ -165,12 +171,15 @@ public class Battle implements Drawable
 						toSend.to = otherPlayer.name;
 						toSend.event = "TDM";
 						MessageManager.getInstance().sendMessageToServer(toSend);
+						// resett the images
+						currentPlayerBattleElementImage = null;
+						otherPlayerBattleElementImage = null;
 					}
-	
+
 					// reset the timer
 					timeRemaining = MAX_TIME;
 				}
-	
+
 				if(TDMcount > 2)
 				{
 					// we are afk!!!
@@ -186,20 +195,23 @@ public class Battle implements Drawable
 					// let them know
 					toSend.event = "OHL";
 					MessageManager.getInstance().sendMessageToServer(toSend);
+					pausedRemaining = PAUSED_TIME;
 					gameOver = true;
-					dispose();
+					//dispose();
 				}
 				// if u have no health left
 				// game over man
 				else if(otherPlayerHealth <= 0 || currentPlayerHealth <= 0)
 				{
-	
+
 					// game over man
 					// each player shud calc it themselves
-	
+					Game.getInstance().player.invincible = true;
+					Game.getInstance().player.invincibleTimeRemaining = Game.getInstance().player.MAX_INVINCIBLE_TIME;
+					pausedRemaining = PAUSED_TIME;
 					gameOver = true;
 
-	
+
 				}
 				/*
 				else if(currentPlayer.health <= 0)
@@ -209,9 +221,9 @@ public class Battle implements Drawable
 					toSend.from = currentPlayer.name;
 					toSend.event = "GOW"; // Game Opponent Win (opponent wins)
 					MessageManager.getInstance().sendMessageToServer(toSend);
-	
+
 					// close the battle thing
-	
+
 					dispose();
 				}
 				 */
@@ -231,9 +243,9 @@ public class Battle implements Drawable
 							messageReceived = fromEnemy.event;
 						}
 					}
-				
-	
-				/*
+
+
+					/*
 				// now check the messageReceived stuff
 				if(messageReceived.equals("GPW")) // game over
 				{
@@ -248,7 +260,7 @@ public class Battle implements Drawable
 					Game.getInstance().player.health = 6;
 					// close the battle thing
 					dispose();
-	
+
 				}
 				else if(messageReceived.equals("GOW"))
 				{
@@ -264,7 +276,7 @@ public class Battle implements Drawable
 					MessageManager.getInstance().sendMessageToServer(toSend);
 					dispose();
 				}
-				 */
+					 */
 					if(messageReceived.equals("TDM"))
 					{
 						// the enemy waited 10 seconds
@@ -272,10 +284,11 @@ public class Battle implements Drawable
 						// we are punished for our transgression
 						timeRemaining = MAX_TIME;
 						// make sure everytime we do dis
-	
+
 						currentPlayerHealth--;
 						otherPlayerBattleElementImage = null;
 						currentPlayerBattleElementImage = null;
+						// currentPlayerBattleElementImage = TextureSingleton.getInstance().whiteRegion;
 						// reset messagereceived
 						messageReceived = "";
 						messageToSend = "";
@@ -284,14 +297,17 @@ public class Battle implements Drawable
 					else if(messageReceived.equals("OHL"))
 					{
 						// our opponent is has lost!!!!!!
-	
+
 						// time to leave
 						Game.getInstance().player.money+= 200;
+						Game.getInstance().player.invincible = true;
+						Game.getInstance().player.invincibleTimeRemaining = Game.getInstance().player.MAX_INVINCIBLE_TIME;
+						pausedRemaining = PAUSED_TIME;
 						gameOver = true;
-						dispose();
-	
-	
-	
+						//dispose();
+
+
+
 					}
 					else if(!messageReceived.equals(""))
 					{
@@ -304,20 +320,20 @@ public class Battle implements Drawable
 							// with our messageToSend
 							int playerAttack = Integer.parseInt(messageToSend.substring(2));
 							int enemyAttack = Integer.parseInt(messageReceived.substring(2));
-	
+
 							System.out.println("messageToSend being parsed is " + messageToSend.substring(2) +
 									" and playerAttack is " + playerAttack);
 							System.out.println("messageReceived being parsed is " + messageReceived.substring(2) +
 									" and enemyAttack is " + enemyAttack);
 							int battleResult = BattleLogics.battle(playerAttack, enemyAttack);
-	
+
 							// only calculate the battle result for your own self!!!
 							// do not calculate for opponent
 							if(battleResult == -1)
 							{
 								// we lost boys
 								currentPlayerHealth-= 2;
-	
+
 							}
 							else if(battleResult == 0)
 							{
@@ -346,100 +362,101 @@ public class Battle implements Drawable
 						}
 					}
 				}
-	
+
 			}
-			assignHealth();
-			sb.draw(TextureSingleton.getInstance().white, -MainClient.WIDTH/4, -MainClient.HEIGHT/4, MainClient.WIDTH/2, MainClient.HEIGHT/2);		
-	
-			//draw BATTLE!
-	
-			sb.draw(TextureSingleton.getInstance().battle, -100, 100, 200, 60);
-	
-			// sb.draw(goButton.spr, -40, 0, 60, 60);
-	
-			//draw player sprites
-	
-			sb.draw(currentPlayerImage, -MainClient.HEIGHT/2+50, 0, Player.WIDTH, Player.HEIGHT);
-			sb.draw(otherPlayerImage, MainClient.HEIGHT/2-125, 0, Player.WIDTH, Player.HEIGHT);
-	
-			//draw health amounts
-			//this player
-			sb.draw(currentPlayerHeartImage1, -MainClient.WIDTH/4+10, 100, 16, 16);
-			sb.draw(currentPlayerHeartImage2, -MainClient.WIDTH/4+30, 100, 16, 16);
-			sb.draw(currentPlayerHeartImage3, -MainClient.WIDTH/4+50, 100, 16, 16);
-			//other player
-			sb.draw(otherPlayerHeartImage3, MainClient.WIDTH/4-45, 100, 16, 16);
-			sb.draw(otherPlayerHeartImage2, MainClient.WIDTH/4-65, 100, 16, 16);
-			sb.draw(otherPlayerHeartImage1, MainClient.WIDTH/4-85, 100, 16, 16);
-	
-			//draw space for element slots
-			sb.draw(new Texture(Gdx.files.internal("images/gray.png")), -MainClient.WIDTH/4+150, -MainClient.HEIGHT/4+10, MainClient.WIDTH/4, MainClient.HEIGHT/4-50);
-	
-			//draw element slots
-			currentPlayerInventoryButtons[0].width = 100;
-			currentPlayerInventoryButtons[0].height = 30;
-			currentPlayerInventoryButtons[0].x = -MainClient.WIDTH/4+180;
-			currentPlayerInventoryButtons[0].y = -80;
-			sb.draw(currentPlayerInventoryImages[0], -MainClient.WIDTH/4+180, -80, 100, 30);
-	
-			currentPlayerInventoryButtons[1].width = 100;
-			currentPlayerInventoryButtons[1].height = 30;
-			currentPlayerInventoryButtons[1].x = -MainClient.WIDTH/4+180;
-			currentPlayerInventoryButtons[1].y = -120;
-			sb.draw(currentPlayerInventoryImages[1], -MainClient.WIDTH/4+180, -120, 100, 30);
-	
-			currentPlayerInventoryButtons[2].width = 100;
-			currentPlayerInventoryButtons[2].height = 30;
-			currentPlayerInventoryButtons[2].x = -MainClient.WIDTH/4+180;
-			currentPlayerInventoryButtons[2].y = -160;
-			sb.draw(currentPlayerInventoryImages[2], -MainClient.WIDTH/4+180, -160, 100, 30);
-	
-			currentPlayerInventoryButtons[3].width = 100;
-			currentPlayerInventoryButtons[3].height = 30;
-			currentPlayerInventoryButtons[3].x = -MainClient.WIDTH/4+340;
-			currentPlayerInventoryButtons[3].y = -80;
-			sb.draw(currentPlayerInventoryImages[3], -MainClient.WIDTH/4+340, -80, 100, 30);
-	
-			currentPlayerInventoryButtons[4].width = 100;
-			currentPlayerInventoryButtons[4].height = 30;
-			currentPlayerInventoryButtons[4].x = -MainClient.WIDTH/4+340;
-			currentPlayerInventoryButtons[4].y = -120;
-			sb.draw(currentPlayerInventoryImages[4], -MainClient.WIDTH/4+340, -120, 100, 30);
-	
-			currentPlayerInventoryButtons[5].width = 100;
-			currentPlayerInventoryButtons[5].height = 30;
-			currentPlayerInventoryButtons[5].x = -MainClient.WIDTH/4+340;
-			currentPlayerInventoryButtons[5].y = -160;
-			sb.draw(currentPlayerInventoryImages[5], -MainClient.WIDTH/4+340, -160, 100, 30);
-	
-			//draw battle element slots
-			if(currentPlayerBattleElementImage != null)
-				sb.draw(currentPlayerBattleElementImage, -200, 0);
-			else
-				sb.draw(TextureSingleton.getInstance().whiteRegion,-200,0);
-	
-			if(otherPlayerBattleElementImage != null)
-				sb.draw(otherPlayerBattleElementImage, 100, 0);
-			else
-				sb.draw(TextureSingleton.getInstance().whiteRegion,100,0);
-			// sb.draw(new Texture(Gdx.files.internal("vs.jpg")), -25, 0, 30, 30);
-			// sb.draw(TextureSingleton.getInstance().whiteRegion, 75, 0);
-	
-			if(pausedRemaining <= 0)
-			{
-				BitmapFont timerDraw = TextureSingleton.getInstance().scoreFont;
-				sb.setColor(Color.BLACK);
-				timerDraw.setColor(Color.BLACK);
-				int timeRemainingDigit = (timeRemaining+1)/60;
-				timerDraw.draw(sb , "" + timeRemainingDigit, -30, 0);
-				sb.setColor(Color.WHITE);
-			}
-	
-			//sb.setColor(Color.WHITE);
-	
-			// scoreFont.draw
 		}
+		assignHealth();
+		sb.draw(TextureSingleton.getInstance().white, -MainClient.WIDTH/4, -MainClient.HEIGHT/4, MainClient.WIDTH/2, MainClient.HEIGHT/2);		
+
+		//draw BATTLE!
+
+		sb.draw(TextureSingleton.getInstance().battle, -100, 100, 200, 60);
+
+		// sb.draw(goButton.spr, -40, 0, 60, 60);
+
+		//draw player sprites
+
+		sb.draw(currentPlayerImage, -MainClient.HEIGHT/2+50, 0, Player.WIDTH, Player.HEIGHT);
+		sb.draw(otherPlayerImage, MainClient.HEIGHT/2-125, 0, Player.WIDTH, Player.HEIGHT);
+
+		//draw health amounts
+		//this player
+		sb.draw(currentPlayerHeartImage1, -MainClient.WIDTH/4+10, 100, 16, 16);
+		sb.draw(currentPlayerHeartImage2, -MainClient.WIDTH/4+30, 100, 16, 16);
+		sb.draw(currentPlayerHeartImage3, -MainClient.WIDTH/4+50, 100, 16, 16);
+		//other player
+		sb.draw(otherPlayerHeartImage3, MainClient.WIDTH/4-45, 100, 16, 16);
+		sb.draw(otherPlayerHeartImage2, MainClient.WIDTH/4-65, 100, 16, 16);
+		sb.draw(otherPlayerHeartImage1, MainClient.WIDTH/4-85, 100, 16, 16);
+
+		//draw space for element slots
+		sb.draw(new Texture(Gdx.files.internal("images/gray.png")), -MainClient.WIDTH/4+150, -MainClient.HEIGHT/4+10, MainClient.WIDTH/4, MainClient.HEIGHT/4-50);
+
+		//draw element slots
+		currentPlayerInventoryButtons[0].width = 100;
+		currentPlayerInventoryButtons[0].height = 30;
+		currentPlayerInventoryButtons[0].x = -MainClient.WIDTH/4+180;
+		currentPlayerInventoryButtons[0].y = -80;
+		sb.draw(currentPlayerInventoryImages[0], -MainClient.WIDTH/4+180, -80, 100, 30);
+
+		currentPlayerInventoryButtons[1].width = 100;
+		currentPlayerInventoryButtons[1].height = 30;
+		currentPlayerInventoryButtons[1].x = -MainClient.WIDTH/4+180;
+		currentPlayerInventoryButtons[1].y = -120;
+		sb.draw(currentPlayerInventoryImages[1], -MainClient.WIDTH/4+180, -120, 100, 30);
+
+		currentPlayerInventoryButtons[2].width = 100;
+		currentPlayerInventoryButtons[2].height = 30;
+		currentPlayerInventoryButtons[2].x = -MainClient.WIDTH/4+180;
+		currentPlayerInventoryButtons[2].y = -160;
+		sb.draw(currentPlayerInventoryImages[2], -MainClient.WIDTH/4+180, -160, 100, 30);
+
+		currentPlayerInventoryButtons[3].width = 100;
+		currentPlayerInventoryButtons[3].height = 30;
+		currentPlayerInventoryButtons[3].x = -MainClient.WIDTH/4+340;
+		currentPlayerInventoryButtons[3].y = -80;
+		sb.draw(currentPlayerInventoryImages[3], -MainClient.WIDTH/4+340, -80, 100, 30);
+
+		currentPlayerInventoryButtons[4].width = 100;
+		currentPlayerInventoryButtons[4].height = 30;
+		currentPlayerInventoryButtons[4].x = -MainClient.WIDTH/4+340;
+		currentPlayerInventoryButtons[4].y = -120;
+		sb.draw(currentPlayerInventoryImages[4], -MainClient.WIDTH/4+340, -120, 100, 30);
+
+		currentPlayerInventoryButtons[5].width = 100;
+		currentPlayerInventoryButtons[5].height = 30;
+		currentPlayerInventoryButtons[5].x = -MainClient.WIDTH/4+340;
+		currentPlayerInventoryButtons[5].y = -160;
+		sb.draw(currentPlayerInventoryImages[5], -MainClient.WIDTH/4+340, -160, 100, 30);
+
+		//draw battle element slots
+		if(currentPlayerBattleElementImage != null)
+			sb.draw(currentPlayerBattleElementImage, -200, 0);
+		else
+			sb.draw(TextureSingleton.getInstance().whiteRegion,-200,0);
+
+		if(otherPlayerBattleElementImage != null)
+			sb.draw(otherPlayerBattleElementImage, 100, 0);
+		else
+			sb.draw(TextureSingleton.getInstance().whiteRegion,100,0);
+		// sb.draw(new Texture(Gdx.files.internal("vs.jpg")), -25, 0, 30, 30);
+		// sb.draw(TextureSingleton.getInstance().whiteRegion, 75, 0);
+
+		if(pausedRemaining <= 0)
+		{
+			BitmapFont timerDraw = TextureSingleton.getInstance().scoreFont;
+			sb.setColor(Color.BLACK);
+			timerDraw.setColor(Color.BLACK);
+			int timeRemainingDigit = (timeRemaining+1)/60;
+			timerDraw.draw(sb , "" + timeRemainingDigit, -30, 0);
+			sb.setColor(Color.WHITE);
+		}
+
+		//sb.setColor(Color.WHITE);
+
+		// scoreFont.draw
 	}
+
 
 
 	public void assignHealth()
@@ -654,6 +671,6 @@ public class Battle implements Drawable
 	public void forceEnd()
 	{
 		// TODO Auto-generated method stub
-		
+
 	}
 }

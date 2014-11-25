@@ -21,7 +21,7 @@ public class ChatArea implements Drawable{
 		str2 = new String (""); 
 		str3 = new String (""); 
 		str4 = new String("");
-		
+
 	}
 
 
@@ -56,7 +56,7 @@ public class ChatArea implements Drawable{
 				chatText = chatText.substring(0, chatText.length() - 1);
 			if(chatText.length() < 50)
 			{
-//				if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) chatText += " ";
+				//				if(Gdx.input.isKeyJustPressed(Input.Keys.SPACE)) chatText += " ";
 				if(Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) || Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT)) {
 					if(Gdx.input.isKeyJustPressed(Input.Keys.A)) chatText += "A";
 					else if(Gdx.input.isKeyJustPressed(Input.Keys.B)) chatText += "B";
@@ -205,7 +205,7 @@ public class ChatArea implements Drawable{
 			// decide whether this message was intended for me
 			// if team message
 			if(msg.to.equals(temp)) {
-//				System.out.println("it should show somewhere" + msg.msg);
+				//				System.out.println("it should show somewhere" + msg.msg);
 				return true;
 			}
 			// if global message
@@ -232,7 +232,7 @@ public class ChatArea implements Drawable{
 		TextMessage msg = new TextMessage();
 		CurrentPlayer temp = Game.getInstance().player;
 		msg.from = temp.name;
-		
+
 		if(!chatText2.isEmpty()){
 			if(!chatText2.substring(0,1).equals("/")){
 				msg.msg = chatText2;
@@ -359,19 +359,20 @@ public class ChatArea implements Drawable{
 			visible = false;
 		} 
 	}
-	
-	
-	
+
+
+
 	private void sendMessage(String chatText2)
 	{
 		first = false;
-		
+		boolean sendMessage = true;
+
 		// abort if message empty
 		if(chatText2.isEmpty()) {
 			System.out.println("GAH IT'S EMPTY");
 			return;
 		}
-		
+
 		if (chatText2.substring(0,1).equals("> "))
 			chatText2 = chatText2.substring(2);	// strip away "> "
 		System.out.println("chatText2 = " + chatText2);
@@ -392,7 +393,7 @@ public class ChatArea implements Drawable{
 			MessageManager.getInstance().sendMessageToServer(msg);
 			System.out.println("SENT TEAM MESSAGE");
 		}
-		
+
 		// if "all" message
 		else if (chatText2.length() >= 5 && chatText2.substring(0,5).equals("/all ")) {
 			System.out.println("SENDING ALL MESSAGE");
@@ -405,10 +406,12 @@ public class ChatArea implements Drawable{
 			MessageManager.getInstance().sendMessageToServer(msg);
 			System.out.println("SENT ALL MESSAGE");
 		}
-		
+
 		// if message to specific user(s)
 		else if (chatText2.length() >= 5 && chatText2.substring(0,5).equals("/msg "))
 		{
+			// /msg name1, name2 """""""
+			boolean multiple = false;
 			System.out.println("SENDING TARGETED MESSAGE");
 			// get all recipients
 			chatText2 = chatText2.substring(5);
@@ -416,9 +419,10 @@ public class ChatArea implements Drawable{
 			String[] tokens = chatText2.split(" ");
 			int i = 0;
 			// go through tokens while each ends with a comma
-			for (i=0; i<tokens.length; i++) {
+			for (i=0; i + 1 <tokens.length; i++) {
 				if (tokens[i].charAt(tokens[i].length()-1) == ',') {
 					// add target username (without comma)
+					multiple = true;
 					targetUsers.add(tokens[i].substring(0,tokens[i].length()-1));
 					// cut this token and the space after it off the total chatText2 string
 					chatText2 = chatText2.substring(tokens[i].length()-1);
@@ -429,35 +433,55 @@ public class ChatArea implements Drawable{
 					break;
 			}
 			// add final target username (the one without comma)
-			if (i < tokens.length) {
-				targetUsers.add(tokens[i]);	// add last user after commas
-				chatText2 = chatText2.substring(tokens[i].length()-1);
-				// chop off the appropriate amount of characters off chatText2
-				//	- depends on if this is the only target username or if there were any before
-				// TODO THIS IS WHERE IT'S FUCKING UP
-				if (chatText2.charAt(0) == ',') {	// if there were multiple target players
-					chatText2 = chatText2.substring(1);
+			if (i + 1 < tokens.length) {
+				
+				String st = tokens[i];
+				
+				if (st.charAt(st.length() - 1) == '/') {	// if there were multiple target players
+					st = st.substring(0, st.length() - 1);
 				}
-				if (chatText2.charAt(0) == ' ')
-					chatText2 = chatText2.substring(1);
-				chatText2 = chatText2.substring(tokens[i].length()-1);
+				
+				targetUsers.add(st);	// add last user after commas
+
+				try
+				{
+//					chatText2 = chatText2.substring(tokens[i].length()-1);
+					// chop off the appropriate amount of characters off chatText2
+					//	- depends on if this is the only target username or if there were any before
+					// TODO THIS IS WHERE IT'S FUCKING UP
+					
+					//				if (chatText2.charAt(0) == ' ')
+					//					chatText2 = chatText2.substring(1);
+
+					//					if(multiple)
+					chatText2 = chatText2.substring(chatText2.indexOf("/") + 1);
+					//					else
+					//						chatText2 = chatText2.substring(tokens[i].length() - 2);	
+				}
+				catch(Exception e)
+				{
+					sendMessage = false;
+				}
 			}			
-			
+
 			// send message for each found recipient
-			for (i=0; i<targetUsers.size(); i++) {
-				TextMessage msg = new TextMessage();
-				CurrentPlayer temp = Game.getInstance().player;
-				msg.from = temp.name;
-				msg.to = targetUsers.get(i);
-				msg.msg = chatText2;
-				MessageManager.getInstance().sendMessageToServer(msg);
-				System.out.println("SENT TARGETTED MESSAGES (#" + i + ")");
+			if(sendMessage)
+			{
+				for (i=0; i<targetUsers.size(); i++) {
+					TextMessage msg = new TextMessage();
+					CurrentPlayer temp = Game.getInstance().player;
+					msg.from = temp.name;
+					msg.to = targetUsers.get(i);
+					msg.msg = chatText2;
+					MessageManager.getInstance().sendMessageToServer(msg);
+					System.out.println("SENT TARGETTED MESSAGES (#" + i + ")");
+				}
 			}
 		}
 
 		visible = false;
 	}
-	
+
 }
 
 

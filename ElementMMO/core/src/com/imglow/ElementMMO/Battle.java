@@ -41,7 +41,7 @@ public class Battle implements Drawable
 	// only the current battle health
 	int currentPlayerHealth;
 	int otherPlayerHealth;
-	
+
 	CurrentPlayer currentPlayer;
 	OtherPlayer otherPlayer;
 
@@ -49,6 +49,7 @@ public class Battle implements Drawable
 	// SpriteBatch sb;
 	String messageToSend;
 	String messageReceived;
+	boolean gameOver;
 
 	static int MAX_TIME = 60*10; // 60 times per second * 10
 	static int PAUSED_TIME = 60;
@@ -57,12 +58,13 @@ public class Battle implements Drawable
 
 	public Battle(final CurrentPlayer currentPlayer, final OtherPlayer otherPlayer)
 	{
+		gameOver = false;
 		messageToSend = "";
 		messageReceived = "";
 		// this.sb = sb;
 		this.currentPlayerHealth = currentPlayer.health;
 		this.otherPlayerHealth = otherPlayer.health;
-		
+
 		this.currentPlayer = currentPlayer;
 		this.otherPlayer = otherPlayer;
 
@@ -108,327 +110,331 @@ public class Battle implements Drawable
 		// when doing the battle, only calculate your own shit
 		// don't worry about your opponent's stuff.
 		// trust his to work
-		if(pausedRemaining == 1)
+		if(gameOver)
 		{
-			// right before pause,
-			// reset the images
-			otherPlayerBattleElementImage = null;
-			currentPlayerBattleElementImage = null;
-			timeRemaining = MAX_TIME;
-		}
-		if(pausedRemaining > 0)
-		{
-			pausedRemaining--;
+			if(currentPlayerHealth <= 0)
+			{
+				// do nothing
+				Game.getInstance().player.health = 6;
+				Game.getInstance().player.sendToSpawn();
+			}
+			else if(otherPlayerHealth <= 0)
+			{
+				// do nothing
+				Game.getInstance().player.money+= 200;
+				
+			}
+			dispose();
 		}
 		else
 		{
-			// we can't see the other player's image after
-			// the pause
-
-			//draw window
-			// reset the timer
-			timeRemaining--;
-			if(timeRemaining <= 0)
+			if(pausedRemaining == 1)
 			{
-				// if MAX_TIME seconds elapses
-				// if we have not yet received a message from enemy
-				// then damage them
-				if(messageReceived.equals(""))
-				{
-					otherPlayerHealth--;
-					BattleMessage toSend = new BattleMessage();
-					toSend.from = currentPlayer.name;
-					toSend.to = otherPlayer.name;
-					toSend.event = "TDM";
-					MessageManager.getInstance().sendMessageToServer(toSend);
-				}
-
-				// reset the timer
+				// right before pause,
+				// reset the images
+				otherPlayerBattleElementImage = null;
+				currentPlayerBattleElementImage = null;
 				timeRemaining = MAX_TIME;
 			}
-			
-			if(TDMcount > 2)
+			if(pausedRemaining > 0)
 			{
-				Game.getInstance().player.sendToSpawn();
-				// you died!!
-				Game.getInstance().player.health = 6;
-				currentPlayer.health = 6;
-				dispose();
+				pausedRemaining--;
 			}
-			// if u have no health left
-			// game over man
-			else if(otherPlayerHealth <= 0 || currentPlayerHealth <= 0)
+			else
 			{
-				
-				// game over man
-				// each player shud calc it themselves
-				
-				
-				if(currentPlayerHealth > otherPlayerHealth)
+				// we can't see the other player's image after
+				// the pause
+	
+				//draw window
+				// reset the timer
+				timeRemaining--;
+				if(timeRemaining <= 0)
 				{
-					
-					// if they both have 1 health and then get hit
-					// at the same time
-					// then the most dmg they could take
-					// is 1
-					// so currentPlayerHealth will never be < 0 at this point
-					
-					Game.getInstance().player.money+= 200;
-					/*
-					for(int i = 0; i < Game.getInstance().otherPlayers.size(); i++)
+					// if MAX_TIME seconds elapses
+					// if we have not yet received a message from enemy
+					// then damage them
+					if(messageReceived.equals(""))
 					{
-						if(otherPlayer.name.equals(Game.getInstance().otherPlayers.get(i).name))
-						{
-							Game.getInstance().otherPlayers.get(i).health = 6;
-						}
-						
+						otherPlayerHealth--;
+						BattleMessage toSend = new BattleMessage();
+						toSend.from = currentPlayer.name;
+						toSend.to = otherPlayer.name;
+						toSend.event = "TDM";
+						MessageManager.getInstance().sendMessageToServer(toSend);
 					}
-					otherPlayerHealth = 6;
-					*/
-					
+	
+					// reset the timer
+					timeRemaining = MAX_TIME;
 				}
-				else
+	
+				if(TDMcount > 2)
 				{
+					// we are afk!!!
+					// time to leave
 					Game.getInstance().player.sendToSpawn();
 					// you died!!
 					Game.getInstance().player.health = 6;
-					currentPlayer.health = 6;
+					// currentPlayer.health = 6;
+					BattleMessage toSend = new BattleMessage();
+					toSend.from = currentPlayer.name;
+					toSend.to = otherPlayer.name;
+					// we lost
+					// let them know
+					toSend.event = "OHL";
+					MessageManager.getInstance().sendMessageToServer(toSend);
+					gameOver = true;
+					dispose();
 				}
-				// we stay where we are
-				// we do not go back to spawn
-				
-				/*BattleMessage toSend = new BattleMessage();
-				toSend.to = otherPlayer.name;
-				toSend.from = currentPlayer.name;
-				toSend.event = "GPW"; // Game Player Win 
-				MessageManager.getInstance().sendMessageToServer(toSend);*/
-				dispose();
-
-			}
-			/*
-			else if(currentPlayer.health <= 0)
-			{
-				BattleMessage toSend = new BattleMessage();
-				toSend.to = otherPlayer.name;
-				toSend.from = currentPlayer.name;
-				toSend.event = "GOW"; // Game Opponent Win (opponent wins)
-				MessageManager.getInstance().sendMessageToServer(toSend);
-				
-				// close the battle thing
-
-				dispose();
-			}
-			*/
-			else
-			{
-				// get a message
-				// get the latest update from the front
-				BattleMessage fromEnemy = MessageManager.getInstance().getBattleMessage();
-				if(fromEnemy != null)
+				// if u have no health left
+				// game over man
+				else if(otherPlayerHealth <= 0 || currentPlayerHealth <= 0)
 				{
-					// is it to us
-					System.out.println("fromEnemy.to is " + fromEnemy.to);
-					System.out.println("fromEnemy.event is " + fromEnemy.event);
-					if(fromEnemy.to.equals(currentPlayer.name))
-					{
-						// enemy has sent us something!!
-						messageReceived = fromEnemy.event;
-					}
+	
+					// game over man
+					// each player shud calc it themselves
+	
+					gameOver = true;
+
+	
 				}
-			}
-			
-			/*
-			// now check the messageReceived stuff
-			if(messageReceived.equals("GPW")) // game over
-			{
-				// we lost boys
-				BattleMessage toSend = new BattleMessage();
-				toSend.to = otherPlayer.name;
-				toSend.from = currentPlayer.name;
-				toSend.event = "GOW"; // Game Opponent Win (opponent wins)
-				MessageManager.getInstance().sendMessageToServer(toSend);
-				Game.getInstance().player.sendToSpawn();
-				// you died!!
-				Game.getInstance().player.health = 6;
-				// close the battle thing
-				dispose();
-
-			}
-			else if(messageReceived.equals("GOW"))
-			{
-				// VICTORY !111!!!!1!1!
-				// they ran out of health
-				Game.getInstance().player.money+= 200;
-				// we stay where we are
-				// we do not go back to spawn
-				BattleMessage toSend = new BattleMessage();
-				toSend.to = otherPlayer.name;
-				toSend.from = currentPlayer.name;
-				toSend.event = "GPW"; // Game Player Win 
-				MessageManager.getInstance().sendMessageToServer(toSend);
-				dispose();
-			}
-			*/
-			if(messageReceived.equals("TDM"))
-			{
-				// the enemy waited 10 seconds
-				// and we did not send a message
-				// we are punished for our transgression
-				timeRemaining = MAX_TIME;
-				// make sure everytime we do dis
-
-				currentPlayerHealth--;
-				otherPlayerBattleElementImage = null;
-				currentPlayerBattleElementImage = null;
-				// reset messagereceived
-				messageReceived = "";
-				messageToSend = "";
-				TDMcount++;
-			}
-			else if(!messageReceived.equals(""))
-			{
-				// messageRecieved = RA#
-				if(!messageToSend.equals(""))
+				/*
+				else if(currentPlayer.health <= 0)
 				{
-					// messageToSend = RA#
-					// DANNG
-					// compare the messageReceived
-					// with our messageToSend
-					int playerAttack = Integer.parseInt(messageToSend.substring(2));
-					int enemyAttack = Integer.parseInt(messageReceived.substring(2));
-					
-					System.out.println("messageToSend being parsed is " + messageToSend.substring(2) +
-							" and playerAttack is " + playerAttack);
-					System.out.println("messageReceived being parsed is " + messageReceived.substring(2) +
-							" and enemyAttack is " + enemyAttack);
-					int battleResult = BattleLogics.battle(playerAttack, enemyAttack);
-
-					// only calculate the battle result for your own self!!!
-					// do not calculate for opponent
-					if(battleResult == -1)
-					{
-						// we lost boys
-						currentPlayerHealth-= 2;
-
-					}
-					else if(battleResult == 0)
-					{
-						// a tie is acceptable
-						// i guess
-						currentPlayerHealth--;
-						otherPlayerHealth--;
-					}
-					else // battleResult == 1
-					{
-						// WE WON!!!
-						// enemy damages himself pew pew
-						otherPlayerHealth-= 2;
-					}
-					// reset our messagelistener things
-					messageToSend = "";
-					messageReceived = "";
-					timeRemaining = MAX_TIME;
-					currentPlayerBattleElementImage = TextureSingleton.getInstance().elements.get(playerAttack);
-					otherPlayerBattleElementImage = TextureSingleton.getInstance().elements.get(enemyAttack);
-					pausedRemaining = PAUSED_TIME;
+					BattleMessage toSend = new BattleMessage();
+					toSend.to = otherPlayer.name;
+					toSend.from = currentPlayer.name;
+					toSend.event = "GOW"; // Game Opponent Win (opponent wins)
+					MessageManager.getInstance().sendMessageToServer(toSend);
+	
+					// close the battle thing
+	
+					dispose();
 				}
+				 */
 				else
 				{
-					// still waiting for the currentPlayer to send a msg
+					// get a message
+					// get the latest update from the front
+					BattleMessage fromEnemy = MessageManager.getInstance().getBattleMessage();
+					if(fromEnemy != null)
+					{
+						// is it to us
+						System.out.println("fromEnemy.to is " + fromEnemy.to);
+						System.out.println("fromEnemy.event is " + fromEnemy.event);
+						if(fromEnemy.to.equals(currentPlayer.name))
+						{
+							// enemy has sent us something!!
+							messageReceived = fromEnemy.event;
+						}
+					}
+				
+	
+				/*
+				// now check the messageReceived stuff
+				if(messageReceived.equals("GPW")) // game over
+				{
+					// we lost boys
+					BattleMessage toSend = new BattleMessage();
+					toSend.to = otherPlayer.name;
+					toSend.from = currentPlayer.name;
+					toSend.event = "GOW"; // Game Opponent Win (opponent wins)
+					MessageManager.getInstance().sendMessageToServer(toSend);
+					Game.getInstance().player.sendToSpawn();
+					// you died!!
+					Game.getInstance().player.health = 6;
+					// close the battle thing
+					dispose();
+	
 				}
+				else if(messageReceived.equals("GOW"))
+				{
+					// VICTORY !111!!!!1!1!
+					// they ran out of health
+					Game.getInstance().player.money+= 200;
+					// we stay where we are
+					// we do not go back to spawn
+					BattleMessage toSend = new BattleMessage();
+					toSend.to = otherPlayer.name;
+					toSend.from = currentPlayer.name;
+					toSend.event = "GPW"; // Game Player Win 
+					MessageManager.getInstance().sendMessageToServer(toSend);
+					dispose();
+				}
+				 */
+					if(messageReceived.equals("TDM"))
+					{
+						// the enemy waited 10 seconds
+						// and we did not send a message
+						// we are punished for our transgression
+						timeRemaining = MAX_TIME;
+						// make sure everytime we do dis
+	
+						currentPlayerHealth--;
+						otherPlayerBattleElementImage = null;
+						currentPlayerBattleElementImage = null;
+						// reset messagereceived
+						messageReceived = "";
+						messageToSend = "";
+						TDMcount++;
+					}
+					else if(messageReceived.equals("OHL"))
+					{
+						// our opponent is has lost!!!!!!
+	
+						// time to leave
+						Game.getInstance().player.money+= 200;
+						gameOver = true;
+						dispose();
+	
+	
+	
+					}
+					else if(!messageReceived.equals(""))
+					{
+						// messageRecieved = RA#
+						if(!messageToSend.equals(""))
+						{
+							// messageToSend = RA#
+							// DANNG
+							// compare the messageReceived
+							// with our messageToSend
+							int playerAttack = Integer.parseInt(messageToSend.substring(2));
+							int enemyAttack = Integer.parseInt(messageReceived.substring(2));
+	
+							System.out.println("messageToSend being parsed is " + messageToSend.substring(2) +
+									" and playerAttack is " + playerAttack);
+							System.out.println("messageReceived being parsed is " + messageReceived.substring(2) +
+									" and enemyAttack is " + enemyAttack);
+							int battleResult = BattleLogics.battle(playerAttack, enemyAttack);
+	
+							// only calculate the battle result for your own self!!!
+							// do not calculate for opponent
+							if(battleResult == -1)
+							{
+								// we lost boys
+								currentPlayerHealth-= 2;
+	
+							}
+							else if(battleResult == 0)
+							{
+								// a tie is acceptable
+								// i guess
+								currentPlayerHealth--;
+								otherPlayerHealth--;
+							}
+							else // battleResult == 1
+							{
+								// WE WON!!!
+								// enemy damages himself pew pew
+								otherPlayerHealth-= 2;
+							}
+							// reset our messagelistener things
+							messageToSend = "";
+							messageReceived = "";
+							timeRemaining = MAX_TIME;
+							currentPlayerBattleElementImage = TextureSingleton.getInstance().elements.get(playerAttack);
+							otherPlayerBattleElementImage = TextureSingleton.getInstance().elements.get(enemyAttack);
+							pausedRemaining = PAUSED_TIME;
+						}
+						else
+						{
+							// still waiting for the currentPlayer to send a msg
+						}
+					}
+				}
+	
 			}
-						
+			assignHealth();
+			sb.draw(TextureSingleton.getInstance().white, -MainClient.WIDTH/4, -MainClient.HEIGHT/4, MainClient.WIDTH/2, MainClient.HEIGHT/2);		
+	
+			//draw BATTLE!
+	
+			sb.draw(TextureSingleton.getInstance().battle, -100, 100, 200, 60);
+	
+			// sb.draw(goButton.spr, -40, 0, 60, 60);
+	
+			//draw player sprites
+	
+			sb.draw(currentPlayerImage, -MainClient.HEIGHT/2+50, 0, Player.WIDTH, Player.HEIGHT);
+			sb.draw(otherPlayerImage, MainClient.HEIGHT/2-125, 0, Player.WIDTH, Player.HEIGHT);
+	
+			//draw health amounts
+			//this player
+			sb.draw(currentPlayerHeartImage1, -MainClient.WIDTH/4+10, 100, 16, 16);
+			sb.draw(currentPlayerHeartImage2, -MainClient.WIDTH/4+30, 100, 16, 16);
+			sb.draw(currentPlayerHeartImage3, -MainClient.WIDTH/4+50, 100, 16, 16);
+			//other player
+			sb.draw(otherPlayerHeartImage3, MainClient.WIDTH/4-45, 100, 16, 16);
+			sb.draw(otherPlayerHeartImage2, MainClient.WIDTH/4-65, 100, 16, 16);
+			sb.draw(otherPlayerHeartImage1, MainClient.WIDTH/4-85, 100, 16, 16);
+	
+			//draw space for element slots
+			sb.draw(new Texture(Gdx.files.internal("images/gray.png")), -MainClient.WIDTH/4+150, -MainClient.HEIGHT/4+10, MainClient.WIDTH/4, MainClient.HEIGHT/4-50);
+	
+			//draw element slots
+			currentPlayerInventoryButtons[0].width = 100;
+			currentPlayerInventoryButtons[0].height = 30;
+			currentPlayerInventoryButtons[0].x = -MainClient.WIDTH/4+180;
+			currentPlayerInventoryButtons[0].y = -80;
+			sb.draw(currentPlayerInventoryImages[0], -MainClient.WIDTH/4+180, -80, 100, 30);
+	
+			currentPlayerInventoryButtons[1].width = 100;
+			currentPlayerInventoryButtons[1].height = 30;
+			currentPlayerInventoryButtons[1].x = -MainClient.WIDTH/4+180;
+			currentPlayerInventoryButtons[1].y = -120;
+			sb.draw(currentPlayerInventoryImages[1], -MainClient.WIDTH/4+180, -120, 100, 30);
+	
+			currentPlayerInventoryButtons[2].width = 100;
+			currentPlayerInventoryButtons[2].height = 30;
+			currentPlayerInventoryButtons[2].x = -MainClient.WIDTH/4+180;
+			currentPlayerInventoryButtons[2].y = -160;
+			sb.draw(currentPlayerInventoryImages[2], -MainClient.WIDTH/4+180, -160, 100, 30);
+	
+			currentPlayerInventoryButtons[3].width = 100;
+			currentPlayerInventoryButtons[3].height = 30;
+			currentPlayerInventoryButtons[3].x = -MainClient.WIDTH/4+340;
+			currentPlayerInventoryButtons[3].y = -80;
+			sb.draw(currentPlayerInventoryImages[3], -MainClient.WIDTH/4+340, -80, 100, 30);
+	
+			currentPlayerInventoryButtons[4].width = 100;
+			currentPlayerInventoryButtons[4].height = 30;
+			currentPlayerInventoryButtons[4].x = -MainClient.WIDTH/4+340;
+			currentPlayerInventoryButtons[4].y = -120;
+			sb.draw(currentPlayerInventoryImages[4], -MainClient.WIDTH/4+340, -120, 100, 30);
+	
+			currentPlayerInventoryButtons[5].width = 100;
+			currentPlayerInventoryButtons[5].height = 30;
+			currentPlayerInventoryButtons[5].x = -MainClient.WIDTH/4+340;
+			currentPlayerInventoryButtons[5].y = -160;
+			sb.draw(currentPlayerInventoryImages[5], -MainClient.WIDTH/4+340, -160, 100, 30);
+	
+			//draw battle element slots
+			if(currentPlayerBattleElementImage != null)
+				sb.draw(currentPlayerBattleElementImage, -200, 0);
+			else
+				sb.draw(TextureSingleton.getInstance().whiteRegion,-200,0);
+	
+			if(otherPlayerBattleElementImage != null)
+				sb.draw(otherPlayerBattleElementImage, 100, 0);
+			else
+				sb.draw(TextureSingleton.getInstance().whiteRegion,100,0);
+			// sb.draw(new Texture(Gdx.files.internal("vs.jpg")), -25, 0, 30, 30);
+			// sb.draw(TextureSingleton.getInstance().whiteRegion, 75, 0);
+	
+			if(pausedRemaining <= 0)
+			{
+				BitmapFont timerDraw = TextureSingleton.getInstance().scoreFont;
+				sb.setColor(Color.BLACK);
+				timerDraw.setColor(Color.BLACK);
+				int timeRemainingDigit = (timeRemaining+1)/60;
+				timerDraw.draw(sb , "" + timeRemainingDigit, -30, 0);
+				sb.setColor(Color.WHITE);
+			}
+	
+			//sb.setColor(Color.WHITE);
+	
+			// scoreFont.draw
 		}
-		assignHealth();
-		sb.draw(TextureSingleton.getInstance().white, -MainClient.WIDTH/4, -MainClient.HEIGHT/4, MainClient.WIDTH/2, MainClient.HEIGHT/2);		
-
-		//draw BATTLE!
-
-		sb.draw(TextureSingleton.getInstance().battle, -100, 100, 200, 60);
-
-		// sb.draw(goButton.spr, -40, 0, 60, 60);
-
-		//draw player sprites
-
-		sb.draw(currentPlayerImage, -MainClient.HEIGHT/2+50, 0, Player.WIDTH, Player.HEIGHT);
-		sb.draw(otherPlayerImage, MainClient.HEIGHT/2-125, 0, Player.WIDTH, Player.HEIGHT);
-
-		//draw health amounts
-		//this player
-		sb.draw(currentPlayerHeartImage1, -MainClient.WIDTH/4+10, 100, 16, 16);
-		sb.draw(currentPlayerHeartImage2, -MainClient.WIDTH/4+30, 100, 16, 16);
-		sb.draw(currentPlayerHeartImage3, -MainClient.WIDTH/4+50, 100, 16, 16);
-		//other player
-		sb.draw(otherPlayerHeartImage3, MainClient.WIDTH/4-45, 100, 16, 16);
-		sb.draw(otherPlayerHeartImage2, MainClient.WIDTH/4-65, 100, 16, 16);
-		sb.draw(otherPlayerHeartImage1, MainClient.WIDTH/4-85, 100, 16, 16);
-
-		//draw space for element slots
-		sb.draw(new Texture(Gdx.files.internal("images/gray.png")), -MainClient.WIDTH/4+150, -MainClient.HEIGHT/4+10, MainClient.WIDTH/4, MainClient.HEIGHT/4-50);
-
-		//draw element slots
-		currentPlayerInventoryButtons[0].width = 100;
-		currentPlayerInventoryButtons[0].height = 30;
-		currentPlayerInventoryButtons[0].x = -MainClient.WIDTH/4+180;
-		currentPlayerInventoryButtons[0].y = -80;
-		sb.draw(currentPlayerInventoryImages[0], -MainClient.WIDTH/4+180, -80, 100, 30);
-
-		currentPlayerInventoryButtons[1].width = 100;
-		currentPlayerInventoryButtons[1].height = 30;
-		currentPlayerInventoryButtons[1].x = -MainClient.WIDTH/4+180;
-		currentPlayerInventoryButtons[1].y = -120;
-		sb.draw(currentPlayerInventoryImages[1], -MainClient.WIDTH/4+180, -120, 100, 30);
-
-		currentPlayerInventoryButtons[2].width = 100;
-		currentPlayerInventoryButtons[2].height = 30;
-		currentPlayerInventoryButtons[2].x = -MainClient.WIDTH/4+180;
-		currentPlayerInventoryButtons[2].y = -160;
-		sb.draw(currentPlayerInventoryImages[2], -MainClient.WIDTH/4+180, -160, 100, 30);
-
-		currentPlayerInventoryButtons[3].width = 100;
-		currentPlayerInventoryButtons[3].height = 30;
-		currentPlayerInventoryButtons[3].x = -MainClient.WIDTH/4+340;
-		currentPlayerInventoryButtons[3].y = -80;
-		sb.draw(currentPlayerInventoryImages[3], -MainClient.WIDTH/4+340, -80, 100, 30);
-
-		currentPlayerInventoryButtons[4].width = 100;
-		currentPlayerInventoryButtons[4].height = 30;
-		currentPlayerInventoryButtons[4].x = -MainClient.WIDTH/4+340;
-		currentPlayerInventoryButtons[4].y = -120;
-		sb.draw(currentPlayerInventoryImages[4], -MainClient.WIDTH/4+340, -120, 100, 30);
-
-		currentPlayerInventoryButtons[5].width = 100;
-		currentPlayerInventoryButtons[5].height = 30;
-		currentPlayerInventoryButtons[5].x = -MainClient.WIDTH/4+340;
-		currentPlayerInventoryButtons[5].y = -160;
-		sb.draw(currentPlayerInventoryImages[5], -MainClient.WIDTH/4+340, -160, 100, 30);
-
-		//draw battle element slots
-		if(currentPlayerBattleElementImage != null)
-			sb.draw(currentPlayerBattleElementImage, -200, 0);
-		else
-			sb.draw(TextureSingleton.getInstance().whiteRegion,-200,0);
-
-		if(otherPlayerBattleElementImage != null)
-			sb.draw(otherPlayerBattleElementImage, 100, 0);
-		else
-			sb.draw(TextureSingleton.getInstance().whiteRegion,100,0);
-		// sb.draw(new Texture(Gdx.files.internal("vs.jpg")), -25, 0, 30, 30);
-		// sb.draw(TextureSingleton.getInstance().whiteRegion, 75, 0);
-
-		if(pausedRemaining <= 0)
-		{
-			BitmapFont timerDraw = TextureSingleton.getInstance().scoreFont;
-			sb.setColor(Color.BLACK);
-			timerDraw.setColor(Color.BLACK);
-			int timeRemainingDigit = (timeRemaining+1)/60;
-			timerDraw.draw(sb , "" + timeRemainingDigit, -30, 0);
-			sb.setColor(Color.WHITE);
-		}
-
-		//sb.setColor(Color.WHITE);
-
-		// scoreFont.draw
 	}
 
 
@@ -549,7 +555,7 @@ public class Battle implements Drawable
 						// if not paused, then do stuff
 						if(pausedRemaining <= 0)
 						{
-							
+
 							// figure out which one is selected
 							int selected = 0;
 							for(int i = 0; i < currentPlayerInventoryButtons.length; i++)
@@ -564,25 +570,25 @@ public class Battle implements Drawable
 									currentPlayerBattleElementNum = i;
 							}
 							// set up the thing to send
-							
+
 							// now we know the proper value to send to the bad guy
 							// let him know what's comin to him
 							currentPlayerBattleElementImage = source.spr;
 							// source.spr = TextureSingleton.getInstance().goGrayed;
 							messageToSend = "RA" + currentPlayerBattleElementNum;
 							BattleMessage battleMessage = new BattleMessage();
-							
+
 							battleMessage.to = otherPlayer.name;
 							battleMessage.from = currentPlayer.name;
 							battleMessage.event = messageToSend;
-							
+
 							MessageManager.getInstance().sendMessageToServer(battleMessage);
 							// messages to send
 							// RA# means that you are doing a regular attack of type #
 							// TDM take damage man, opp has stalled, so opp takes damage
 							// otherwise end the battle
 							// based upon health
-							
+
 						}
 					}
 				}
@@ -614,20 +620,21 @@ public class Battle implements Drawable
 		// currentPlayerBattleElementImage = TextureSingleton.getInstance().whiteGrass;
 		// otherPlayerBattleElementImage = TextureSingleton.getInstance().whiteGrass;
 	}
-	
+
 	//static helps debugging
 	public static void tellSeverToIncrementScore(boolean team1)
 	{
 		EventMessage msg = new EventMessage();
 		msg.to = "server";
-		
+
 		if(team1)
 			msg.event = "b";
 		else
 			msg.event = "r";
-		
+
 		MessageManager.getInstance().sendMessageToServer(msg);
 	}
+
 
 	public void dispose()
 	{
@@ -640,7 +647,8 @@ public class Battle implements Drawable
 		Game.getInstance().StatusUpdate();
 	}
 
-	public void forceEnd() {
+	public void forceEnd()
+	{
 		// TODO Auto-generated method stub
 		
 	}

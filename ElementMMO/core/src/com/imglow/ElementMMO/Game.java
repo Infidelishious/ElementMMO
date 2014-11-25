@@ -227,9 +227,9 @@ public class Game implements Drawable{
 		if(MessageManager.getInstance().hasStatusMessage())
 		{
 			
-			timer.cancel();
-			timer = new Timer();
-			timer.schedule(timerTask, 1000);
+//			timer.cancel();
+//			timer = new Timer();
+//			timer.schedule(timerTask, 1000);
 			
 			StatusMessage ms = MessageManager.getInstance().getLastStatusMessage();
 			

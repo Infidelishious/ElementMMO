@@ -27,7 +27,7 @@ public class TextureSingleton {
 	public ArrayList<TextureRegion> copList, spikeyList, chikaList, nakedManList, shopElements, elements, grassArray, storeArray;
 	public TextureRegion grass, whiteGrass, blackGrass, bush, tree1, tree2, imagination, hunger, music, giggles, segFaults, sunshine, drought,
 							entropy, trig, choco, synergy, hugs, shop, whiteRegion, grayRegion, battle, go, goGrayed, vs, fullHeart,
-							halfHeart, noHeart, storeCorner, storeEmpty, storeFlowers, storeSide, storeStall1, storeStall2, storePot, nothing;
+							halfHeart, noHeart, storeCorner, storeEmpty, storeFlowers, storeSide, storeStall1, storeStall2, storePot, nothing, msgBox;
 	
 	public Music mainMusic;
 	public Music battleMusic;
@@ -61,6 +61,7 @@ public class TextureSingleton {
 		halfHeart = new TextureRegion(new Texture(Gdx.files.internal("images/half_heart.png")));
 		noHeart = new TextureRegion(new Texture(Gdx.files.internal("images/no_heart.png")));
 		nothing = new TextureRegion(new Texture(Gdx.files.internal("images/nothing.png")));
+		msgBox = new TextureRegion(new Texture(Gdx.files.internal("images/msgbox.png")));
 		
 		//This one is for the player.. #PS4 reference
 		cop = new Texture(Gdx.files.internal("images/cop.png"));

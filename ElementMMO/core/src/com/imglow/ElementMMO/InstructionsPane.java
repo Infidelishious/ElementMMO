@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector3;
 
 public class InstructionsPane implements Drawable
 {
-	static final BitmapFont INSTRUCTION_FONT = TextureSingleton.getInstance().scoreFont;
+	static final BitmapFont INSTRUCTION_FONT = TextureSingleton.getInstance().nameFont;
 		
 	public InstructionsPane()
 	{
@@ -32,7 +32,7 @@ public class InstructionsPane implements Drawable
 
 		});
 		
-		sb.draw(TextureSingleton.getInstance().whiteRegion, -275, 50, 550, 205);
+		sb.draw(TextureSingleton.getInstance().msgBox, -275, 30, 550, 220);
 		sb.setColor(Color.WHITE);
 		INSTRUCTION_FONT.setColor(Color.BLACK);
 		INSTRUCTION_FONT.setScale(1f);

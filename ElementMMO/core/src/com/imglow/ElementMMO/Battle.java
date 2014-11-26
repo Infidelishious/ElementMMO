@@ -245,7 +245,9 @@ public class Battle implements Drawable
 					else if(currentPlayerHealth <= 0)
 					{
 						CombatResult = textureSingleton.defeat;
+						game.player.sendToSpawn();
 					}
+						
 					game.player.invincible = true;
 					game.player.invincibleTimeRemaining = CurrentPlayer.INVINCIBLE_TIME;
 					pausedRemaining = PAUSED_TIME;
@@ -400,7 +402,7 @@ public class Battle implements Drawable
 							otherPlayerBattleElementImage = textureSingleton.elements.get(enemyAttack);
 							pausedRemaining = PAUSED_TIME;
 						}
-						else
+						else // (!messageToSend.equals("")) // still waiting on a msg from currentPlayer
 						{
 							// still waiting for the currentPlayer to send a msg
 						}

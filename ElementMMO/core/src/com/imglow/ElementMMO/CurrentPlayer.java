@@ -253,15 +253,15 @@ public class CurrentPlayer extends Player{
 			toSend.from = game.player.name; // sign at the bottom
 
 			// now figure out what to write for the msg
-			if(received.event.equals("FMB")) // FIGHT ME BRO
+			if(received.event.substring(0,2).equals("FM")) // FIGHT ME BRO
 			{
-				System.out.println("received FMB");
+				System.out.println("received " + received.event);
 				// lets check to see if we can
 				if(waiting == false && invincible == false && game.battle == null)
 				{
 					// not waiting, not invincible, and not in a fight
-					toSend.event = "OKB"; // ok bro lets go
-					System.out.println("sent message OKB");
+					toSend.event = "OK" + health; // ok bro lets go
+					System.out.println("sent message OK" + health);
 					if(game.battle == null) // doublecheck cuz shes a looker
 					{
 						// lets go find the mofo
@@ -276,6 +276,7 @@ public class CurrentPlayer extends Player{
 								// rite it down
 								System.out.println("joined the fight with them");
 								other = game.otherPlayers.get(i);
+								other.health = Integer.parseInt(received.event.substring(2,3));
 								game.battle = new Battle(this,other);
 								break;
 							}
@@ -305,9 +306,9 @@ public class CurrentPlayer extends Player{
 				waiting = false;
 				waitingTime = 0;
 			}
-			else if(received.event.equals("OKB") && waiting) // she wants it
+			else if(received.event.substring(0,2).equals("OK") && waiting) // she wants it
 			{
-				System.out.println("received message OKB");
+				System.out.println("received message " + received.event);
 				waiting = false;
 				waitingTime = 0;
 				if(game.battle == null)
@@ -321,6 +322,7 @@ public class CurrentPlayer extends Player{
 							// rite it down
 							System.out.println("joined the fight");
 							other = game.otherPlayers.get(i);
+							other.health = Integer.parseInt(received.event.substring(2,3));
 							game.battle = new Battle(this,other);
 							break;
 						}
@@ -369,11 +371,11 @@ public class CurrentPlayer extends Player{
 							game.player.invincible == false) // make sure we wanna
 					{
 						// we gotta call him out
-						System.out.println("encountered an enemy, sent FMB");
+						System.out.println("encountered an enemy, sent FM" + health);
 						EventMessage toSend = new EventMessage();
 						toSend.from = game.player.name;
 						toSend.to = other.name;
-						toSend.event = "FMB"; // fight me bro
+						toSend.event = "FM" + health; // fight me bro
 						messageManager.sendMessageToServer(toSend);
 						waiting = true;
 						waitingTime = WAITING_TIME; // wait for her to call u bak

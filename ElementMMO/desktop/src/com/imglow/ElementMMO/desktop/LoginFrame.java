@@ -42,6 +42,7 @@ public class LoginFrame extends JFrame {
 	JLabel loginErrorLabel;
 	JLabel charErrorLabel;
 	JLabel teamErrorLabel;
+	Image splash;
 	Image logo;
 
 	// user data
@@ -70,6 +71,9 @@ public class LoginFrame extends JFrame {
 			protected void paintComponent (Graphics g) {
 				try {
 					super.paintComponent(g);
+					// draw splash
+					splash = ImageIO.read(new File("splash.png"));
+					g.drawImage(splash, 0, 0, loginPanel);
 					// draw logo
 					logo = ImageIO.read(new File("logo.png"));
 					g.drawImage(logo, 210, 80, loginPanel);
@@ -128,7 +132,7 @@ public class LoginFrame extends JFrame {
 		hostPanel.setOpaque(false);
 		loginPanel.add(stuffPanel, BorderLayout.CENTER);
 		loginPanel.add(loginErrorLabel, BorderLayout.SOUTH);
-		loginPanel.setBorder(new EmptyBorder(280, 420, 270, 420));
+		loginPanel.setBorder(new EmptyBorder(240, 420, 310, 420));
 		//loginPanel.setBackground(Color.BLACK);
 		loginPanel.setOpaque(false);
 		//loginPanel.repaint();
@@ -138,14 +142,23 @@ public class LoginFrame extends JFrame {
 		loginTopPanel.repaint();
 
 		// character select panel
-		JPanel charSelectPanel = new JPanel(new BorderLayout());	// empty, provides border inset
+		JPanel charSelectPanel = new JPanel(new BorderLayout()) {
+			protected void paintComponent (Graphics g) {
+				try {
+					super.paintComponent(g);
+					// draw splash
+					splash = ImageIO.read(new File("splash.png"));
+					g.drawImage(splash, 0, 0, loginPanel);
+				} catch (IOException ioe) { System.out.println(ioe.getMessage()); }
+			}
+		};	// empty, provides border inset
 		JPanel charSelectStuffPanel = new JPanel(new BorderLayout());	// panel elements
 		JPanel charPanel = new JPanel(new GridLayout(2,2));	// character images
 
 		// character select panel elements
 		JLabel chooseLabel = new JLabel("Choose a Character!");
 		chooseLabel.setForeground(Color.WHITE);
-		chooseLabel.setBorder(new EmptyBorder(20, 20, 50, 20));
+		chooseLabel.setBorder(new EmptyBorder(20, 20, 10, 20));
 		chooseLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		charErrorLabel = new JLabel(".");
 		charErrorLabel.setForeground(Color.BLACK);
@@ -174,18 +187,27 @@ public class LoginFrame extends JFrame {
 		charSelectStuffPanel.setBackground(Color.BLACK);
 		charSelectPanel.add(charSelectStuffPanel, BorderLayout.CENTER);
 		charSelectPanel.add(charErrorLabel, BorderLayout.SOUTH);
-		charSelectPanel.setBorder(new EmptyBorder(120, 350, 200, 350));
+		charSelectPanel.setBorder(new EmptyBorder(20, 350, 300, 350));
 		charSelectPanel.setBackground(Color.BLACK);
 
 		// team selection panel
-		JPanel teamSelectPanel = new JPanel(new BorderLayout());	// empty, holds border
+		JPanel teamSelectPanel = new JPanel(new BorderLayout()) {
+			protected void paintComponent (Graphics g) {
+				try {
+					super.paintComponent(g);
+					// draw splash
+					splash = ImageIO.read(new File("splash.png"));
+					g.drawImage(splash, 0, 0, loginPanel);
+				} catch (IOException ioe) { System.out.println(ioe.getMessage()); }
+			}
+		};	// empty, holds border
 		JPanel teamStuffPanel = new JPanel(new BorderLayout());	// holds all team selection elements
 		JPanel teamOptionsPanel = new JPanel(new GridLayout(1,2));	// holds team choice elements
 
 		// team selection panel elements
 		JLabel chooseTeamLabel = new JLabel("Choose your team!");
 		chooseTeamLabel.setForeground(Color.WHITE);
-		chooseTeamLabel.setBorder(new EmptyBorder(20, 20, 50, 20));
+		chooseTeamLabel.setBorder(new EmptyBorder(20, 20, 10, 20));
 		chooseTeamLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		teamErrorLabel = new JLabel(".");
 		teamErrorLabel.setForeground(Color.BLACK);
@@ -196,7 +218,7 @@ public class LoginFrame extends JFrame {
 			for (int i=0; i<teamLabels.length; i++) {
 				if (i==0) unscaledImage = ImageIO.read(new File("blueteam.png"));
 				else unscaledImage = ImageIO.read(new File("redteam.png"));
-				scaledImage = unscaledImage.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+				scaledImage = unscaledImage.getScaledInstance(170, 170, Image.SCALE_SMOOTH);
 				teamLabels[i] = new JLabel(new ImageIcon(scaledImage));
 				teamOptionsPanel.add(teamLabels[i]);
 			}
@@ -210,7 +232,7 @@ public class LoginFrame extends JFrame {
 		teamStuffPanel.setBackground(Color.BLACK);
 		teamSelectPanel.add(teamStuffPanel, BorderLayout.CENTER);
 		teamSelectPanel.add(teamErrorLabel, BorderLayout.SOUTH);
-		teamSelectPanel.setBorder(new EmptyBorder(180, 350, 200, 350));
+		teamSelectPanel.setBorder(new EmptyBorder(50, 350, 330, 350));
 		teamSelectPanel.setBackground(Color.BLACK);
 
 		// add login and char select panels to main panel as cards

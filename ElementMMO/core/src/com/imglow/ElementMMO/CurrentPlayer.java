@@ -543,6 +543,9 @@ public class CurrentPlayer extends Player{
 		money = 200;
 		health = 6;
 		
+		owned = new ArrayList<Boolean>();
+		using = new ArrayList<Boolean>();
+		
 		for(int i = 0; i < 12; i++)
 		{
 			owned.add(false);

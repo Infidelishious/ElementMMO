@@ -137,6 +137,17 @@ public class Game implements Drawable{
 		
 		//if battle draw battle
 		
+		if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_1))
+		{
+			Battle.tellSeverToIncrementScore(true);
+		}
+		else if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_2))
+		{
+			Battle.tellSeverToIncrementScore(false);
+		}
+		
+		StatusUpdate();
+		
 		// bg.draw(sb);
 		if(battle != null)
 			battle.draw(sb);
@@ -155,13 +166,7 @@ public class Game implements Drawable{
 						player.move(Player.LEFT);
 					
 					///////////////DEBUG CODE//////////////////
-//					if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_1))
-//					{
-//						Battle.tellSeverToIncrementScore(true);
-//					}
-//					else if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_2))
-//					{
-//						Battle.tellSeverToIncrementScore(false);
+					
 //					}
 					///////////////DEBUG CODE//////////////////
 						
@@ -171,8 +176,8 @@ public class Game implements Drawable{
 //					chat.chatText = "> ";
 			}
 			
-			StatusUpdate();
 			
+//			StatusUpdate();
 			for(OtherPlayer i : otherPlayers)
 			{
 				i.draw(sb);

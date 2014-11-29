@@ -190,12 +190,16 @@ public class Store implements Drawable, ClickListener
 		// draw each button
 		for(int i = 0; i < buttons.size(); i++)
 		{
+			Button b = buttons.get(i);
+			
 			if(using.get(i))
 			{
-				sb.setColor(1.0f,1.0f,1.0f,0.7f);
+//				sb.setColor(1.0f,1.0f,1.0f,0.7f);
+				sb.draw(textures.yellow,b.x - 4,b.y - 4,b.width + 8,b.height + 8);
+				sb.draw(textures.black,b.x - 2,b.y - 2,b.width + 4,b.height + 4);
 			}
 			buttons.get(i).draw(sb);
-			sb.setColor(1.0f,1.0f,1.0f,1.0f);
+//			sb.setColor(1.0f,1.0f,1.0f,1.0f);
 		}
 	}
 

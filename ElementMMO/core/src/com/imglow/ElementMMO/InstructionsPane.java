@@ -32,7 +32,7 @@ public class InstructionsPane implements Drawable
 
 		});
 		
-		sb.draw(TextureSingleton.getInstance().msgBox, -275, 30, 550, 220);
+		sb.draw(TextureSingleton.getInstance().msgBox, -275, 0, 550, 250);
 		sb.setColor(Color.WHITE);
 		INSTRUCTION_FONT.setColor(Color.BLACK);
 		INSTRUCTION_FONT.setScale(1f);
@@ -43,8 +43,9 @@ public class InstructionsPane implements Drawable
 		INSTRUCTION_FONT.draw(sb, "- Buy battle elements at the stores!", -210, 150);
 		INSTRUCTION_FONT.draw(sb, "- Talk! Press enter to open chat, and enter to send", -210, 130);
 		INSTRUCTION_FONT.draw(sb, "- Use \"/all [msg]\" or \"/msg user1, user2/ [msg]\"", -210, 110);
-		INSTRUCTION_FONT.draw(sb, "- HAVE FUN!", -210, 90);
-		INSTRUCTION_FONT.draw(sb, "Close this by clicking anywhere outside the window!", -210, 60);
+		INSTRUCTION_FONT.draw(sb, "- Made by: Josh Bollar, Ian Glow,", -210, 90);
+		INSTRUCTION_FONT.draw(sb, "           Joel Grattan, Uday Chadha, Liam Duffy", -210, 70);
+		INSTRUCTION_FONT.draw(sb, "Close this by clicking anywhere outside the window!", -210, 40);
 	}
 	
 	public void close()

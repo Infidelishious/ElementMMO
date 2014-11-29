@@ -415,28 +415,28 @@ public class Battle implements Drawable
 		sb.draw(textureSingleton.msgBox, -MainClient.WIDTH/4, -MainClient.HEIGHT/4, MainClient.WIDTH/2, MainClient.HEIGHT/2);		
 
 		//draw BATTLE!
-
+		
 		sb.draw(textureSingleton.battle, -100, 100, 200, 60);
 
 		// sb.draw(goButton.spr, -40, 0, 60, 60);
 
 		//draw player sprites
 
-		sb.draw(currentPlayerImage, -MainClient.HEIGHT/2+50, 0, Player.WIDTH, Player.HEIGHT);
-		sb.draw(otherPlayerImage, MainClient.HEIGHT/2-125, 0, Player.WIDTH, Player.HEIGHT);
+		sb.draw(currentPlayerImage, -MainClient.HEIGHT/2+75, 0, Player.WIDTH, Player.HEIGHT);
+		sb.draw(otherPlayerImage, MainClient.HEIGHT/2-150, 0, Player.WIDTH, Player.HEIGHT);
 
 		//draw health amounts
 		//this player
-		sb.draw(currentPlayerHeartImage1, -MainClient.WIDTH/4+10, 100, 16, 16);
-		sb.draw(currentPlayerHeartImage2, -MainClient.WIDTH/4+30, 100, 16, 16);
-		sb.draw(currentPlayerHeartImage3, -MainClient.WIDTH/4+50, 100, 16, 16);
+		sb.draw(currentPlayerHeartImage1, -MainClient.WIDTH/4+40, 100, 16, 16);
+		sb.draw(currentPlayerHeartImage2, -MainClient.WIDTH/4+60, 100, 16, 16);
+		sb.draw(currentPlayerHeartImage3, -MainClient.WIDTH/4+80, 100, 16, 16);
 		//other player
-		sb.draw(otherPlayerHeartImage3, MainClient.WIDTH/4-45, 100, 16, 16);
-		sb.draw(otherPlayerHeartImage2, MainClient.WIDTH/4-65, 100, 16, 16);
-		sb.draw(otherPlayerHeartImage1, MainClient.WIDTH/4-85, 100, 16, 16);
+		sb.draw(otherPlayerHeartImage3, MainClient.WIDTH/4-70, 100, 16, 16);
+		sb.draw(otherPlayerHeartImage2, MainClient.WIDTH/4-90, 100, 16, 16);
+		sb.draw(otherPlayerHeartImage1, MainClient.WIDTH/4-110, 100, 16, 16);
 
 		//draw space for element slots
-		sb.draw(new Texture(Gdx.files.internal("images/gray.png")), -MainClient.WIDTH/4+150, -MainClient.HEIGHT/4+10, MainClient.WIDTH/4, MainClient.HEIGHT/4-50);
+//		sb.draw(textureSingleton.gray, -MainClient.WIDTH/4+160, -MainClient.HEIGHT/4+10, MainClient.WIDTH/4 - 20, MainClient.HEIGHT/4-50);
 
 		//draw element slots
 		currentPlayerInventoryButtons[0].width = 100;
@@ -477,10 +477,10 @@ public class Battle implements Drawable
 
 		//draw battle element slots
 		if(currentPlayerBattleElementImage != null)
-			sb.draw(currentPlayerBattleElementImage, -200, 0);
+			sb.draw(currentPlayerBattleElementImage, -180, 30);
 
 		if(otherPlayerBattleElementImage != null)
-			sb.draw(otherPlayerBattleElementImage, 100, 0);
+			sb.draw(otherPlayerBattleElementImage, 80, 30);
 		
 		// sb.draw(new Texture(Gdx.files.internal("vs.jpg")), -25, 0, 30, 30);
 		// sb.draw(TextureSingleton.getInstance().whiteRegion, 75, 0);
@@ -491,7 +491,7 @@ public class Battle implements Drawable
 			sb.setColor(Color.BLACK);
 			timerDraw.setColor(Color.BLACK);
 			int timeRemainingDigit = (timeRemaining+1)/60;
-			timerDraw.draw(sb , "" + timeRemainingDigit, -30, 0);
+			timerDraw.draw(sb , "" + timeRemainingDigit, -30, MainClient.HEIGHT/2.0f - 50);
 			sb.setColor(Color.WHITE);
 		}
 		else
@@ -672,7 +672,7 @@ public class Battle implements Drawable
 		while(inventoryElementNum < 6)
 		{
 			//fill remaining inventory elements with white space
-			currentPlayerInventoryImages[inventoryElementNum] = textureSingleton.whiteRegion;
+			currentPlayerInventoryImages[inventoryElementNum] = textureSingleton.spot;
 			currentPlayerInventoryButtons[inventoryElementNum] = new Button(currentPlayerInventoryImages[inventoryElementNum], 0, 0, 0, 0, 
 					new OnClickListener()
 			{

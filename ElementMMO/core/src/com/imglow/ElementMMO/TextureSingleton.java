@@ -27,7 +27,8 @@ public class TextureSingleton {
 	public ArrayList<TextureRegion> copList, spikeyList, chikaList, nakedManList, shopElements, elements, grassArray, storeArray;
 	public TextureRegion grass, whiteGrass, blackGrass, bush, tree1, tree2, imagination, hunger, music, giggles, segFaults, sunshine, drought, entropy, 
 						trig, choco, synergy, hugs, shop, whiteRegion, grayRegion, battle, go, goGrayed, vs, fullHeart,halfHeart, noHeart, storeCorner, 
-						storeEmpty, storeFlowers, storeSide, storeStall1, storeStall2, storePot, nothing, msgBox, win, tie, lose, victory, defeat;
+						storeEmpty, storeFlowers, storeSide, storeStall1, storeStall2, storePot, nothing, msgBox, win, tie, lose, victory, defeat, spot,
+						yellow, black;
 	
 	public Music mainMusic;
 	public Music battleMusic;
@@ -47,6 +48,8 @@ public class TextureSingleton {
 		//This is where textures are loaded
 		white = new Texture(Gdx.files.internal("images/white.png"));
 		gray = new Texture(Gdx.files.internal("images/gray.png"));
+		yellow = new TextureRegion(new Texture(Gdx.files.internal("images/yellow.png")));
+		black = new TextureRegion(new Texture(Gdx.files.internal("images/black.png")));
 		playerSprites = new ArrayList<ArrayList<TextureRegion>>();
 		scoreFont = new BitmapFont(Gdx.files.internal("fonts/Fipps-Regular.fnt"), Gdx.files.internal("fonts/Fipps-Regular_0.tga"), false);
 		nameFont = new BitmapFont(Gdx.files.internal("fonts/FlxRegular.fnt"), Gdx.files.internal("fonts/FlxRegular_0.tga"), false);
@@ -62,13 +65,13 @@ public class TextureSingleton {
 		noHeart = new TextureRegion(new Texture(Gdx.files.internal("images/no_heart.png")));
 		nothing = new TextureRegion(new Texture(Gdx.files.internal("images/nothing.png")));
 		msgBox = new TextureRegion(new Texture(Gdx.files.internal("images/msgbox.png")));
-		// win = new TextureRegion(new Texture(Gdx.files.internal("images/win.png")));
+		 win = new TextureRegion(new Texture(Gdx.files.internal("images/win.png")));
 		tie = new TextureRegion(new Texture(Gdx.files.internal("images/tie.png")));
 		lose = new TextureRegion(new Texture(Gdx.files.internal("images/lose.png")));
 		// victory = new TextureRegion(new Texture(Gdx.files.internal("images/victory.png")));
 		defeat = new TextureRegion(new Texture(Gdx.files.internal("images/defeat.png")));
 		
-		//This one is for the player.. #PS4 reference
+		spot = new TextureRegion(new Texture(Gdx.files.internal("images/spot.png")));
 		cop = new Texture(Gdx.files.internal("images/cop.png"));
 		spikey = new Texture(Gdx.files.internal("images/Spikey.png"));
 		chika = new Texture(Gdx.files.internal("images/chika.png"));

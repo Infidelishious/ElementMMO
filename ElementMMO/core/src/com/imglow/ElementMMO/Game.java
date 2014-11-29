@@ -137,14 +137,14 @@ public class Game implements Drawable{
 		
 		//if battle draw battle
 		
-		if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_1))
-		{
-			Battle.tellSeverToIncrementScore(true);
-		}
-		else if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_2))
-		{
-			Battle.tellSeverToIncrementScore(false);
-		}
+//		if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_1))
+//		{
+//			Battle.tellSeverToIncrementScore(true);
+//		}
+//		else if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_2))
+//		{
+//			Battle.tellSeverToIncrementScore(false);
+//		}
 		
 		StatusUpdate();
 		
@@ -173,7 +173,7 @@ public class Game implements Drawable{
 				}
 //				if(Gdx.input.isKeyJustPressed(Input.Keys.ENTER))
 //					chat.visible = true;
-//					chat.chatText = "> ";
+//					chat.chatText = ">ew ";
 			}
 			
 			

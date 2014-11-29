@@ -538,4 +538,23 @@ public class CurrentPlayer extends Player{
 		mm.invincible = invincible;
 		MessageManager.getInstance().sendMessageToServer(mm);
 	}
+
+	public void reset() {
+		money = 200;
+		health = 6;
+		
+		for(int i = 0; i < 12; i++)
+		{
+			owned.add(false);
+			using.add(false);
+		}
+		owned.set(0,true);
+		using.set(0,true);
+		owned.set(1,true);
+		using.set(1,true);
+		owned.set(2,true);
+		using.set(2,true);
+		
+		sendToSpawn();
+	}
 }

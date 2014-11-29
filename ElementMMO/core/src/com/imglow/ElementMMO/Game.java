@@ -278,8 +278,6 @@ public class Game implements Drawable{
 		if(battle != null)
 			battle.forceEnd();
 		
-		player.money = 200;
-		player.health = 6;
-		player.sendToSpawn();
+		player.reset();
 	}
 }

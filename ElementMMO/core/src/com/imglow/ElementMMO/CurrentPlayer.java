@@ -63,6 +63,7 @@ public class CurrentPlayer extends Player{
 	}
 
 	public void sendToSpawn() {
+		moving = false;
 		if(team1)
 		{
 			x = Game.WIDTH/2;

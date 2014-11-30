@@ -141,10 +141,10 @@ public class Battle implements Drawable
 				{
 					System.out.println("ok we died");
 					// do nothing
-//					game.player.health = 6;
+					game.player.health = 6;
 					System.out.println("sent to spawn");
 //					game.player.moving = false;
-					game.player.reset();
+					game.player.sendToSpawn();
 					
 					for(int i = 0; i < game.otherPlayers.size(); i++)
 					{

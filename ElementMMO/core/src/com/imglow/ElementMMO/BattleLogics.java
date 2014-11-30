@@ -25,140 +25,103 @@ public class BattleLogics
 	// returns 0 for no interaction
 	// returns 1 for victory
 	// returns -1 for loss
+	
 	static int battle(int first, int second)
 	{
+		if(_battle(first, second))
+			return 1;
+		if(_battle(second, first))
+			return -1;
+		return 0;
+	}
+	
+	private static boolean _battle(int first, int second)
+	{
+		
 		if(first == IMAGINATION)
 		{
 			if(second == SEGFAULTS || second == TRIGONOMETRY || second == HUNGER)
 			{
-				return 1;
-			}
-			else if(second == SYNERGY || second == HUGS || second == GIGGLES || second == ENTROPY)
-			{
-				return -1;
+				return true;
 			}
 		}
 		else if(first == GIGGLES)
 		{
 			if(second == MUSIC || second == ENTROPY || second == IMAGINATION)
 			{
-				return 1;
-			}
-			else if(second == HUGS || second == CHOCOLATE || second == SEGFAULTS)
-			{
-				return -1;
+				return true;
 			}
 		}
 		else if(first == SEGFAULTS)
 		{
 			if(second == SUNSHINE || second == GIGGLES)
 			{
-				return 1;
-			}
-			else if(second == TRIGONOMETRY || second == MUSIC || second == IMAGINATION)
-			{
-				return -1;
+				return true;
 			}
 		}
 		else if(first == SUNSHINE)
 		{
 			if(second == CHOCOLATE || second == DROUGHT)
 			{
-				return 1;
-			}
-			else if(second == IMAGINATION || second == SEGFAULTS || second == TRIGONOMETRY)
-			{
-				return -1;
+				return true;
 			}
 		}
 		else if(first == HUNGER)
 		{
 			if(second == TRIGONOMETRY || second == HUGS)
 			{
-				return 1;
-			}
-			else if(second == DROUGHT || second == IMAGINATION || second == CHOCOLATE)
-			{
-				return -1;
+				return true;
 			}
 		}
 		else if(first == MUSIC)
 		{
 			if(second == SEGFAULTS || second == TRIGONOMETRY || second == ENTROPY)
 			{
-				return 1;
-			}
-			else if(second == SYNERGY || second == HUGS || second == GIGGLES)
-			{
-				return -1;
+				return true;
 			}
 		}
 		else if(first == DROUGHT)
 		{
 			if(second == SYNERGY || second == HUGS || second == HUNGER)
 			{
-				return 1;
-			}
-			else if (second == SUNSHINE || second == CHOCOLATE)
-			{
-				return -1;
+				return true;
 			}
 		}
 		else if(first == ENTROPY)
 		{
 			if(second == CHOCOLATE || second == HUGS || second == IMAGINATION)
 			{
-				return 1;
-			}
-			else if(second == TRIGONOMETRY || second == GIGGLES || second == MUSIC)
-			{
-				return -1;
+				return true;
 			}
 		}
 		else if(first == TRIGONOMETRY)
 		{
 			if(second == SUNSHINE || second == SEGFAULTS || second == ENTROPY)
 			{
-				return 1;
-			}
-			else if(second == MUSIC || second == HUNGER)
-			{
-				return -1;
+				return true;
 			}
 		}
 		else if(first == CHOCOLATE)
 		{
 			if(second == HUNGER || second == DROUGHT || second == GIGGLES)
 			{
-				return 1;
-			}
-			else if(second == SUNSHINE || second == ENTROPY)
-			{
-				return -1;
+				return true;
 			}
 		}
 		else if(first == SYNERGY)
 		{
 			if(second == IMAGINATION || second == MUSIC)
 			{
-				return 1;
-			}
-			else if(second == DROUGHT)
-			{
-				return -1;
+				return true;
 			}
 		}
 		else if(first == HUGS)
 		{
 			if(second == GIGGLES || second == MUSIC || second == IMAGINATION)
 			{
-				return 1;
-			}
-			else if(second == HUNGER || second == ENTROPY || second == DROUGHT)
-			{
-				return -1;
+				return true;
 			}
 		}
-		return 0;
+		return false;
 	}
 }

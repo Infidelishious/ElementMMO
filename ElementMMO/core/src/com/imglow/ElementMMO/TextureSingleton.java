@@ -13,7 +13,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class TextureSingleton {
 	private static TextureSingleton instance;
-	//////////////IF YOU TOUCH THIS CODE I WILL PEE ON YOUR MOM////////////////
+	//////////////DONT TOUCH////////////////
 	public static int COP = 0, SPIKEY = 1, CHIKA = 2, NAKED_MAN = 3;
 	public static int STAND = 0, FACE_UP = 1, FACE_LEFT = 2, WALK_DOWN = 3, WALK_UP = 4, WALK_LEFT_1 = 5,
 						WALK_LEFT_2 = 6, WALK_RIGHT_1 = 7, WALK_RIGHT_2 = 8, FACE_RIGHT = 9, WALK_DOWN_2 = 10, WALK_UP_2 = 11;
